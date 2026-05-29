@@ -1,0 +1,16 @@
+.lake/
+build/
+*.olean
+*.ilean
+*.hash
+*.o
+*.so
+*.dylib
+__pycache__/
+.DS_Store
+
+# Local-only audit/process docs. The public-facing record lives in
+# commit messages + CHANGELOG.md. Pre-publication review docs are
+# kept out of the repo to avoid cluttering the contributor surface.
+REVIEW_*.md
+

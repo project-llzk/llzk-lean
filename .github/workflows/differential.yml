@@ -1,0 +1,74 @@
+name: Strategy A — Differential
+
+# Runs the LLZK ↔ VEIR differential harness against the in-repo corpus.
+# CI provisioning of `llzk-opt` is a v1 milestone (see
+# docs/strategy-a-oracle.md §"What this v1 needs" #1). Until that lands,
+# the runner is skipped when `llzk-opt` isn't available; we surface the
+# skip as a step-level warning so the badge color reflects coverage
+# rather than silently going green.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly cron. NOTE: the Lake dep is SHA-pinned (see lakefile.toml),
+    # so `lake update` here is a no-op and the differential always runs
+    # against the pinned VEIR revision until that pin is bumped. The
+    # cron's value today is catching regressions in the runner / CI env,
+    # not in upstream HEAD. Move to a branch pin in lakefile.toml if you
+    # want HEAD-tracking — accepting the proof-basis drift that comes
+    # with it.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  differential:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout llzk-lean
+        # actions/checkout@v4.1.7 (pin by SHA to match the SHA-pin
+        # posture of the Lake dep — assurance infra should not float
+        # actions, even minor versions).
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache .lake
+        # actions/cache@v4.0.2
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: |
+            .lake
+            ~/.elan
+          key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
+
+      - name: lake update + build
+        # `lake update` is a no-op against a SHA-pinned manifest, kept
+        # for the day we move to a branch pin. `lake build` builds the
+        # local LlzkLean lib + emit-certs exe; veir-opt builds lazily
+        # inside .lake/packages/VeIR/ on first `lake exec veir-opt`,
+        # which the differential script triggers.
+        run: |
+          lake update
+          lake build
+
+      - name: Run differential harness
+        run: |
+          if [[ -n "$LLZK_OPT" ]] || command -v llzk-opt >/dev/null 2>&1; then
+            ./differential/run-differential.sh
+          else
+            # No llzk-opt in this runner. Emit a GitHub Actions warning
+            # so the run status reflects the skip — silently exiting 0
+            # would let the badge go green on zero coverage.
+            echo "::warning::llzk-opt not available; differential harness skipped. See docs/strategy-a-oracle.md §'What this v1 needs' for the CI-provisioning plan."
+            exit 0
+          fi

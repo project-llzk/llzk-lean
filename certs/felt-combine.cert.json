@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "0.2.0",
+  "source": "VEIR Veir.Passes.Felt.Combine (stub catalog — 2 of 15 patterns)",
+  "_note": "Hand-listed catalog. The full 15-pattern catalog will be derived reflectively from VEIR's Veir.Passes.Felt.Combine; today's source is LlzkLean.Cert.feltCombineCatalog.",
+  "_aboutLlzkParityStatus": "Per-cert tag indicating how a VEIR rewrite relates to LLZK's runtime: 'aligned' = LLZK performs the same rewrite exactly; 'aligned-with-caveats' = LLZK performs it under additional conditions (e.g. modular reduction, field-name guard); 'veir-only' = LLZK has no matching fold or canonicalization pattern, the cert is a Lean-side soundness statement only. The C++ checker uses this to pick assertion polarity.",
+  "certs": [
+    {"patternId":"right_identity_zero_add","rootKind":"felt.add","lhs":{"kind":"opResult","opKind":"felt.add","operands":[{"kind":"any"},{"kind":"const","opKind":"felt.const","value":0}],"commutative":true},"rhs":{"kind":"any"},"conditions":[],"theoremName":"Veir.Data.Felt.right_identity_zero_add","llzkParityStatus":"veir-only","description":"felt.add x (felt.const 0) → x. Sound over any ZMod p."},
+    {"patternId":"constant_fold_add","rootKind":"felt.add","lhs":{"kind":"opResult","opKind":"felt.add","operands":[{"kind":"const","opKind":"felt.const"},{"kind":"const","opKind":"felt.const"}],"commutative":true},"rhs":{"kind":"const","opKind":"felt.const"},"conditions":[{"kind":"sameAttr","attr":"fieldName","positions":["lhs","rhs"]},{"kind":"attrInRegistry","pos":"lhs","attr":"fieldName","registry":"field"}],"theoremName":"Veir.Data.Felt.constant_fold_add","llzkParityStatus":"aligned-with-caveats","description":"felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2). Sound over any ZMod p. Caveat: LLZK applies modular reduction (field->reduce); VEIR's runtime fold stores c1+c2 unreduced. Otherwise aligned."}
+  ]
+}

@@ -1,0 +1,37 @@
+name = "LlzkLean"
+version = "0.2.0"
+defaultTargets = ["LlzkLean", "emit-certs"]
+moreLeanArgs = ["--tstack=400000"]
+moreServerArgs = ["--tstack=400000"]
+
+# VEIR carries the verified Felt-dialect Lean port
+# (Veir.Passes.Felt.*, Veir.Data.Felt.*) plus the MLIR IR machinery.
+# We import it rather than vendoring so this repository stays a thin
+# cooperation surface — VEIR is the source of truth for the proofs.
+#
+# Why the fork pin (project-llzk/veir vs opencompl/veir):
+# the LLZK port + verified rewrites do not exist in upstream
+# opencompl/veir yet. They live on the project-llzk/veir fork's
+# `llzkfelt_test1` branch pending upstream-merge. Migration plan:
+#
+#   1. (done) Bootstrap pin on alexanderlhicks/veir's
+#      `llzkfelt_test1` branch.
+#   2. (current) Pin to project-llzk/veir at the SHA below
+#      (the fork is now organization-owned).
+#   3. (eventually) Upstream the LLZK port to opencompl/veir;
+#      migrate this pin to opencompl/veir.
+#
+# Bump this `rev` deliberately. Implicit bumps via `lake update`
+# would silently change what we proof-depend on.
+[[require]]
+name = "VeIR"
+git = "https://github.com/project-llzk/veir.git"
+rev = "09d5f00f0d2b4a8710afbe53dfdd7cf468578a04"
+
+[[lean_lib]]
+name = "LlzkLean"
+root = "LlzkLean"
+
+[[lean_exe]]
+name = "emit-certs"
+root = "EmitCerts"

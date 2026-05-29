@@ -1,0 +1,33 @@
+// LOWER_FIRST=1 smoke test, expected-divergence form. Adapted from
+// llzk-lib/test/Dialect/Felt/types_pass.llzk first section.
+//
+// Lowered through `llzk-opt --mlir-print-op-generic` (i.e. LOWER_FIRST=1)
+// and round-tripped through veir-opt, this file surfaces two cosmetic
+// normalizer gaps that must be closed before the same input can move
+// to corpus/felt/ as a positive test:
+//
+// 1. Discardable-attribute key quoting. LLZK emits
+//    `{sym_visibility = "private"}`; VEIR emits
+//    `{"sym_visibility" = "private"}`. The normalizer in
+//    `scripts/llzk-diff.sh` already strips the quotes for *property*
+//    attributes inside `<{...}>`, but not for *discardable*
+//    attributes inside `{...}` after the region body.
+//
+// 2. Empty-region-body whitespace. LLZK emits:
+//        ({
+//        }) {sym_visibility = ...}
+//    VEIR emits the body inline:
+//        ({    }) {"sym_visibility" = ...}
+//    Functionally identical; cosmetically divergent.
+//
+// Both are normalizer gaps, not soundness issues. Close them by
+// extending the Python normalizer in
+// `.lake/packages/VeIR/scripts/llzk-diff.sh` (upstream that change
+// to VEIR and bump the SHA pin here when it lands).
+//
+// Run via:
+//   LOWER_FIRST=1 ./differential/run-differential.sh corpus/expected-divergence/types_smoke.llzk
+// Expected: EXPECTED-DIVERGE.
+
+function.def private @f(!felt.type) -> i1
+function.def private @g() -> !felt.type

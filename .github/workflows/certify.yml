@@ -1,0 +1,82 @@
+name: Strategy E — Certificates
+
+# Two jobs:
+#   1. emit-certs: regenerate certificates and diff against committed
+#      snapshot. Any drift fails the workflow — keeps the on-disk
+#      cert file faithful to the live emitter output.
+#   2. build-checker: build the C++ checker skeleton. Today's skeleton
+#      compiles without MLIR (find_package MLIR is QUIET, not REQUIRED).
+#      The real upstream lands MLIR as a build dep.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  emit-certs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache .lake
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: |
+            .lake
+            ~/.elan
+          key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
+
+      - name: lake update + build
+        run: |
+          lake update
+          lake build
+
+      - name: Regenerate certs and compare to committed snapshot
+        run: |
+          lake exec emit-certs > /tmp/felt-combine.cert.json
+          if ! diff -u certs/felt-combine.cert.json /tmp/felt-combine.cert.json; then
+            echo "::error::Committed cert snapshot is stale. Refresh with:"
+            echo "::error::  lake exec emit-certs > certs/felt-combine.cert.json"
+            exit 1
+          fi
+
+  build-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - name: Install build tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake clang
+          # TODO(strategy-E v1): install MLIR 20.x dev headers matching
+          # llzk-lib's pin. Skeleton compiles without them; the real
+          # integration depends on them.
+
+      - name: cmake configure + build
+        run: |
+          cd checker
+          cmake -B build -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build
+
+      - name: Run cert-loader smoke tests
+        run: |
+          cd checker
+          # ctest -V passes through stdout so a CI log reader sees
+          # each [ OK ] / [ FAIL ] line. The test driver returns
+          # non-zero on any failure → ctest fails the workflow.
+          ctest --test-dir build --output-on-failure -V
