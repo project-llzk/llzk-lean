@@ -1,6 +1,6 @@
 # llzk-lean — Independent Review: Status & Findings
 
-> **Status:** in progress. Last updated 2026-06-01.
+> **Status:** in progress. Last updated 2026-06-02 (F1: joint 2 closed — see §3).
 > **Reviewer note:** This is an independent, adversarial review conducted at
 > the maintainer's request, aimed at making the work's guarantees, tradeoffs,
 > and caveats legible — especially to readers who are *not* Lean experts.
@@ -38,8 +38,8 @@ normalizer. See §8.
 | Toolchain split | `veir` pins `v4.30.0-rc2`, `llzk-lean` pins `v4.30.0`; did **not** break this build | observed |
 | **Stale manifest (H4)** | `lake-manifest.json` pinned `alexanderlhicks/veir @ bf086362` (personal fork, **3 commits old, predates the parser fix `ab77c1c57`**) while `lakefile.toml` pins `project-llzk/veir @ 09d5f00f0`. A plain local `lake build` builds the wrong/older proof basis. | git ancestry; **remediated** by `lake update` (uncommitted) |
 | 15 theorems | axiom-clean: `[propext, Quot.sound]` only — no `sorryAx` | axiom audit |
-| 15 patterns + the `Combine` pass | carry `sorryAx`: `[propext, sorryAx, Classical.choice, Quot.sound]` | axiom audit |
-| `Combine.lean` admissions | **140 `sorry` tokens** across the 15 patterns (`set_option warn.sorry false`) | count |
+| 15 patterns + the `Combine` pass | ~~carry `sorryAx`~~ **RESOLVED (F1, 2026-06-02):** all 15 patterns now axiom-clean `[propext, Classical.choice, Quot.sound]` — no `sorryAx`, no `WfIRContext.Dom`. See §3 joint 2. | axiom audit (veir `lake build` + `#print axioms`) |
+| `Combine.lean` admissions | ~~140 `sorry` tokens~~ **0 (F1):** every rewriter precondition discharged in `RewriteLemmas.lean` (no `set_option warn.sorry false`) | count |
 | Interpreter link | absent — `Veir.Data.Felt` is imported only by `Proofs.lean` + its own `Basic.lean` | grep |
 | Catalog | 2 of 15 patterns; `#assertCatalogCoverage` lists the 13 uncovered | build output |
 | C++ matcher | fail-closed stub ("MLIR not found"); the "26 tests" are internal `EXPECT`s across 2 ctest exes driven by a **mock** matcher — no real-IR matching is built or tested | cmake log + ctest |
@@ -53,23 +53,33 @@ The headline is "15 verified Felt rewrites." What is actually established,
 mechanically:
 
 ```
-Veir.Data.Felt.<theorem>   (all 15)  →  [propext, Quot.sound]                          ← AXIOM-CLEAN
-Veir.FeltPass.<pattern>    (all 15)  →  [propext, sorryAx, Classical.choice, Quot.sound]
-Veir.FeltPass.Combine      (the pass)→  [propext, sorryAx, Classical.choice, Quot.sound] ← carries sorryAx
+Veir.Data.Felt.<theorem>   (all 15)  →  [propext, Quot.sound]                       ← AXIOM-CLEAN
+Veir.FeltPass.<pattern>    (all 15)  →  [propext, Classical.choice, Quot.sound]     ← AXIOM-CLEAN (F1, 2026-06-02)
+Veir.FeltPass.Combine      (the pass)→  [propext, Classical.choice, Quot.sound]     ← AXIOM-CLEAN (F1)
 ```
 
-The detached algebraic lemmas are fully proven; the **executable rewriter
-that `veir-opt -p felt-combine` actually runs — and that the certificates
-point at — transitively depends on `sorryAx`.** What is verified and what
-runs are different objects. The three joints between "a true lemma" and "LLZK
-does the right thing" are:
+**Update (F1, 2026-06-02):** joint 2 below is now CLOSED. The executable
+rewriter that `veir-opt -p felt-combine` actually runs no longer depends on
+`sorryAx` — all 15 patterns and the pass are axiom-clean (no `sorryAx`, no
+`WfIRContext.Dom`), verified by a full `lake build` of the veir source +
+`#print axioms` on each. Joints **1 and 3 remain open** (the theorem↔pattern
+link is still by naming convention, and there is still no algebra↔interpreter
+bridge). So "verified" now means *arithmetic identity + IR well-formedness
+preservation* — still **not** semantic preservation. The three joints between
+"a true lemma" and "LLZK does the right thing" are:
 
 1. **Theorem ↔ pattern**: by naming convention only. `CertValidate.lean`
    checks the theorem *name resolves*; it does **not** check the theorem says
    anything about what the pattern does. (`#certThmExists "X"` would pass for
    `theorem X : True`.)
-2. **Pattern preconditions**: every rewriter well-formedness obligation is
-   `sorry`'d (140 of them).
+2. **Pattern preconditions**: ~~every rewriter well-formedness obligation is
+   `sorry`'d (140 of them).~~ **CLOSED (F1, 2026-06-02):** all 140 discharged
+   in `RewriteLemmas.lean` via three reusable precondition-discharging tails
+   (`projectToOperand`, `replaceWithNewOp`, `replaceWithBinOpOfConst`) + a
+   per-matcher in-bounds lemma library; the three facts `WfIRContext` does not
+   carry (region count, result≠operand, op-has-parent) are supplied by sound
+   defensive runtime guards (no `WfIRContext.Dom`). This establishes IR
+   *well-formedness* preservation, not semantic preservation (joint 3).
 3. **Algebra ↔ IR semantics**: the abstract `Veir.Data.Felt.add` (a thin
    `ZMod p` wrapper) is never connected to the IR op `OpCode.felt Felt.add`'s
    interpreter meaning. No such bridge exists anywhere in VEIR.
@@ -89,8 +99,10 @@ Two framing caveats worth stating to non-Lean readers:
 ## 4. Findings catalog
 
 **Critical** (assurance-defining; must be made explicit, not necessarily "fixed"):
-- **C1** The three unproven joints (§3). "Verified" overclaims relative to the
-  `sorry`'d preconditions and the missing interpreter link.
+- **C1** The unproven joints (§3). **Joint 2 (sorry'd preconditions) is now
+  CLOSED (F1, 2026-06-02).** Joints 1 (theorem↔pattern by naming) and 3
+  (missing interpreter link) remain — "verified" still means arithmetic
+  identity + IR well-formedness, not semantic preservation.
 - **C2** Cert structural fields (`lhs`/`rhs`/`conditions`/`parity`/`scope`) are
   hand-authored and unvalidated against either VEIR or LLZK — yet Strategy E's
   entire value rests on their accuracy.
@@ -108,7 +120,8 @@ Two framing caveats worth stating to non-Lean readers:
   fold-agreement is currently unreachable (named-field path parser-blocked).
 - **H4** Stale `lake-manifest.json` (see §2) — **remediated** (uncommitted).
 
-**Medium:** M1 no CI axiom-gate / `warn.sorry false` hides admits; M2
+**Medium:** M1 no CI axiom-gate (the `warn.sorry false` admits are gone as of
+F1, but a CI `#print axioms` gate to *prevent regressions* is still absent); M2
 `#assertCatalogCoverage` uses fragile base-name heuristics; M3 three namespaces
 for one unit (`Veir.FeltPass` / `Veir.Data.Felt` / path `Passes/Felt`); M4
 `constant_fold_add` "aligned-with-caveats" understates that VEIR folds
