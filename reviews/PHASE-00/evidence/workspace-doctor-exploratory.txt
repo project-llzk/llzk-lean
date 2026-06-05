@@ -10,7 +10,7 @@ WARN: dependency checkout is dirty in exploratory mode:
  M Veir/Passes/Felt/Combine.lean
  M Veir/Passes/Felt/Proofs.lean
 ?? Veir/Passes/Felt/RewriteLemmas.lean
-WARN: workspace VeIR repo was not checked; pass --workspace-veir PATH
+WARN: workspace VeIR HEAD 66413edb9bfa differs from bootstrap input 4b0978bddec0
 PASS: found AGENTS.md
 PASS: found docs/phases/PHASE-00-harness-reset.md
 PASS: found docs/phases/PHASE_TEMPLATE.md

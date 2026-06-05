@@ -118,9 +118,9 @@ fi
 
 head_short="$(git -C "$ROOT" rev-parse --short=12 HEAD 2>/dev/null || true)"
 if [[ "$head_short" == "$EXPECTED_LLZK_LEAN_HEAD" ]]; then
-  ok "llzk-lean HEAD matches ${EXPECTED_LLZK_LEAN_HEAD}"
+  ok "llzk-lean HEAD matches bootstrap input ${EXPECTED_LLZK_LEAN_HEAD}"
 else
-  fail "llzk-lean HEAD ${head_short:-<none>} does not match bootstrap ${EXPECTED_LLZK_LEAN_HEAD}"
+  warn "llzk-lean HEAD ${head_short:-<none>} differs from bootstrap input ${EXPECTED_LLZK_LEAN_HEAD}"
 fi
 
 if grep -q "$EXPECTED_VEIR_DEP" "${ROOT}/lakefile.toml" &&
@@ -160,9 +160,9 @@ if [[ -n "$WORKSPACE_VEIR" ]]; then
   else
     workspace_head="$(git -C "$workspace" rev-parse --short=12 HEAD 2>/dev/null || true)"
     if [[ "$workspace_head" == "$EXPECTED_WORKSPACE_VEIR_HEAD" ]]; then
-      ok "workspace VeIR HEAD matches ${EXPECTED_WORKSPACE_VEIR_HEAD}"
+      ok "workspace VeIR HEAD matches bootstrap input ${EXPECTED_WORKSPACE_VEIR_HEAD}"
     else
-      fail "workspace VeIR HEAD ${workspace_head:-<none>} does not match ${EXPECTED_WORKSPACE_VEIR_HEAD}"
+      warn "workspace VeIR HEAD ${workspace_head:-<none>} differs from bootstrap input ${EXPECTED_WORKSPACE_VEIR_HEAD}"
     fi
   fi
 else

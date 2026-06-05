@@ -1,9 +1,6 @@
-Script started on 2026-06-05 20:26:26+01:00 [COMMAND="scripts/harness/cert-smoke.sh" <not executed on terminal>]
 CERT-SMOKE: cmake/ctest unavailable; built checker from source with g++
 CERT-SMOKE: g++ schema/loader tests passed
 CERT-SMOKE: theorem metadata present for 2/2 certs
 CERT-SMOKE: driver cert summary passed
 CERT-SMOKE: MLIR matcher absent; DefaultMatcher still has W4B TODOs
 CERT-SMOKE: schema validation passed
-
-Script done on 2026-06-05 20:26:29+01:00 [COMMAND_EXIT_CODE="0"]

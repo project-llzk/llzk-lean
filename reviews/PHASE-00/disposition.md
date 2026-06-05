@@ -16,3 +16,6 @@ Repository: llzk-lean
   CMake/CTest when available or direct `g++` otherwise. Prebuilt
   `checker/build` binaries require `CERT_SMOKE_ALLOW_PREBUILT=1` and are
   reported explicitly.
+- L-P0-005: fixed. `scripts/harness/doctor.sh` now reports repository HEAD
+  drift from bootstrap inputs as a warning. Dependency pin mismatches and dirty
+  `.lake/packages/VeIR` state remain hard failures.

@@ -1,10 +1,9 @@
-Script started on 2026-06-05 20:26:09+01:00 [COMMAND="scripts/harness/doctor.sh" <not executed on terminal>]
 PASS: tool git is available
 PASS: tool lake is available
 WARN: optional tool cmake is not available
 WARN: optional tool ctest is not available
 PASS: git root is /home/alh/LLZK/llzk-lean
-PASS: llzk-lean HEAD matches ea2363f87bcc
+WARN: llzk-lean HEAD 34cbe65907bf differs from bootstrap input ea2363f87bcc
 PASS: Lake files pin VeIR 09d5f00f0d2b
 PASS: dependency checkout is at 09d5f00f0d2b
 FAIL: dependency checkout is dirty:
@@ -29,6 +28,4 @@ PASS: executable scripts/harness/cert-smoke.sh
 PASS: executable scripts/harness/validate-skills.sh
 PASS: found reviews/PHASE-00/evidence
 
-doctor summary: 1 fail, 3 warn, mode=strict
-
-Script done on 2026-06-05 20:26:09+01:00 [COMMAND_EXIT_CODE="1"]
+doctor summary: 1 fail, 4 warn, mode=strict

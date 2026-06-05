@@ -7,8 +7,8 @@ Last reviewed: 2026-06-05
 | Gate | Command | Expected Phase 0 behavior | What it proves |
 |---|---|---|---|
 | Strict doctor | `scripts/harness/doctor.sh` | Fails while `.lake/packages/VeIR` is dirty | Dirty dependency state is not hidden |
-| Exploratory doctor | `scripts/harness/doctor.sh --mode exploratory` | Passes with dirty-file warnings | Local investigation can continue with explicit dependency state |
-| Workspace doctor | `scripts/harness/doctor.sh --mode exploratory --workspace-veir ../veir` | Passes if workspace VeIR is at the bootstrap ref | Companion repo state is explicit |
+| Exploratory doctor | `scripts/harness/doctor.sh --mode exploratory` | Passes with warnings when only repo HEAD or dirty dependency state differs from bootstrap inputs | Local investigation can continue with explicit dependency state |
+| Workspace doctor | `scripts/harness/doctor.sh --mode exploratory --workspace-veir ../veir` | Passes with warnings if workspace VeIR differs from the bootstrap input | Companion repo state is explicit |
 | Doc freshness | `scripts/harness/check-doc-freshness.sh` | Passes when canonical docs and review disposition exist | Phase metadata and review state are present |
 | Differential smoke | `scripts/harness/diff-smoke.sh` | Exits 0 on real pass, 77 on missing `llzk-opt`, 1 on divergence, 2 on tool/parse/pass failure | Strategy A smoke status is classified |
 | Certificate smoke | `scripts/harness/cert-smoke.sh` | Builds checker smoke binaries from source via CMake/CTest or direct `g++`, passes loader/schema smoke, and reports MLIR matcher active or absent | Strategy E smoke status is classified without pretending MLIR matching exists |

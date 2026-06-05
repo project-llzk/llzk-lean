@@ -71,6 +71,7 @@ fi
 for evidence in \
   reviews/PHASE-00/evidence/doctor-strict.txt \
   reviews/PHASE-00/evidence/doctor-exploratory.txt \
+  reviews/PHASE-00/evidence/workspace-doctor-exploratory.txt \
   reviews/PHASE-00/evidence/validate-skills.txt \
   reviews/PHASE-00/evidence/diff-smoke.txt \
   reviews/PHASE-00/evidence/cert-smoke.txt \
