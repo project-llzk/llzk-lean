@@ -1,0 +1,4 @@
+Script started on 2026-06-05 20:16:21+01:00 [COMMAND="git -C .lake/packages/VeIR rev-parse --short=12 HEAD" <not executed on terminal>]
+09d5f00f0d2b
+
+Script done on 2026-06-05 20:16:21+01:00 [COMMAND_EXIT_CODE="0"]

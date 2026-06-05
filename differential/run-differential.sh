@@ -21,8 +21,8 @@
 #                     inputs are normalized to generic-MLIR before comparison.
 #                     Required for any input in LLZK's native textual form.
 #
-# See differential/README.md for the protocol and harness/differential.md
-# in VEIR for the diff script's normalization rules.
+# See differential/README.md for the protocol and docs/harness/GATES.md for the
+# current Phase 0 smoke boundary.
 
 set -uo pipefail
 

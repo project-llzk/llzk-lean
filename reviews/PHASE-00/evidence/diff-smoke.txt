@@ -1,0 +1,4 @@
+Script started on 2026-06-05 20:26:23+01:00 [COMMAND="scripts/harness/diff-smoke.sh" <not executed on terminal>]
+TOOL-MISSING: llzk-opt is not on PATH and LLZK_OPT is unset
+
+Script done on 2026-06-05 20:26:23+01:00 [COMMAND_EXIT_CODE="77"]
