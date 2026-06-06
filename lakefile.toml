@@ -11,13 +11,13 @@ moreServerArgs = ["--tstack=400000"]
 #
 # Why the fork pin (project-llzk/veir vs opencompl/veir):
 # the LLZK port + verified rewrites do not exist in upstream
-# opencompl/veir yet. They live on the project-llzk/veir fork's
-# `llzkfelt_test1` branch pending upstream-merge. Migration plan:
+# opencompl/veir yet. They live on the project-llzk/veir fork, with the current
+# accepted Phase 1 proof basis selected from `felt-review-structural-close`.
+# Migration plan:
 #
-#   1. (done) Bootstrap pin on alexanderlhicks/veir's
-#      `llzkfelt_test1` branch.
-#   2. (current) Pin to project-llzk/veir at the SHA below
-#      (the fork is now organization-owned).
+#   1. (done) Bootstrap pin on the original personal fork branch.
+#   2. (current) Pin to project-llzk/veir at the accepted SHA below
+#      (the fork is now organization-owned; see docs/harness/PINS.md).
 #   3. (eventually) Upstream the LLZK port to opencompl/veir;
 #      migrate this pin to opencompl/veir.
 #
@@ -26,7 +26,7 @@ moreServerArgs = ["--tstack=400000"]
 [[require]]
 name = "VeIR"
 git = "https://github.com/project-llzk/veir.git"
-rev = "09d5f00f0d2b4a8710afbe53dfdd7cf468578a04"
+rev = "d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3"
 
 [[lean_lib]]
 name = "LlzkLean"

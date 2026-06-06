@@ -1,0 +1,14 @@
+accepted VeIR pin: d52917ca4a57c4094b1aa61dd413aca4e1c2a56e
+accepted VeIR source: https://github.com/project-llzk/veir.git felt-review-structural-close
+FAIL: lakefile.toml VeIR rev 09d5f00f0d2b4a8710afbe53dfdd7cf468578a04 does not match d52917ca4a57c4094b1aa61dd413aca4e1c2a56e
+FAIL: lake-manifest.json VeIR rev 09d5f00f0d2b4a8710afbe53dfdd7cf468578a04 does not match d52917ca4a57c4094b1aa61dd413aca4e1c2a56e
+PASS: Lake files agree on VeIR 09d5f00f0d2b
+FAIL: dependency checkout HEAD 09d5f00f0d2b4a8710afbe53dfdd7cf468578a04 does not match d52917ca4a57c4094b1aa61dd413aca4e1c2a56e
+PASS: dependency checkout HEAD equals manifest rev
+FAIL: dependency checkout is dirty:
+ M Veir/Passes/Felt/Combine.lean
+ M Veir/Passes/Felt/Proofs.lean
+?? Veir/Passes/Felt/RewriteLemmas.lean
+PASS: workspace VeIR HEAD equals accepted pin d52917ca4a57
+
+pin verification summary: 4 fail, 0 warn, mode=strict

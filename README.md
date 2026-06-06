@@ -25,9 +25,10 @@ LLZK's Felt dialect:
   actual MLIR rewrites conform to the catalog at runtime, keeping Lean
   and Mathlib out of LLZK's runtime trusted base.
 
-The 15 verified Felt-dialect rewrites the catalog references live in
-VEIR on the [`llzkfelt_test1`](https://github.com/project-llzk/veir/tree/llzkfelt_test1)
-branch.
+The current proof basis is the clean VEIR commit
+[`d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3`](docs/harness/PINS.md),
+selected from `project-llzk/veir` branch `felt-review-structural-close`
+and pinned through Lake metadata.
 
 ## Repository contents
 
@@ -49,6 +50,11 @@ documented under [`docs/`](docs/):
   A design + harness usage.
 - [`docs/strategy-e-certificates.md`](docs/strategy-e-certificates.md)
   — Strategy E cert format, lifecycle, and checker design.
+- [`docs/harness/PINS.md`](docs/harness/PINS.md) — current accepted
+  VEIR pin, update procedure, rollback procedure, and forbidden hidden
+  dependency state.
+- [`docs/harness/CURRENT.md`](docs/harness/CURRENT.md) — active
+  phase and acceptance rule for the harness.
 - [`docs/future-b-extraction.md`](docs/future-b-extraction.md) —
   Future: extract VEIR's verified rewriter to C++.
 - [`docs/future-c-drop-in.md`](docs/future-c-drop-in.md) — Future:

@@ -24,67 +24,57 @@ below.
 ### Known alignment caveats (read before adding to the corpus)
 
 Four structural gaps between LLZK and VEIR constrain what the
-harness can actually demonstrate today — surfaced in the
-external-alignment audit that drove commit `3c33115` ("Alignment
-audit fixes: cert parity, parser incompatibility, schema gaps";
-see `git log 3c33115^!` for the full rationale):
+harness can actually demonstrate today. Phase 2 re-baselines those
+claims to `llzk-lib` commit
+`db922857bc5a88a9107627ef6b36a8b5e57bc5c2`:
 
-1. **LLZK has no canonicalization patterns for Felt ops.** A
-   `grep -rn "getCanonicalizationPatterns" llzk-lib/lib/Dialect/Felt/`
-   returns zero matches; the Felt dialect ships only `fold`
-   implementations (`Ops.cpp:141-333`). VEIR's rewrites that *aren't*
-   constant folds — e.g., `right_identity_zero_add` (x+0 → x) — have
-   no LLZK counterpart. They are correct VEIR soundness claims, but
-   the differential cannot demonstrate LLZK and VEIR producing
-   identical canonical forms for them, because LLZK doesn't reduce.
+1. **LLZK has no canonicalization patterns for Felt ops.** VEIR
+   rewrites that *aren't* constant folds, e.g.
+   `right_identity_zero_add` (x+0 → x), have no LLZK counterpart.
+   They are correct VEIR soundness claims, but the differential
+   cannot demonstrate LLZK and VEIR producing identical canonical
+   forms for them, because LLZK doesn't reduce.
 
 2. **LLZK's binary folds require a registered field name.**
-   `tryGetBinaryFoldData` (`Ops.cpp:57-79`) returns null unless both
-   operands are `FeltConstAttr`s with matching, registered field
-   names (one of `bn128`, `bn254`, `babybear`, `goldilocks`,
-   `mersenne31`, `koalabear`, or a `#felt.field`-registered custom
-   name). Our seed corpus `corpus/felt/const_identities.mlir` uses
-   bare `!felt.type` — so LLZK's fold short-circuits to a no-op,
-   and the parse-print round-trip is what the differential
-   actually catches.
+   `tryGetBinaryFoldData` in `lib/Dialect/Felt/IR/Ops.cpp` returns
+   null unless both operands are `FeltConstAttr`s with matching,
+   registered field names. The accepted built-ins are `bn128`,
+   `bn254`, `grumpkin`, `babybear`, `goldilocks`, `mersenne31`, and
+   `koalabear`; custom fields can be specified with `#felt.field`.
+   Bare `!felt.type` inputs short-circuit to a no-op, and the
+   parse-print round-trip is what the differential actually catches.
 
-3. **Named-field FeltConstAttr is parser-incompatible.** VEIR's
-   parser accepts `#felt<const N> : !felt.type<"name">` (field
-   annotation on the outer type) but rejects LLZK's
-   `#felt<const N : <"name">>` (field annotation inside the const).
-   LLZK accepts both, but silently drops VEIR's outer annotation
-   and fails verification on the result-type mismatch. Until one
-   side fixes its parser, the corpus *cannot* include any
-   named-field FeltConstAttr — both directions of the round-trip
-   error out. `corpus/expected-divergence/named_field_const.mlir`
-   documents this gap as an expected-divergence test.
+3. **Named-field FeltConstAttr parser parity is resolved on the
+   generic-MLIR path.** VEIR accepts the generic form emitted by
+   `llzk-opt --mlir-print-op-generic`, and the outer
+   `!felt.type<"name">` retains the field. The remaining difference
+   is cosmetic printer style: LLZK prints a redundant inner
+   annotation, while VEIR relies on the outer type annotation; the
+   normalizer strips only that redundant inner form.
 
 4. **VEIR's folds don't apply modular reduction.** LLZK's
-   `field->reduce(...)` (`Util/Field.cpp`) normalizes constants
+   `Field::reduce` in `lib/Util/Field.cpp` normalizes constants
    modulo the prime; VEIR's `constant_fold_add` stores the raw
-   integer. For unnamed-field inputs this never bites (LLZK
-   doesn't fold). For named-field inputs it would bite, but #3
-   blocks that path.
+   integer. For named-field inputs, this modular-reduction difference
+   is the expected arithmetic divergence to classify.
 
 The right v1 ordering, given these gaps:
-   - First **fix the named-field parser incompatibility** in VEIR
-     (one-side fix; smallest blast radius) so corpus expansion to
-     named-field inputs is even possible.
-   - *Then* add a Field registry on VEIR's side so its folds
+   - First **re-test the named-field corpus** under the Phase 1 pin and
+     reclassify stale expected-divergence inputs.
+   - Then add a Field registry on VEIR's side so its folds
      short-circuit-or-reduce consistent with LLZK.
-   - *Then* enable canonicalization in the diff script and start
+   - Then enable canonicalization in the diff script and start
      mirroring `llzk-lib/test/Dialect/Felt/`.
 
-Without that ordering, every named-field corpus addition just goes
-into `expected-divergence/` and the harness, while honest, doesn't
-demonstrate alignment.
+Without that ordering, named-field corpus additions will mostly document
+the known modular-reduction gap rather than demonstrate alignment.
 
 When the outputs diverge, the harness reports the diff inline. The
 divergence is then classified as one of:
 
 1. A canonical-form mismatch (e.g., VEIR's folds don't apply modular
-   reduction yet — see VEIR's `FELT_PARITY_ASSESSMENT_2026-05-28.md`
-   §2.2 row #1 for the parity-gap list).
+   reduction yet — see `../veir/REVIEW.md` VH3 for the current
+   parity-gap framing).
 2. An LLZK bug to file against `llzk-lib`.
 3. A spec disagreement to escalate.
 
@@ -118,13 +108,16 @@ No user-visible change to `llzk-opt`.
 
 ## What this v1 needs
 
-Current state (2026-05-28):
+Current state (2026-06-05):
 - ✅ `differential/run-differential.sh` wraps VEIR's diff script;
   recurses into directory args; plumbs `LOWER_FIRST=1` through to
   `--lower-first` for LLZK custom-asm inputs.
 - 🌱 Seed input: `corpus/felt/const_identities.mlir` (one file).
   Corpus expansion is the headline v1 work item.
-- ✅ VEIR has 15 verified rewrites in `Veir.Passes.Felt.Combine`.
+- ✅ VEIR has 15 Felt rewrite patterns whose structural preconditions are
+  sorry-free and axiom-clean under the accepted Phase 1 pin. This still does
+  not close the theorem↔pattern or IR-semantics joints; see
+  `docs/REVIEW.md`.
 - 🚧 Harness is a **parse-print round-trip differential**, not a
   pass-pipeline differential. v1 adds `--canonicalize` /
   `-p felt-combine` invocations (see #1 below).
@@ -158,8 +151,9 @@ Outstanding work to reach v1:
    way we can mirror `llzk-lib/test/Dialect/Felt/` quickly.
 
 4. **Coverage reporting.** When a corpus input passes, record which
-   VEIR patterns (and LLZK folders) it exercised. Surface "12 of 15
-   VEIR patterns differentially confirmed; 4 of 18 LLZK folders".
+   VEIR patterns and LLZK folders it exercised. Surface "12 of 15
+   VEIR patterns differentially confirmed; N of 18 LLZK Felt ops
+   covered by corpus inputs".
 
 5. **Failing-case corpus.** Programs LLZK rejects but VEIR accepts
    (or vice versa) belong in `corpus/expected-divergence/`. The
@@ -170,10 +164,10 @@ Outstanding work to reach v1:
    for the polarity convention.
 
 6. **Field-registry parity.** VEIR currently folds constants without
-   modular reduction; LLZK does. Until VEIR ships a Field registry,
-   any named-field constant arithmetic diverges textually. Tracked in
-   [VEIR FELT_PARITY_ASSESSMENT_2026-05-28.md](https://github.com/alexanderlhicks/veir/blob/llzkfelt_test1/FELT_PARITY_ASSESSMENT_2026-05-28.md)
-   — fix lives upstream in VEIR, not in llzk-lean.
+   modular reduction; LLZK does. Until VEIR's folds model the accepted
+   Field registry, named-field constant arithmetic can diverge
+   textually. Tracked in `../veir/REVIEW.md` VH3 — fix lives upstream
+   in VEIR, not in llzk-lean.
 
 ## Effort
 

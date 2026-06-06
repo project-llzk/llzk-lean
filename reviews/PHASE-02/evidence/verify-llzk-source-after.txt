@@ -1,0 +1,65 @@
+PASS: llzk-lib path is /home/alh/LLZK/llzk-lib
+PASS: found docs/harness/LLZK_SOURCE.md
+PASS: LLZK source ledger records db922857bc5a
+PASS: LLZK source ledger records lib/Util/Field.cpp
+accepted LLZK source: db922857bc5a88a9107627ef6b36a8b5e57bc5c2 (origin/main)
+PASS: accepted LLZK commit exists locally
+PASS: origin/main equals accepted LLZK source db922857bc5a
+WARN: llzk-lib worktree HEAD 30b0fa1eb77de154ff60c13fa88ef286d8b01c65 differs; gate reads db922857bc5a88a9107627ef6b36a8b5e57bc5c2 with git show
+PASS: accepted source contains include/llzk/Dialect/Felt/IR/Ops.td
+PASS: accepted source contains include/llzk/Dialect/Felt/IR/Types.td
+PASS: accepted source contains include/llzk/Dialect/Felt/IR/Attrs.td
+PASS: accepted source contains lib/Dialect/Felt/IR/Ops.cpp
+PASS: accepted source contains lib/Util/Field.cpp
+PASS: accepted source contains test/Dialect/Felt/felt_arith_pass.llzk
+PASS: accepted source contains unittests/IR/FeltFoldTests.cpp
+PASS: accepted Felt op mnemonics match Phase 2 ledger
+PASS: registry declares bn128
+PASS: registry declares bn254
+PASS: registry declares grumpkin
+PASS: registry declares babybear
+PASS: registry declares goldilocks
+PASS: registry declares mersenne31
+PASS: registry declares koalabear
+PASS: registry maps bn128 to accepted prime
+PASS: registry maps bn254 to accepted prime
+PASS: registry maps grumpkin to accepted prime
+PASS: registry maps babybear to accepted prime
+PASS: registry maps goldilocks to accepted prime
+PASS: registry maps mersenne31 to accepted prime
+PASS: registry maps koalabear to accepted prime
+PASS: Felt type source defines !felt.type
+PASS: Felt type source carries optional field-name parameter
+PASS: checker registry comment block mentions bn128
+PASS: checker registry comment block mentions bn254
+PASS: checker registry comment block mentions grumpkin
+PASS: checker registry comment block mentions babybear
+PASS: checker registry comment block mentions goldilocks
+PASS: checker registry comment block mentions mersenne31
+PASS: checker registry comment block mentions koalabear
+PASS: Strategy A registered-field source claim mentions bn128
+PASS: Strategy A registered-field source claim mentions bn254
+PASS: Strategy A registered-field source claim mentions grumpkin
+PASS: Strategy A registered-field source claim mentions babybear
+PASS: Strategy A registered-field source claim mentions goldilocks
+PASS: Strategy A registered-field source claim mentions mersenne31
+PASS: Strategy A registered-field source claim mentions koalabear
+PASS: LLZK source ledger mentions bn128
+PASS: LLZK source ledger mentions bn254
+PASS: LLZK source ledger mentions grumpkin
+PASS: LLZK source ledger mentions babybear
+PASS: LLZK source ledger mentions goldilocks
+PASS: LLZK source ledger mentions mersenne31
+PASS: LLZK source ledger mentions koalabear
+PASS: Strategy E documents sameAttr side condition
+PASS: Strategy E documents attrInRegistry side condition
+PASS: Lean cert catalog contains constant_fold_add
+PASS: Lean cert catalog requires same fieldName
+PASS: Lean cert catalog requires registered fieldName
+PASS: Lean cert catalog marks constant_fold_add aligned-with-caveats
+PASS: cert snapshot contains constant_fold_add
+PASS: cert snapshot records aligned-with-caveats
+PASS: cert snapshot requires same fieldName
+PASS: cert snapshot requires registered fieldName
+
+LLZK source verification summary: 0 fail, 1 warn

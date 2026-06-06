@@ -566,8 +566,9 @@ class DefaultMatcher : public Matcher {
     //   - ConstEquals: resolve `pos`, check it's a constant of expected value.
     //   - SameAttr: resolve each position, extract named attribute, compare.
     //   - AttrInRegistry: resolve `pos`, extract attr, check against
-    //     a hardcoded LLZK Field registry (initial: the six built-in
-    //     fields {bn128, bn254, babybear, goldilocks, mersenne31,
+    //     the accepted LLZK Field registry (Phase 2 source:
+    //     lib/Util/Field.cpp at llzk-lib db922857bc5a; built-ins
+    //     {bn128, bn254, grumpkin, babybear, goldilocks, mersenne31,
     //     koalabear}). Pluggable registries are a v0.3 feature.
     //   - ConstCompare: like ConstEquals, with CompareOp dispatch.
     //   - ResultTypeFromOperand: resolve `pos`, compare mlir::Type.

@@ -1,6 +1,6 @@
 # Phase 1: Reproducible Pins
 
-Status: bootstrap
+Status: active
 Last reviewed: 2026-06-05
 Repository: llzk-lean
 Companion phase file: ../../../veir/docs/phases/PHASE-01-pins-and-repro.md
@@ -50,8 +50,9 @@ dependency checkout must be clean.
   accepted commit.
 - `lake-manifest.json`: update consistently with `lakefile.toml`.
 - `.lake/packages/VeIR`: refresh to the accepted clean commit.
-- `scripts/harness/verify-pins.sh`: verify Lake file agreement, dependency HEAD,
-  dependency cleanliness, and optional workspace VeIR agreement.
+- `scripts/harness/verify-pins.sh`: verify Lake file URL/rev agreement,
+  manifest `url`/`type`/`rev`/`inputRev`, dependency HEAD, dependency
+  cleanliness, and optional workspace VeIR agreement.
 - `reviews/PHASE-01/{request.md,findings.md,disposition.md,evidence/}`:
   adversarial review workspace for the pin transition.
 
@@ -62,8 +63,11 @@ dependency checkout must be clean.
 - `scripts/harness/doctor.sh` passes in strict mode only after the dependency
   checkout is clean and at the accepted rev.
 - `git -C .lake/packages/VeIR status --short` is empty.
+- `lakefile.toml` uses the accepted VeIR remote URL and accepted commit.
+- `lake-manifest.json` uses the accepted VeIR remote URL, has `type: "git"`,
+  and records the accepted commit in both `rev` and `inputRev`.
 - `git -C .lake/packages/VeIR rev-parse HEAD` equals both the `lakefile.toml`
-  rev and the `lake-manifest.json` rev.
+  rev and the `lake-manifest.json` rev/inputRev.
 - If `../veir` is supplied, its HEAD equals the accepted rev or the mismatch is
   explicitly documented as a non-acceptance exploratory layout.
 - `lake build` succeeds against the clean dependency.
@@ -71,15 +75,17 @@ dependency checkout must be clean.
 ## Review Requirements
 
 - Capture exact command output under `reviews/PHASE-01/evidence/`.
-- Review must include the Lake file diff, dependency checkout HEAD, dependency
-  cleanliness, and the result of `lake build`.
+- Review must include the Lake file diff, Lake source URL/type/inputRev,
+  dependency checkout HEAD, dependency cleanliness, and the result of
+  `lake build`.
 - Review must explicitly reject any proof state that only exists in a dirty
   `.lake/packages/VeIR` checkout.
 - Disposition every finding before closing the phase.
 
 ## Done Criteria
 
-- `lakefile.toml` and `lake-manifest.json` pin the same accepted VeIR commit.
+- `lakefile.toml` and `lake-manifest.json` pin the same accepted VeIR remote and
+  commit, with manifest `type`, `rev`, and `inputRev` checked.
 - `.lake/packages/VeIR` is clean and at that commit.
 - `scripts/harness/verify-pins.sh` passes.
 - `scripts/harness/doctor.sh` passes in strict mode.

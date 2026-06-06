@@ -1,37 +1,46 @@
 # Source Ledger
 
-Last reviewed: 2026-06-05
+Last reviewed: 2026-06-06
 
 ## Trusted Local Sources
 
 | Source | Ref or retrieval | Use |
 |---|---:|---|
-| `docs/phases/PHASE-00-harness-reset.md` | local file, 2026-06-05 | Phase 0 objective, artifacts, gates, done criteria |
-| llzk-lean repository HEAD | `ea2363f87bcc` | Bootstrap llzk-lean source state |
-| Workspace VeIR repository HEAD | `4b0978bddec0` | Companion source state |
+| `docs/phases/PHASE-01-pins-and-repro.md` | local file, 2026-06-05 | Phase 1 objective, artifacts, gates, done criteria |
+| Accepted VeIR pin | `d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3` | Dependency commit consumed by llzk-lean |
+| Accepted VeIR branch | `felt-review-structural-close` | Remote branch containing the accepted commit |
+| Accepted VeIR remote | `https://github.com/project-llzk/veir.git` | Canonical source repository for the accepted pin |
 | `lakefile.toml` | local file, 2026-06-05 | Declared `VeIR` dependency pin |
 | `lake-manifest.json` | local file, 2026-06-05 | Resolved `VeIR` dependency pin |
-| `.lake/packages/VeIR` | `09d5f00f0d2b`, dirty | Actual dependency checkout state |
-| `differential/run-differential.sh` | local file, 2026-06-05 | Strategy A wrapper behavior |
-| `checker/CMakeLists.txt` | local file, 2026-06-05 | Strategy E CMake build/test surface |
-| `checker/src/CertChecker.cpp` | local file, 2026-06-05 | MLIR matcher status |
-| `checker/tests/test_loader.cpp` | local file, 2026-06-05 | Certificate loader and dispatch smoke tests |
-| `checker/bin/llzk_lean_check.cpp` | local file, 2026-06-05 | Certificate summary driver smoke test |
-| `certs/felt-combine.cert.json` | local file, 2026-06-05 | Certificate schema and theorem metadata smoke input |
+| `.lake/packages/VeIR` | clean checkout at accepted pin | Actual dependency state used by `lake build` |
+| `scripts/harness/verify-pins.sh` | local file, 2026-06-05 | Phase 1 pin agreement and cleanliness gate |
+| `scripts/harness/doctor.sh` | local file, 2026-06-05 | Strict harness wrapper around pin and layout gates |
+| `docs/phases/PHASE-02-llzk-source-truth.md` | local file, 2026-06-06 | Phase 2 source-truth objective, artifacts, gates, and done criteria |
+| `docs/harness/LLZK_SOURCE.md` | local file, 2026-06-06 | Accepted LLZK Felt source ledger |
+| Accepted LLZK source commit | `db922857bc5a88a9107627ef6b36a8b5e57bc5c2` | Exact `llzk-lib` source commit for Phase 2 Felt source facts |
+| Accepted LLZK source ref | `../llzk-lib origin/main` | Fetched source ref selected for Phase 2 |
+| Accepted LLZK field registry | `lib/Util/Field.cpp` at `db922857bc5a88a9107627ef6b36a8b5e57bc5c2` | Built-in field registry facts |
+| Accepted LLZK Felt ops | `include/llzk/Dialect/Felt/IR/Ops.td` at `db922857bc5a88a9107627ef6b36a8b5e57bc5c2` | Felt op mnemonic ledger |
+| `scripts/harness/verify-llzk-source.sh` | local file, 2026-06-06 | Phase 2 LLZK source-truth gate |
 
-Evidence for the bootstrap state is captured under
-`reviews/PHASE-00/evidence/`.
+Evidence for the dirty bootstrap state and the refreshed clean state is
+captured under `reviews/PHASE-01/evidence/`.
 
 ## External Sources
 
-No external web source is trusted as canonical for Phase 0. Future phases may
-add upstream LLZK, MLIR, Lean, or GitHub Actions references, but each must list
-an exact URL or commit and retrieval date here.
+The accepted remote branch was checked with `git ls-remote origin
+refs/heads/felt-review-structural-close` from the VeIR repository and recorded
+under `../veir/reviews/PHASE-01/evidence/accepted-remote-branch.txt`.
 
-## Stale Historical Material
+No web page, issue, or mutable branch name is trusted without the exact commit
+hash above. For LLZK source facts, `origin/main` is accepted only through the
+exact commit `db922857bc5a88a9107627ef6b36a8b5e57bc5c2`.
 
-These files are design context, not Phase 0 acceptance evidence unless a claim
-is revalidated against current refs:
+## Contextual Non-Canonical Material
+
+These files remain design and review context, not Phase 1 pin evidence unless a
+specific claim is revalidated against the accepted commit and recorded under
+Phase 1 evidence:
 
 - `README.md`
 - `docs/README.md`
@@ -39,9 +48,7 @@ is revalidated against current refs:
 - `docs/strategy-e-certificates.md`
 - `docs/future-*.md`
 - `docs/REVIEW.md`
-- `.github/workflows/differential.yml`
-- `.github/workflows/certify.yml`
-- Historical references to `llzkfelt_test1` and dates before 2026-06-05
-
-When using any of these, cite the exact local file and explain whether the claim
-was revalidated.
+- `.github/workflows/*.yml`
+- Historical references to `llzkfelt_test1` in archived evidence or old notes
+- Local `../llzk-lib` worktree files while the worktree remains at
+  `30b0fa1eb77de154ff60c13fa88ef286d8b01c65`

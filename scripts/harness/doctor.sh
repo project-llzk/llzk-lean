@@ -7,9 +7,6 @@ MODE="strict"
 WORKSPACE_VEIR=""
 
 EXPECTED_LLZK_LEAN_HEAD="ea2363f87bcc"
-EXPECTED_WORKSPACE_VEIR_HEAD="4b0978bddec0"
-EXPECTED_VEIR_DEP="09d5f00f0d2b4a8710afbe53dfdd7cf468578a04"
-EXPECTED_VEIR_DEP_SHORT="09d5f00f0d2b"
 
 FAIL=0
 WARN=0
@@ -18,9 +15,9 @@ usage() {
   cat <<'USAGE'
 usage: scripts/harness/doctor.sh [--mode strict|exploratory] [--workspace-veir PATH]
 
-Validates the Phase 0 llzk-lean harness. Strict mode fails on dirty or
-mismatched .lake/packages/VeIR state. Exploratory mode reports that state but
-allows the command to complete successfully.
+Validates the Phase 1 llzk-lean harness. Strict mode requires a clean
+.lake/packages/VeIR checkout at the accepted reproducible pin. Exploratory mode
+only downgrades an optional workspace VeIR mismatch.
 USAGE
 }
 
@@ -123,72 +120,62 @@ else
   warn "llzk-lean HEAD ${head_short:-<none>} differs from bootstrap input ${EXPECTED_LLZK_LEAN_HEAD}"
 fi
 
-if grep -q "$EXPECTED_VEIR_DEP" "${ROOT}/lakefile.toml" &&
-   grep -q "$EXPECTED_VEIR_DEP" "${ROOT}/lake-manifest.json"; then
-  ok "Lake files pin VeIR ${EXPECTED_VEIR_DEP_SHORT}"
-else
-  fail "Lake files do not both pin VeIR ${EXPECTED_VEIR_DEP}"
-fi
-
-dep="${ROOT}/.lake/packages/VeIR"
-if [[ -d "$dep/.git" ]]; then
-  dep_head="$(git -C "$dep" rev-parse --short=12 HEAD 2>/dev/null || true)"
-  if [[ "$dep_head" == "$EXPECTED_VEIR_DEP_SHORT" ]]; then
-    ok "dependency checkout is at ${EXPECTED_VEIR_DEP_SHORT}"
-  else
-    fail "dependency checkout ${dep_head:-<none>} does not match ${EXPECTED_VEIR_DEP_SHORT}"
-  fi
-
-  dep_status="$(git -C "$dep" status --short 2>/dev/null || true)"
-  if [[ -z "$dep_status" ]]; then
-    ok "dependency checkout is clean"
-  elif [[ "$MODE" == "exploratory" ]]; then
-    warn "dependency checkout is dirty in exploratory mode:"
-    printf '%s\n' "$dep_status" >&2
-  else
-    fail "dependency checkout is dirty:"
-    printf '%s\n' "$dep_status" >&2
-  fi
-else
-  fail "dependency checkout missing at ${dep}"
-fi
-
-if [[ -n "$WORKSPACE_VEIR" ]]; then
-  workspace="$(cd "$ROOT" && cd "$WORKSPACE_VEIR" 2>/dev/null && pwd || true)"
-  if [[ -z "$workspace" ]]; then
-    fail "workspace VeIR path is not readable: ${WORKSPACE_VEIR}"
-  else
-    workspace_head="$(git -C "$workspace" rev-parse --short=12 HEAD 2>/dev/null || true)"
-    if [[ "$workspace_head" == "$EXPECTED_WORKSPACE_VEIR_HEAD" ]]; then
-      ok "workspace VeIR HEAD matches bootstrap input ${EXPECTED_WORKSPACE_VEIR_HEAD}"
-    else
-      warn "workspace VeIR HEAD ${workspace_head:-<none>} differs from bootstrap input ${EXPECTED_WORKSPACE_VEIR_HEAD}"
-    fi
-  fi
-else
-  warn "workspace VeIR repo was not checked; pass --workspace-veir PATH"
-fi
-
 require_file AGENTS.md
 require_file docs/phases/PHASE-00-harness-reset.md
+require_file docs/phases/PHASE-01-pins-and-repro.md
+require_file docs/phases/PHASE-02-llzk-source-truth.md
 require_file docs/phases/PHASE_TEMPLATE.md
 require_file docs/harness/CURRENT.md
 require_file docs/harness/SOURCES.md
 require_file docs/harness/GATES.md
+require_file docs/harness/LLZK_SOURCE.md
+require_file docs/harness/PINS.md
 require_file docs/harness/REVIEWS.md
 require_file reviews/PHASE-00/request.md
 require_file reviews/PHASE-00/findings.md
 require_file reviews/PHASE-00/disposition.md
 require_file reviews/PHASE-00/adversarial-review.md
+require_file reviews/PHASE-01/request.md
+require_file reviews/PHASE-01/findings.md
+require_file reviews/PHASE-01/disposition.md
+require_file reviews/PHASE-01/adversarial-review.md
+require_file reviews/PHASE-02/request.md
+require_file reviews/PHASE-02/findings.md
+require_file reviews/PHASE-02/disposition.md
+require_file reviews/PHASE-02/adversarial-review.md
 require_executable scripts/harness/check-doc-freshness.sh
 require_executable scripts/harness/diff-smoke.sh
 require_executable scripts/harness/cert-smoke.sh
+require_executable scripts/harness/verify-pins.sh
+require_executable scripts/harness/verify-llzk-source.sh
 require_executable scripts/harness/validate-skills.sh
+
+pin_args=(--mode "$MODE")
+if [[ -n "$WORKSPACE_VEIR" ]]; then
+  pin_args+=(--workspace-veir "$WORKSPACE_VEIR")
+fi
+if "${ROOT}/scripts/harness/verify-pins.sh" "${pin_args[@]}"; then
+    ok "pin verification passed"
+else
+    fail "pin verification failed"
+fi
 
 if [[ -d "${ROOT}/reviews/PHASE-00/evidence" ]]; then
   ok "found reviews/PHASE-00/evidence"
 else
   fail "missing reviews/PHASE-00/evidence"
+fi
+
+if [[ -d "${ROOT}/reviews/PHASE-01/evidence" ]]; then
+  ok "found reviews/PHASE-01/evidence"
+else
+  fail "missing reviews/PHASE-01/evidence"
+fi
+
+if [[ -d "${ROOT}/reviews/PHASE-02/evidence" ]]; then
+  ok "found reviews/PHASE-02/evidence"
+else
+  fail "missing reviews/PHASE-02/evidence"
 fi
 
 echo

@@ -255,14 +255,13 @@ def Cert.mk' (patternId : String) (rootKind : String)
 -/
 def feltCombineCatalog : List Cert := [
   -- VEIR-side soundness claim with no current LLZK counterpart.
-  -- LLZK's `AddFeltOp::fold` (lib/Dialect/Felt/IR/Ops.cpp:141-149)
-  -- only folds when *both* operands are FeltConstAttrs with
-  -- matching, registered field names; LLZK registers no
-  -- canonicalization patterns for AddFeltOp. So this cert is a
-  -- VEIR-only soundness statement, not a contract on LLZK runtime
-  -- behavior. Strategy-E's checker should treat veir-only certs as
-  -- informational (label them in --verify-rewrites output, do not
-  -- assert LLZK ever exhibits the rewrite).
+  -- LLZK's `AddFeltOp::fold` only folds when *both* operands are
+  -- FeltConstAttrs with matching, registered field names; LLZK
+  -- registers no canonicalization patterns for AddFeltOp. So this
+  -- cert is a VEIR-only soundness statement, not a contract on LLZK
+  -- runtime behavior. Strategy-E's checker should treat veir-only
+  -- certs as informational (label them in --verify-rewrites output,
+  -- do not assert LLZK ever exhibits the rewrite).
   -- v0.2.0: `.const "felt.const" (some 0)` pins the literal value
   -- in the shape itself rather than via a separate constEquals
   -- condition. `commutative := true` flags felt.add as
@@ -276,26 +275,19 @@ def feltCombineCatalog : List Cert := [
     (conditions := [])
     (llzkParityStatus := .veirOnly)
     (description := "felt.add x (felt.const 0) → x. Sound over any ZMod p."),
-  -- LLZK does this fold (Ops.cpp:141-149) but with two caveats VEIR
-  -- doesn't share today:
+  -- LLZK does this fold but with two caveats VEIR doesn't fully
+  -- share today:
   --   (a) LLZK short-circuits unless both operands have a registered
-  --       field name (tryGetBinaryFoldData, Ops.cpp:57-79); VEIR's
-  --       fold has no field-name guard.
-  --   (b) LLZK applies modular reduction (field->reduce); VEIR's
-  --       implementation stores c1+c2 as an unreduced Int.
-  -- Both gaps are tracked in VEIR's FELT_PARITY_ASSESSMENT.
+  --       field name (`tryGetBinaryFoldData` in
+  --       lib/Dialect/Felt/IR/Ops.cpp); VEIR now guards equal field
+  --       types, but does not model LLZK's registry membership check.
+  --   (b) LLZK applies modular reduction (`Field::reduce` in
+  --       lib/Util/Field.cpp); VEIR's implementation stores c1+c2 as
+  --       an unreduced Int.
   -- v0.2.0 expresses LLZK's actual fold conditions structurally:
-  --   - both operands' fieldName attrs must match (sameAttr) —
-  --     this is `lhsFieldName == rhsFieldName` in
-  --     llzk-lib/lib/Dialect/Felt/IR/Ops.cpp:66
-  --   - the shared fieldName must resolve in LLZK's Field
-  --     registry (attrInRegistry) — i.e. Field::tryGetField at
-  --     Ops.cpp:70-73 succeeds
-  -- With these conditions in place, this cert correctly describes
-  -- LLZK's fold *when the inputs are named-field*. (For unnamed
-  -- !felt.type operands LLZK still short-circuits to a no-op;
-  -- VEIR's fold fires unconditionally — that gap remains and
-  -- requires the Field-registry parity work on the VEIR side.)
+  --   - both operands' fieldName attrs must match (sameAttr)
+  --   - the shared fieldName must resolve in LLZK's Field registry
+  --     (attrInRegistry)
   Cert.mk'
     (patternId := "constant_fold_add")
     (rootKind := "felt.add")
@@ -306,7 +298,7 @@ def feltCombineCatalog : List Cert := [
       .attrInRegistry "lhs" "fieldName" "field"
     ])
     (llzkParityStatus := .alignedWithCaveats)
-    (description := "felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2). Sound over any ZMod p. Caveat: LLZK applies modular reduction (field->reduce); VEIR's runtime fold stores c1+c2 unreduced. Otherwise aligned.")
+    (description := "felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2). Sound over any ZMod p. Caveat: LLZK applies modular reduction (Field::reduce); VEIR's runtime fold stores c1+c2 unreduced. Otherwise aligned.")
   -- TODO: derive the remaining 13 entries from
   --   Veir.Passes.Felt.Combine reflectively. Hand-listed here as
   --   stub-quality scaffolding — the real emitter walks the Lean

@@ -87,12 +87,20 @@ elab "#assertCatalogCoverage" : command => do
       --   - `Combine.impl` — the pass body (compound name; filtered
       --     by the `Name.str parent baseName` pattern only matching
       --     single-segment names below the namespace).
+      --   - `projectToOperand`, `replaceWithNewOp`, and
+      --     `replaceWithBinOpOfConst` — shared rewrite tails used by the
+      --     verified patterns, not standalone rewrite patterns.
       -- A rewrite pattern's base name doesn't start with `match` or
-      -- `Combine` and isn't an internal `_*` name.
+      -- `Combine`, isn't an internal `_*` name, and isn't one of those
+      -- shared helper tails.
       let isHelper := baseName.startsWith "match"
       let isPass   := baseName == "Combine"
       let isInternal := baseName.startsWith "_"
-      if parent == nsPrefix && !isHelper && !isPass && !isInternal then
+      let isRewriteTailHelper :=
+        baseName == "projectToOperand" ||
+        baseName == "replaceWithNewOp" ||
+        baseName == "replaceWithBinOpOfConst"
+      if parent == nsPrefix && !isHelper && !isPass && !isInternal && !isRewriteTailHelper then
         veirPatternIds := baseName :: veirPatternIds
     | _, _ => pure ()
   let catalogIds := feltCombineCatalog.map (·.patternId)
