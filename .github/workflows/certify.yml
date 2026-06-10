@@ -43,7 +43,7 @@ jobs:
 
       - name: lake update + build
         run: |
-          lake update
+          lake update --no-cache
           lake build
 
       - name: Regenerate certs and compare to committed snapshot

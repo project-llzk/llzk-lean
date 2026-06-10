@@ -53,13 +53,11 @@ jobs:
           key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
 
       - name: lake update + build
-        # `lake update` is a no-op against a SHA-pinned manifest, kept
-        # for the day we move to a branch pin. `lake build` builds the
-        # local LlzkLean lib + emit-certs exe; veir-opt builds lazily
-        # inside .lake/packages/VeIR/ on first `lake exec veir-opt`,
-        # which the differential script triggers.
+        # The manifest is SHA-pinned, but CI still needs Lake to hydrate
+        # dependencies. `--no-cache` avoids failing on the documented
+        # llzk-lean/mathlib toolchain split before the build starts.
         run: |
-          lake update
+          lake update --no-cache
           lake build
 
       - name: Run differential harness
