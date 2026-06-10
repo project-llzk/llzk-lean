@@ -56,6 +56,8 @@ jobs:
         # The manifest is SHA-pinned, but CI still needs Lake to hydrate
         # dependencies. `--no-cache` avoids failing on the documented
         # llzk-lean/mathlib toolchain split before the build starts.
+        env:
+          MATHLIB_NO_CACHE_ON_UPDATE: "1"
         run: |
           lake update --no-cache
           lake build

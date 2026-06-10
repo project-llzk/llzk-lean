@@ -42,6 +42,8 @@ jobs:
           key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
 
       - name: lake update + build
+        env:
+          MATHLIB_NO_CACHE_ON_UPDATE: "1"
         run: |
           lake update --no-cache
           lake build
