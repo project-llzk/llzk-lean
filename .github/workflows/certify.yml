@@ -32,7 +32,9 @@ jobs:
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Cache .lake
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        # GitHub rejects the old pinned cache SHA; use the maintained v4
+        # major until an audited v4 SHA is selected.
+        uses: actions/cache@v4
         with:
           path: |
             .lake
