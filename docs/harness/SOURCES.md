@@ -7,7 +7,7 @@ Last reviewed: 2026-06-10
 | Source | Ref or retrieval | Use |
 |---|---:|---|
 | `docs/phases/PHASE-01-pins-and-repro.md` | local file, 2026-06-05 | Phase 1 objective, artifacts, gates, done criteria |
-| Accepted VeIR pin | `8e9c08925fce1caf8d6eb1d69239aae263629802` | Dependency commit consumed by llzk-lean |
+| Accepted VeIR pin | `d899d95004d4bd988c8456d686c33b11a7a5eb4a` | Dependency commit consumed by llzk-lean |
 | Accepted VeIR branch | `felt-review-structural-close` | Remote branch containing the accepted commit |
 | Accepted VeIR remote | `https://github.com/project-llzk/veir.git` | Canonical source repository for the accepted pin |
 | `lakefile.toml` | local file, 2026-06-05 | Declared `VeIR` dependency pin |
@@ -32,7 +32,7 @@ Last reviewed: 2026-06-10
 | `docs/phases/PHASE-08-strategy-a-field-preconditions.md` | local file, 2026-06-10 | Active Phase 8 field-precondition objective, artifacts, gates, and done criteria |
 | `differential/run-differential.sh` | local file, 2026-06-09 | llzk-lean corpus wrapper around the consumed VeIR diff script |
 | `differential/corpus/` | local files, 2026-06-09 | Current Strategy A corpus and expected-divergence classification |
-| Consumed VeIR `scripts/llzk-diff.sh` | `.lake/packages/VeIR/scripts/llzk-diff.sh` at accepted pin | Default clean dependency driver with canonicalization support; Phase 6 canonical mode runs `felt-combine,dce`, and the accepted Phase 7 pin includes registered-field fold-result reduction |
+| Consumed VeIR `scripts/llzk-diff.sh` | `.lake/packages/VeIR/scripts/llzk-diff.sh` at accepted pin | Default clean dependency driver with canonicalization support; Phase 6 canonical mode runs `felt-combine,dce`, the accepted Phase 7 pin includes registered-field fold-result reduction, and the accepted Phase 8 pin skips folds whose field name does not resolve |
 | Workspace VeIR `scripts/llzk-diff.sh` | `../veir/scripts/llzk-diff.sh`, local file, 2026-06-09 | Phase 4 canonicalization-aware driver used explicitly through `VEIR_DIFF=../veir/scripts/llzk-diff.sh` |
 | Phase 4 canonical differential evidence | `reviews/PHASE-04/evidence/differential-canonicalize.txt` | Reviewed workspace Strategy A seed evidence; not clean-pin acceptance |
 | Phase 4 fresh adversarial review evidence | `reviews/PHASE-04/evidence/adversarial-review-fresh.txt` | Confirms Phase 4 wrapper findings were resolved before Phase 5 |
@@ -40,7 +40,7 @@ Last reviewed: 2026-06-10
 | Phase 5 exact-polarity guard evidence | `reviews/PHASE-05/evidence/polarity-guard.txt` | Proves a canonical `EXPECTED-DIVERGE` input fails on the wrong LLZK failure mode |
 | Phase 6 review workspace | `reviews/PHASE-06/` | Completed Phase 6 request, findings, disposition, adversarial review, implementation evidence, and burn-down disposition |
 | Phase 7 review workspace | `reviews/PHASE-07/` | Completed Phase 7 request, findings, disposition, adversarial review, implementation evidence, and modular-reduction target |
-| Phase 8 review workspace | `reviews/PHASE-08/` | Active Phase 8 request, findings, disposition, adversarial review, bootstrap evidence, and field-precondition target |
+| Phase 8 review workspace | `reviews/PHASE-08/` | Active Phase 8 request, findings, disposition, adversarial review, implementation evidence, and field-precondition target |
 | Accepted local `llzk-opt` binary | `/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt` | LLZK executable for Strategy A differential testing |
 | Local LLVM/MLIR checkout | `/home/alh/llvm-project` at `49f12af164138123589263fe75ea5f1d356e8780` | Source and build tree for local MLIR/LLVM testing support |
 | Local `mlir-opt` | `/home/alh/llvm-project/build/bin/mlir-opt`, version `23.0.0git` | Local MLIR tool available for Strategy A testing |

@@ -84,6 +84,7 @@ produced no parse/print or canonicalization evidence.
 | `felt/constant_fold_mul.llzk` | PASS | Registered-field multiplication folds to 42; Phase 6 `felt-combine,dce` aligns VeIR with LLZK's dead-input cleanup |
 | `felt/registered_add_wrap.llzk` | PASS | Registered-field add folds through babybear reduction; Phase 7 aligns VeIR with LLZK's reduced result |
 | `felt/constant_fold_neg.llzk` | PASS | Registered-field negation folds through babybear reduction; Phase 7 aligns VeIR with LLZK's reduced result |
+| `felt/unspecified_add_fold.llzk` | PASS | Bare `!felt.type` add remains unfired; Phase 8 aligns VeIR with LLZK's registered-field fold precondition |
 | `expected-divergence/named_field_const.mlir` | EXPECTED-LLZK-FAIL | Generic named-field FeltConstAttr still fails on LLZK's parser/verifier path |
 | `expected-divergence/canonical/add_neg_to_zero.llzk` | EXPECTED-DIVERGE | VeIR rewrites `x + (-x)` to zero; LLZK leaves the non-constant add/neg pair in place |
 | `expected-divergence/canonical/add_sub_const_cancel.llzk` | EXPECTED-DIVERGE | VeIR rewrites `(x + c) - c` to `x`; LLZK leaves the add/sub pair in place |
@@ -95,17 +96,16 @@ produced no parse/print or canonicalization evidence.
 | `expected-divergence/canonical/right_zero_mul.llzk` | EXPECTED-DIVERGE | VeIR rewrites `x * 0` to zero; LLZK leaves the non-constant multiplication in place |
 | `expected-divergence/canonical/self_subtraction_to_zero.llzk` | EXPECTED-DIVERGE | VeIR rewrites `x - x` to zero; LLZK leaves the non-constant subtraction in place |
 | `expected-divergence/canonical/sub_add_const_cancel.llzk` | EXPECTED-DIVERGE | VeIR rewrites `(x - c) + c` to `x`; LLZK leaves the sub/add pair in place |
-| `expected-divergence/canonical/unspecified_add_fold.llzk` | EXPECTED-DIVERGE | LLZK skips bare `!felt.type` binary folds; VEIR currently folds them |
 
-The current Phase 8 bootstrap clean-pin canonical corpus records 9 PASS cases,
-11 `EXPECTED-DIVERGE` canonical cases, and 1 `EXPECTED-LLZK-FAIL`
+The current Phase 8 implementation clean-pin canonical corpus records 10 PASS cases,
+10 `EXPECTED-DIVERGE` canonical cases, and 1 `EXPECTED-LLZK-FAIL`
 parser/verifier gap. The run reports:
 
 ```text
 Summary: 21 pass (incl. expected-diverge), 0 fail (over 21 inputs)
 ```
 
-## Phase 8 bootstrap rewrite-pattern coverage
+## Phase 8 implementation rewrite-pattern coverage
 
 This matrix tracks coverage against the 15 `Veir.FeltPass` rewrite-pattern
 definitions. It is not a Strategy A acceptance claim: `EXPECTED-DIVERGE` means
@@ -115,7 +115,7 @@ gate.
 | VeIR pattern | Corpus status | Corpus file |
 |---|---|---|
 | `right_identity_zero_add` | EXPECTED-DIVERGE | `expected-divergence/canonical/right_identity_zero_add.llzk` |
-| `constant_fold_add` | PASS | `felt/registered_add_fold.llzk`, `felt/registered_add_wrap.llzk` |
+| `constant_fold_add` | PASS | `felt/registered_add_fold.llzk`, `felt/registered_add_wrap.llzk`; no-fire precondition coverage in `felt/unspecified_add_fold.llzk` |
 | `self_subtraction_to_zero` | EXPECTED-DIVERGE | `expected-divergence/canonical/self_subtraction_to_zero.llzk` |
 | `assoc_const_fold_add` | EXPECTED-DIVERGE | `expected-divergence/canonical/assoc_const_fold_add.llzk` |
 | `right_identity_one_mul` | EXPECTED-DIVERGE | `expected-divergence/canonical/right_identity_one_mul.llzk` |

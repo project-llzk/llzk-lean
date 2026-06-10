@@ -4,7 +4,7 @@ set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 FAIL=0
-ACCEPTED_VEIR_COMMIT="8e9c08925fce1caf8d6eb1d69239aae263629802"
+ACCEPTED_VEIR_COMMIT="d899d95004d4bd988c8456d686c33b11a7a5eb4a"
 ACCEPTED_LLZK_REMOTE="git@github.com:project-llzk/llzk-lib.git"
 
 fail() {
@@ -412,6 +412,14 @@ done
 
 for evidence in \
   reviews/PHASE-08/evidence/README.md \
+  reviews/PHASE-08/evidence/check-doc-freshness.txt \
+  reviews/PHASE-08/evidence/verify-llzk-source.txt \
+  reviews/PHASE-08/evidence/verify-pins.txt \
+  reviews/PHASE-08/evidence/doctor-workspace.txt \
+  reviews/PHASE-08/evidence/validate-skills.txt \
+  reviews/PHASE-08/evidence/lake-build.txt \
+  reviews/PHASE-08/evidence/cert-smoke.txt \
+  reviews/PHASE-08/evidence/differential-clean-pin-canonicalize.txt \
   reviews/PHASE-08/evidence/adversarial-review.txt; do
   require_nonempty "$evidence"
 done
@@ -478,8 +486,20 @@ require_contains reviews/PHASE-07/evidence/adversarial-review.txt "PASS: certifi
 require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 7 is marked completed before Phase 8 starts." "Phase 8 adversarial evidence records Phase 7 closeout"
 require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: expected-divergence polarity remains exact and marker-driven." "Phase 8 adversarial evidence records exact polarity baseline"
 require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: only Phase 8 phase file remains marked active." "Phase 8 adversarial evidence records singular active phase"
+require_contains reviews/PHASE-08/evidence/verify-llzk-source.txt "LLZK source verification summary: 0 fail" "Phase 8 source evidence reports no failures"
+require_contains reviews/PHASE-08/evidence/verify-pins.txt "pin verification summary: 0 fail" "Phase 8 pin evidence reports no failures"
+require_contains reviews/PHASE-08/evidence/doctor-workspace.txt "doctor summary: 0 fail" "Phase 8 strict doctor evidence reports no failures"
+require_contains reviews/PHASE-08/evidence/validate-skills.txt "skill validation summary: 0 fail" "Phase 8 skill evidence reports no failures"
+require_contains reviews/PHASE-08/evidence/lake-build.txt "Build completed successfully" "Phase 8 lake build evidence reports success"
+require_contains reviews/PHASE-08/evidence/cert-smoke.txt "CERT-SMOKE: schema validation passed" "Phase 8 certificate smoke evidence reports success"
+require_contains reviews/PHASE-08/evidence/cert-smoke.txt "CERT-SMOKE: theorem metadata present for 2/2 certs" "Phase 8 certificate smoke evidence validates theorem metadata"
+require_contains reviews/PHASE-08/evidence/differential-clean-pin-canonicalize.txt "differential/corpus/felt/unspecified_add_fold.llzk" "Phase 8 differential evidence records reclassified target"
+require_contains reviews/PHASE-08/evidence/differential-clean-pin-canonicalize.txt "Summary: 21 pass (incl. expected-diverge), 0 fail" "Phase 8 clean-pin canonical baseline reports no failures"
 require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 8 target is limited to bare/unknown-field fold-precondition parity." "Phase 8 adversarial evidence records target scope"
-require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 8 targets unspecified_add_fold.llzk." "Phase 8 adversarial evidence records target case"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 8 consumes VeIR pin d899d95004d4bd988c8456d686c33b11a7a5eb4a." "Phase 8 adversarial evidence records consumed pin"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 8 reclassifies unspecified_add_fold.llzk as a positive no-fold case." "Phase 8 adversarial evidence records reclassified target case"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 8 clean-pin canonical baseline remains 21 pass (incl. expected-diverge), 0 fail." "Phase 8 adversarial evidence records clean-pin baseline"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: no Phase 8 findings remain open." "Phase 8 adversarial evidence reports no open findings"
 require_contains differential/README.md "clean-pin expanded corpus" "differential README records clean-pin expanded corpus status"
 require_contains differential/README.md "The directory is not a wildcard" "differential README documents exact expected-divergence markers"
 require_not_contains differential/README.md "still intentionally small" "differential README no longer calls the Phase 5 corpus intentionally small"
@@ -488,6 +508,8 @@ require_not_contains differential/README.md "Current seed bar" "differential REA
 require_contains differential/corpus/README.md 'EXPECTED-LLZK-FAIL' "corpus README documents expected LLZK failure polarity"
 require_contains differential/corpus/README.md 'EXPECTED-VEIR-FAIL' "corpus README documents expected VEIR failure polarity"
 require_contains differential/corpus/README.md 'with `EXPECTED-DIVERGE` marker' "corpus README documents exact output-divergence polarity"
+require_contains differential/corpus/README.md "10 PASS cases" "corpus README records Phase 8 PASS count"
+require_contains differential/corpus/README.md '10 `EXPECTED-DIVERGE` canonical cases' "corpus README records Phase 8 expected-divergence count"
 
 if grep -q "Phase 5 implementation gate" "${ROOT}/docs/phases/PHASE-05-strategy-a-pin-and-corpus.md" &&
    grep -q "Clean-pin expanded corpus evidence covers the 15 VeIR Felt rewrite-pattern" "${ROOT}/docs/phases/PHASE-05-strategy-a-pin-and-corpus.md"; then

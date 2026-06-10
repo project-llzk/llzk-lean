@@ -12,7 +12,7 @@ specific corpus and reporting.
 
 ## Status
 
-**Canonicalization-aware, clean-pin expanded corpus with Phase 8 bootstrap.**
+**Canonicalization-aware, clean-pin expanded corpus with Phase 8 burn-down.**
 `run-differential.sh` wraps VEIR's script, supports parse/print mode
 and canonicalization mode, and classifies output divergence, LLZK
 failure, VEIR failure, missing tools, and mode-skipped corpus entries
@@ -21,9 +21,10 @@ Felt rewrite-pattern definitions as PASS or EXPECTED-DIVERGE, with
 registered add/sub/mul constant folds reclassified to PASS after VeIR
 canonical mode started running `felt-combine,dce`. Phase 7 reclassifies
 the registered-field add-wrap and negation folds after VeIR began reducing
-registered fold results through the accepted field registry. Phase 8 starts
-from that baseline and targets the remaining bare/unknown-field fold
-precondition gap. This is not full Strategy A acceptance coverage.
+registered fold results through the accepted field registry. Phase 8
+reclassifies the bare `!felt.type` add-fold precondition case after VeIR began
+skipping folds whose field does not resolve through the accepted registry. This
+is not full Strategy A acceptance coverage.
 
 ## Running locally
 
@@ -75,7 +76,7 @@ non-zero if any input lands in the FAIL column.
 
 ## Corpus expansion targets
 
-Current Phase 8 bootstrap bar:
+Current Phase 8 implementation bar:
 - `corpus/felt/const_identities.mlir` — live const proof-of-life.
 - `corpus/felt/types_smoke.llzk` — custom-asm lowering smoke.
 - `corpus/felt/arithmetic_no_fold.llzk` — canonical no-fire arithmetic.
@@ -88,8 +89,8 @@ Current Phase 8 bootstrap bar:
 - `corpus/felt/registered_add_wrap.llzk` and
   `corpus/felt/constant_fold_neg.llzk` — Phase 7 positives closed by
   registered-field modular reduction in VeIR folds.
-- `corpus/expected-divergence/canonical/unspecified_add_fold.llzk` — Phase 8
-  target for unresolved bare/unknown-field fold preconditions.
+- `corpus/felt/unspecified_add_fold.llzk` — Phase 8 positive no-fold case for
+  bare/unknown-field fold preconditions.
 - The remaining `corpus/expected-divergence/canonical/*` files — classified
   clean-pin canonicalization gaps for VeIR-only algebraic rewrites.
 - `corpus/README.md` — the current 21-input inventory and 15-pattern

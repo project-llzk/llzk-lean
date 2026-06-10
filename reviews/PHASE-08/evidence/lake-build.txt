@@ -1,0 +1,37 @@
+⚠ [39/619] Replayed Veir.Verifier
+warning: Veir/Verifier.lean:2107:23: This simp argument is unused:
+  throw
+
+Hint: Omit it from the simp argument list.
+  simp only [Verified, verifyLocalInvariants, ← getOpType!_eq_getOpType, opType, ne_eq,
+  ̵  ̵ ̵ ̵bind,
+  ̲  ̲ ̲ ̲Except.bind, throw,̵ ̵t̵h̵r̵o̵w̵The, MonadExceptOf.throw, pure, Except.pure, dite_not,
+  ̵  ̵ ̵ ̵ite_not] at opVerify
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Veir/Verifier.lean:2107:30: This simp argument is unused:
+  throwThe
+
+Hint: Omit it from the simp argument list.
+  simp only [Verified, verifyLocalInvariants, ← getOpType!_eq_getOpType, opType, ne_eq,
+  ̵  ̵ ̵ ̵bind,
+  ̲  ̲ ̲ ̲Except.bind, throw, t̵h̵r̵o̵w̵T̵h̵e̵,̵ ̵MonadExceptOf.throw, pure, Except.pure, dite_not,
+  ̵  ̵ ̵ ̵ite_not] at opVerify
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Veir/Verifier.lean:2107:40: This simp argument is unused:
+  MonadExceptOf.throw
+
+Hint: Omit it from the simp argument list.
+  simp only [Verified, verifyLocalInvariants, ← getOpType!_eq_getOpType, opType, ne_eq,
+  ̵  ̵ ̵ ̵bind,
+  ̲  ̲ ̲ ̲Except.bind, throw, throwThe, M̵o̵n̵a̵d̵E̵x̵c̵e̵pt̵O̵f̵.̵t̵h̵r̵o̵w̵,̵ ̵p̵ure, Except.pure, dite_not,
+  ̵  ̵ ̵ ̵ite_not] at opVerify
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+✔ [1236/1240] Built Veir.Passes.Felt.RewriteLemmas (1.8s)
+✔ [1237/1240] Built Veir.Passes.Felt.Combine (1.2s)
+ℹ [1238/1240] Built LlzkLean.CertValidate (2.4s)
+info: LlzkLean/CertValidate.lean:147:0: [#assertCatalogCoverage] 15 VEIR rewrite-pattern defs found in Veir.FeltPass; catalog covers 2 of them; 13 uncovered (stub status; expected 13 today). Uncovered: [assoc_const_fold_add, right_zero_mul, constant_fold_mul, neg_neg_to_self, assoc_const_fold_mul, add_const_swap, right_identity_one_mul, constant_fold_sub, add_sub_const_cancel, self_subtraction_to_zero, add_neg_to_zero, constant_fold_neg, sub_add_const_cancel]
+✔ [1239/1240] Built LlzkLean (1.2s)
+Build completed successfully (1240 jobs).

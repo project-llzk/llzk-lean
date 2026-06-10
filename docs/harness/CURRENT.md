@@ -12,7 +12,7 @@ Last reviewed: 2026-06-10
 ## Accepted VeIR Pin
 
 - Accepted VeIR commit:
-  `8e9c08925fce1caf8d6eb1d69239aae263629802`.
+  `d899d95004d4bd988c8456d686c33b11a7a5eb4a`.
 - Accepted source branch: `felt-review-structural-close`.
 - Accepted source remote: `https://github.com/project-llzk/veir.git`.
 - Pin mode: remote commit, consumed through Lake metadata and a clean
@@ -78,8 +78,11 @@ the clean dependency checkout remains the source of truth.
   DCE-only registered add/sub/mul fold cases after the clean VeIR driver began
   running `felt-combine,dce`. Phase 7 reclassified the registered-field
   modular-reduction add-wrap and negation cases after VeIR began reducing fold
-  results through the accepted registry. The corpus covers all 15 current VeIR
-  Felt rewrite-pattern definitions as PASS or EXPECTED-DIVERGE, plus one
+  results through the accepted registry. Phase 8 reclassified the bare
+  `!felt.type` add-fold precondition case after VeIR began skipping folds whose
+  field name does not resolve through the accepted registry. The corpus covers
+  all 15 current VeIR Felt rewrite-pattern definitions as PASS or
+  EXPECTED-DIVERGE, plus one
   EXPECTED-LLZK-FAIL parser/verifier gap, but this is not full Strategy A
   acceptance.
 - The local `../llzk-lib` worktree is behind fetched `origin/main`. Current
@@ -92,13 +95,12 @@ the clean dependency checkout remains the source of truth.
   file-header markers. Phase 6's first burn-down target aligned VeIR's
   canonical diff path with LLZK's dead-input cleanup by consuming the
   DCE-enabled VeIR pin. Phase 7 targeted registered-field modular reduction for
-  `registered_add_wrap.llzk` and `constant_fold_neg.llzk`. Phase 8 starts from
-  that baseline and targets field-precondition parity for
-  `unspecified_add_fold.llzk`.
+  `registered_add_wrap.llzk` and `constant_fold_neg.llzk`. Phase 8 consumed the
+  VeIR field-precondition pin and reclassified `unspecified_add_fold.llzk`.
 
 ## Acceptance Rule
 
-Phase 8 bootstrap is current only when:
+Phase 8 implementation state is current only when:
 
 - `docs/harness/FELT_OP_GAPS.md` records every accepted LLZK Felt mnemonic and
   explicitly marks unsupported Strategy A/E coverage as gaps.
@@ -116,9 +118,8 @@ Phase 8 bootstrap is current only when:
 - `scripts/harness/check-doc-freshness.sh` passes.
 - `scripts/harness/validate-skills.sh` passes.
 
-Phase 8 implementation evidence additionally requires reducing or reclassifying
-the bare/unknown-field fold-precondition divergence without weakening the
-clean-pin canonical baseline. The current clean-pin canonical run remains
-`21 pass (incl. expected-diverge), 0 fail` and records 9 PASS cases, 11
-`EXPECTED-DIVERGE` canonical cases, and 1 `EXPECTED-LLZK-FAIL`
-parser/verifier gap.
+Phase 8 implementation evidence requires the bare/unknown-field
+fold-precondition divergence to be reclassified without weakening the clean-pin
+canonical baseline. The current clean-pin canonical run remains `21 pass (incl.
+expected-diverge), 0 fail` and records 10 PASS cases, 10 `EXPECTED-DIVERGE`
+canonical cases, and 1 `EXPECTED-LLZK-FAIL` parser/verifier gap.

@@ -52,9 +52,9 @@ claims to `llzk-lib` commit
 
 4. **Registered-field folds now apply modular reduction.** Phase 7
    aligns VeIR's registered-field add-wrap and negation folds with LLZK's
-   `Field::reduce` behavior. Phase 8 starts the follow-on
-   bare/unknown-field fold-precondition burn-down, with
-   `unspecified_add_fold.llzk` as the first target.
+   `Field::reduce` behavior. Phase 8 aligns VeIR with LLZK's
+   bare/unknown-field fold precondition for
+   `unspecified_add_fold.llzk`.
 
 The Phase 4 ordering is now:
    - Re-test the named-field corpus and keep the generic parser edge
@@ -122,7 +122,7 @@ Current state (2026-06-09):
   pin runs VeIR `felt-combine,dce`, which reclassifies registered add/sub/mul
   constant folds from expected divergence to positive coverage. Phase 7 now
   reclassifies registered-field modular reduction for add-wrap and negation.
-  Phase 8 targets the remaining bare/unknown-field fold-precondition gap.
+  Phase 8 reclassifies the bare/unknown-field fold-precondition gap.
 - 🚧 CI workflow stubbed in `.github/workflows/differential.yml`.
   Skips green if `llzk-opt` not provisioned — CI provisioning is
   v1 work.
@@ -132,9 +132,9 @@ Outstanding work to reach v1:
 1. **Continue burning down classified divergences.** The consumed clean pin now
    invokes both tools with their canonicalize pipelines
    (`llzk-opt --canonicalize` and `veir-opt -p=felt-combine,dce`). The next
-   VeIR-side targets are the remaining classified algebraic and field
-   precondition divergences, starting with the Phase 8
-   `unspecified_add_fold.llzk` target.
+   VeIR-side targets are the remaining classified algebraic divergences after
+   the Phase 8 `unspecified_add_fold.llzk` field-precondition target moved to
+   positive no-fold coverage.
 
 2. **Corpus expansion.** Hand-author a Felt corpus that exercises every
    pattern in VEIR's `Combine.lean` against an equivalent LLZK input.
@@ -163,9 +163,10 @@ Outstanding work to reach v1:
    [`differential/corpus/README.md`](../differential/corpus/README.md)
    for the polarity convention.
 
-6. **Field-registry parity.** VEIR now reduces registered-field fold results,
-   but it still folds bare or unknown-field constants in cases LLZK can leave
-   unresolved. Phase 8 tracks this as the active field-precondition workstream.
+6. **Field-registry parity.** VEIR now reduces registered-field fold results
+   and skips bare or unknown-field constant folds in cases LLZK leaves
+   unresolved. Remaining Strategy A work is the classified nonconstant
+   algebraic rewrite matrix.
 
 ## Effort
 
