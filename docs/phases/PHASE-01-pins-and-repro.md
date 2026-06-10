@@ -1,6 +1,6 @@
 # Phase 1: Reproducible Pins
 
-Status: active
+Status: completed; superseded by Phase 2
 Last reviewed: 2026-06-05
 Repository: llzk-lean
 Companion phase file: ../../../veir/docs/phases/PHASE-01-pins-and-repro.md

@@ -155,10 +155,11 @@ Two framing caveats worth stating to non-Lean readers:
 
 **Medium:** M1 no CI axiom-gate (the `warn.sorry false` admits are gone as of
 F1, but a CI `#print axioms` gate to *prevent regressions* is still absent); M2
-`#assertCatalogCoverage` uses fragile base-name heuristics; M3 three namespaces
-for one unit (`Veir.FeltPass` / `Veir.Data.Felt` / path `Passes/Felt`); M4
-`constant_fold_add` "aligned-with-caveats" understates that VEIR folds
-unconditionally while LLZK requires a registered field name.
+`#assertCatalogCoverage` remains a shape heuristic rather than reflective
+metadata; M3 three namespaces for one unit (`Veir.FeltPass` /
+`Veir.Data.Felt` / path `Passes/Felt`); M4 `constant_fold_add` is now marked
+`aligned` under registered-field side conditions, but the cert is still
+hand-authored rather than derived from the VEIR pattern body.
 
 **Low:** L1 `JsonParser` `LLONG_MAX_REL_LIMIT` misnamed + most-negative-int64
 edge; L2 README "26 tests / 15 verified" reads as more coverage than the stubs

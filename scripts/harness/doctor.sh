@@ -131,6 +131,8 @@ require_file docs/phases/PHASE-03-felt-op-gap-ledger.md
 require_file docs/phases/PHASE-04-strategy-a-differential.md
 require_file docs/phases/PHASE-05-strategy-a-pin-and-corpus.md
 require_file docs/phases/PHASE-06-strategy-a-divergence-burndown.md
+require_file docs/phases/PHASE-07-strategy-a-modular-reduction.md
+require_file docs/phases/PHASE-08-strategy-a-field-preconditions.md
 require_file docs/phases/PHASE_TEMPLATE.md
 require_file docs/harness/CURRENT.md
 require_file docs/harness/SOURCES.md
@@ -167,6 +169,14 @@ require_file reviews/PHASE-06/request.md
 require_file reviews/PHASE-06/findings.md
 require_file reviews/PHASE-06/disposition.md
 require_file reviews/PHASE-06/adversarial-review.md
+require_file reviews/PHASE-07/request.md
+require_file reviews/PHASE-07/findings.md
+require_file reviews/PHASE-07/disposition.md
+require_file reviews/PHASE-07/adversarial-review.md
+require_file reviews/PHASE-08/request.md
+require_file reviews/PHASE-08/findings.md
+require_file reviews/PHASE-08/disposition.md
+require_file reviews/PHASE-08/adversarial-review.md
 require_executable scripts/harness/check-doc-freshness.sh
 require_executable scripts/harness/diff-smoke.sh
 require_executable scripts/harness/cert-smoke.sh
@@ -224,6 +234,18 @@ if [[ -d "${ROOT}/reviews/PHASE-06/evidence" ]]; then
   ok "found reviews/PHASE-06/evidence"
 else
   fail "missing reviews/PHASE-06/evidence"
+fi
+
+if [[ -d "${ROOT}/reviews/PHASE-07/evidence" ]]; then
+  ok "found reviews/PHASE-07/evidence"
+else
+  fail "missing reviews/PHASE-07/evidence"
+fi
+
+if [[ -d "${ROOT}/reviews/PHASE-08/evidence" ]]; then
+  ok "found reviews/PHASE-08/evidence"
+else
+  fail "missing reviews/PHASE-08/evidence"
 fi
 
 echo

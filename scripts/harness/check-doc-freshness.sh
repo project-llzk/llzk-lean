@@ -4,7 +4,7 @@ set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 FAIL=0
-ACCEPTED_VEIR_COMMIT="a0bb2fc8e6d38ab068247dfc6506ba63f5feb953"
+ACCEPTED_VEIR_COMMIT="8e9c08925fce1caf8d6eb1d69239aae263629802"
 ACCEPTED_LLZK_REMOTE="git@github.com:project-llzk/llzk-lib.git"
 
 fail() {
@@ -87,6 +87,8 @@ require_file docs/phases/PHASE-03-felt-op-gap-ledger.md
 require_file docs/phases/PHASE-04-strategy-a-differential.md
 require_file docs/phases/PHASE-05-strategy-a-pin-and-corpus.md
 require_file docs/phases/PHASE-06-strategy-a-divergence-burndown.md
+require_file docs/phases/PHASE-07-strategy-a-modular-reduction.md
+require_file docs/phases/PHASE-08-strategy-a-field-preconditions.md
 require_file docs/phases/PHASE_TEMPLATE.md
 require_file docs/harness/CURRENT.md
 require_file docs/harness/SOURCES.md
@@ -123,8 +125,18 @@ require_file reviews/PHASE-06/findings.md
 require_file reviews/PHASE-06/request.md
 require_file reviews/PHASE-06/adversarial-review.md
 require_file reviews/PHASE-06/evidence/README.md
+require_file reviews/PHASE-07/disposition.md
+require_file reviews/PHASE-07/findings.md
+require_file reviews/PHASE-07/request.md
+require_file reviews/PHASE-07/adversarial-review.md
+require_file reviews/PHASE-07/evidence/README.md
+require_file reviews/PHASE-08/disposition.md
+require_file reviews/PHASE-08/findings.md
+require_file reviews/PHASE-08/request.md
+require_file reviews/PHASE-08/adversarial-review.md
+require_file reviews/PHASE-08/evidence/README.md
 
-phase_date="$(sed -n 's/^Last reviewed: //p' "${ROOT}/docs/phases/PHASE-06-strategy-a-divergence-burndown.md" | head -1)"
+phase_date="$(sed -n 's/^Last reviewed: //p' "${ROOT}/docs/phases/PHASE-08-strategy-a-field-preconditions.md" | head -1)"
 if [[ "$phase_date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
   ok "phase review date has ISO format"
 else
@@ -140,13 +152,26 @@ for doc in docs/harness/CURRENT.md docs/harness/SOURCES.md docs/harness/GATES.md
   fi
 done
 
-if grep -q "Active phase: Phase 6" "${ROOT}/docs/harness/CURRENT.md"; then
+if grep -q "Active phase: Phase 8" "${ROOT}/docs/harness/CURRENT.md"; then
   ok "CURRENT names active phase"
 else
-  fail "CURRENT does not name Phase 6 as active"
+  fail "CURRENT does not name Phase 8 as active"
 fi
 
+active_phase_files="$(grep -Rl '^Status: active$' "${ROOT}/docs/phases"/PHASE-*.md 2>/dev/null | sed "s#${ROOT}/##" | sort)"
+if [[ "$active_phase_files" == "docs/phases/PHASE-08-strategy-a-field-preconditions.md" ]]; then
+  ok "only Phase 8 phase file is marked active"
+else
+  fail "unexpected active phase files: ${active_phase_files:-<none>}"
+fi
+
+require_contains docs/phases/PHASE-01-pins-and-repro.md "Status: completed; superseded by Phase 2" "Phase 1 phase file is marked completed"
+require_contains docs/phases/PHASE-02-llzk-source-truth.md "Status: completed; superseded by Phase 3" "Phase 2 phase file is marked completed"
+require_contains docs/phases/PHASE-03-felt-op-gap-ledger.md "Status: completed; superseded by Phase 4" "Phase 3 phase file is marked completed"
+require_contains docs/phases/PHASE-04-strategy-a-differential.md "Status: completed; superseded by Phase 5" "Phase 4 phase file is marked completed"
 require_contains docs/phases/PHASE-05-strategy-a-pin-and-corpus.md "Status: completed; superseded by Phase 6" "Phase 5 phase file is marked completed"
+require_contains docs/phases/PHASE-06-strategy-a-divergence-burndown.md "Status: completed; superseded by Phase 7" "Phase 6 phase file is marked completed"
+require_contains docs/phases/PHASE-07-strategy-a-modular-reduction.md "Status: completed; superseded by Phase 8" "Phase 7 phase file is marked completed"
 
 require_not_contains docs/harness/CURRENT.md "corpus expansion beyond the seed set remains the next" "CURRENT no longer says corpus expansion is future work"
 require_not_contains docs/harness/CURRENT.md "starts moving the corpus evidence" "CURRENT no longer says clean-pin corpus migration is only starting"
@@ -186,6 +211,18 @@ if grep -q "docs/phases/PHASE-06-strategy-a-divergence-burndown.md" "${ROOT}/doc
   ok "SOURCES records Phase 6 phase file"
 else
   fail "SOURCES does not record docs/phases/PHASE-06-strategy-a-divergence-burndown.md"
+fi
+
+if grep -q "docs/phases/PHASE-07-strategy-a-modular-reduction.md" "${ROOT}/docs/harness/SOURCES.md"; then
+  ok "SOURCES records Phase 7 phase file"
+else
+  fail "SOURCES does not record docs/phases/PHASE-07-strategy-a-modular-reduction.md"
+fi
+
+if grep -q "docs/phases/PHASE-08-strategy-a-field-preconditions.md" "${ROOT}/docs/harness/SOURCES.md"; then
+  ok "SOURCES records Phase 8 phase file"
+else
+  fail "SOURCES does not record docs/phases/PHASE-08-strategy-a-field-preconditions.md"
 fi
 
 if grep -q "reviews/PHASE-04/evidence/differential-canonicalize.txt" "${ROOT}/docs/harness/SOURCES.md" &&
@@ -280,6 +317,18 @@ else
   fail "Phase 6 disposition is not populated"
 fi
 
+if grep -q "# Phase 7 Disposition" "${ROOT}/reviews/PHASE-07/disposition.md"; then
+  ok "Phase 7 disposition exists"
+else
+  fail "Phase 7 disposition is not populated"
+fi
+
+if grep -q "# Phase 8 Disposition" "${ROOT}/reviews/PHASE-08/disposition.md"; then
+  ok "Phase 8 disposition exists"
+else
+  fail "Phase 8 disposition is not populated"
+fi
+
 for evidence in \
   reviews/PHASE-02/evidence/llzk-lib-refs.txt \
   reviews/PHASE-02/evidence/llzk-field-registry.txt \
@@ -347,6 +396,26 @@ for evidence in \
   require_nonempty "$evidence"
 done
 
+for evidence in \
+  reviews/PHASE-07/evidence/README.md \
+  reviews/PHASE-07/evidence/check-doc-freshness.txt \
+  reviews/PHASE-07/evidence/verify-llzk-source.txt \
+  reviews/PHASE-07/evidence/verify-pins.txt \
+  reviews/PHASE-07/evidence/doctor-workspace.txt \
+  reviews/PHASE-07/evidence/validate-skills.txt \
+  reviews/PHASE-07/evidence/lake-build.txt \
+  reviews/PHASE-07/evidence/cert-smoke.txt \
+  reviews/PHASE-07/evidence/differential-clean-pin-canonicalize.txt \
+  reviews/PHASE-07/evidence/adversarial-review.txt; do
+  require_nonempty "$evidence"
+done
+
+for evidence in \
+  reviews/PHASE-08/evidence/README.md \
+  reviews/PHASE-08/evidence/adversarial-review.txt; do
+  require_nonempty "$evidence"
+done
+
 require_contains reviews/PHASE-03/evidence/verify-llzk-source.txt "LLZK source verification summary: 0 fail" "verify-llzk-source evidence reports no failures"
 require_contains reviews/PHASE-03/evidence/verify-pins.txt "pin verification summary: 0 fail" "pin evidence reports no failures"
 require_contains reviews/PHASE-03/evidence/doctor-workspace.txt "doctor summary: 0 fail" "strict doctor evidence reports no failures"
@@ -392,6 +461,25 @@ require_contains reviews/PHASE-06/evidence/lake-build.txt "Build completed succe
 require_contains reviews/PHASE-06/evidence/differential-clean-pin-canonicalize.txt "Summary: 21 pass (incl. expected-diverge), 0 fail" "Phase 6 clean-pin canonical baseline reports no failures"
 require_contains reviews/PHASE-06/evidence/adversarial-review.txt "PASS: Phase 5 is marked completed before Phase 6 starts." "Phase 6 adversarial evidence records Phase 5 closeout"
 require_contains reviews/PHASE-06/evidence/adversarial-review.txt "PASS: expected-divergence polarity remains exact and marker-driven." "Phase 6 adversarial evidence records exact polarity baseline"
+require_contains reviews/PHASE-07/evidence/verify-llzk-source.txt "LLZK source verification summary: 0 fail" "Phase 7 source evidence reports no failures"
+require_contains reviews/PHASE-07/evidence/verify-pins.txt "pin verification summary: 0 fail" "Phase 7 pin evidence reports no failures"
+require_contains reviews/PHASE-07/evidence/doctor-workspace.txt "doctor summary: 0 fail" "Phase 7 strict doctor evidence reports no failures"
+require_contains reviews/PHASE-07/evidence/validate-skills.txt "skill validation summary: 0 fail" "Phase 7 skill evidence reports no failures"
+require_contains reviews/PHASE-07/evidence/lake-build.txt "Build completed successfully" "Phase 7 lake build evidence reports success"
+require_contains reviews/PHASE-07/evidence/cert-smoke.txt "CERT-SMOKE: schema validation passed" "Phase 7 certificate smoke evidence reports success"
+require_contains reviews/PHASE-07/evidence/cert-smoke.txt "CERT-SMOKE: theorem metadata present for 2/2 certs" "Phase 7 certificate smoke evidence validates theorem metadata"
+require_contains reviews/PHASE-07/evidence/differential-clean-pin-canonicalize.txt "Summary: 21 pass (incl. expected-diverge), 0 fail" "Phase 7 clean-pin canonical baseline reports no failures"
+require_contains reviews/PHASE-07/evidence/adversarial-review.txt "PASS: Phase 6 is marked completed before Phase 7 starts." "Phase 7 adversarial evidence records Phase 6 closeout"
+require_contains reviews/PHASE-07/evidence/adversarial-review.txt "PASS: expected-divergence polarity remains exact and marker-driven." "Phase 7 adversarial evidence records exact polarity baseline"
+require_contains reviews/PHASE-07/evidence/adversarial-review.txt "PASS: only Phase 7 phase file remains marked active." "Phase 7 adversarial evidence records singular active phase"
+require_contains reviews/PHASE-07/evidence/adversarial-review.txt "PASS: Phase 7 target is limited to registered-field modular reduction." "Phase 7 adversarial evidence records target scope"
+require_contains reviews/PHASE-07/evidence/adversarial-review.txt "PASS: Phase 7 targets registered_add_wrap.llzk and constant_fold_neg.llzk." "Phase 7 adversarial evidence records target cases"
+require_contains reviews/PHASE-07/evidence/adversarial-review.txt "PASS: certificate smoke passes after the constant_fold_add parity update." "Phase 7 adversarial evidence records certificate-smoke closeout"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 7 is marked completed before Phase 8 starts." "Phase 8 adversarial evidence records Phase 7 closeout"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: expected-divergence polarity remains exact and marker-driven." "Phase 8 adversarial evidence records exact polarity baseline"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: only Phase 8 phase file remains marked active." "Phase 8 adversarial evidence records singular active phase"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 8 target is limited to bare/unknown-field fold-precondition parity." "Phase 8 adversarial evidence records target scope"
+require_contains reviews/PHASE-08/evidence/adversarial-review.txt "PASS: Phase 8 targets unspecified_add_fold.llzk." "Phase 8 adversarial evidence records target case"
 require_contains differential/README.md "clean-pin expanded corpus" "differential README records clean-pin expanded corpus status"
 require_contains differential/README.md "The directory is not a wildcard" "differential README documents exact expected-divergence markers"
 require_not_contains differential/README.md "still intentionally small" "differential README no longer calls the Phase 5 corpus intentionally small"
@@ -413,6 +501,25 @@ if grep -q "Phase 6: Strategy A Divergence Burn-Down" "${ROOT}/docs/phases/PHASE
   ok "Phase 6 docs record divergence burn-down baseline"
 else
   fail "Phase 6 docs do not record divergence burn-down baseline"
+fi
+
+if grep -q "Phase 7: Strategy A Modular Reduction" "${ROOT}/docs/phases/PHASE-07-strategy-a-modular-reduction.md" &&
+   grep -q "registered-field modular reduction" "${ROOT}/docs/phases/PHASE-07-strategy-a-modular-reduction.md" &&
+   grep -q "registered_add_wrap.llzk" "${ROOT}/docs/phases/PHASE-07-strategy-a-modular-reduction.md" &&
+   grep -q "constant_fold_neg.llzk" "${ROOT}/docs/phases/PHASE-07-strategy-a-modular-reduction.md" &&
+   grep -q "21 pass (incl. expected-diverge), 0 fail" "${ROOT}/docs/phases/PHASE-07-strategy-a-modular-reduction.md"; then
+  ok "Phase 7 docs record modular-reduction target and baseline"
+else
+  fail "Phase 7 docs do not record modular-reduction target and baseline"
+fi
+
+if grep -q "Phase 8: Strategy A Field Preconditions" "${ROOT}/docs/phases/PHASE-08-strategy-a-field-preconditions.md" &&
+   grep -q "field-precondition" "${ROOT}/docs/phases/PHASE-08-strategy-a-field-preconditions.md" &&
+   grep -q "unspecified_add_fold.llzk" "${ROOT}/docs/phases/PHASE-08-strategy-a-field-preconditions.md" &&
+   grep -q "21 pass (incl. expected-diverge), 0 fail" "${ROOT}/docs/phases/PHASE-08-strategy-a-field-preconditions.md"; then
+  ok "Phase 8 docs record field-precondition target and baseline"
+else
+  fail "Phase 8 docs do not record field-precondition target and baseline"
 fi
 
 if grep -Fq -- "$ACCEPTED_LLZK_REMOTE" "${ROOT}/reviews/PHASE-02/evidence/llzk-lib-refs.txt"; then

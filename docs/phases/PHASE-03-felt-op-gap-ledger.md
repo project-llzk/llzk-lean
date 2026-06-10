@@ -1,6 +1,6 @@
 # Phase 3: Felt Operation Semantics Gap Ledger
 
-Status: active
+Status: completed; superseded by Phase 4
 Last reviewed: 2026-06-06
 Repository: llzk-lean
 Companion phase file: ../../../veir/docs/phases/PHASE-03-felt-op-gap-ledger.md
@@ -62,7 +62,8 @@ fresh without expanding the certificate catalog or differential corpus yet.
 
 ## Gates To Implement
 
-- `scripts/harness/check-doc-freshness.sh` fails if Phase 3 is not active, if
+- `scripts/harness/check-doc-freshness.sh` fails if Phase 3 docs or review
+  workspace files are missing, if
   `docs/harness/FELT_OP_GAPS.md` is missing, or if the ledger omits any accepted
   LLZK Felt mnemonic.
 - `scripts/harness/verify-llzk-source.sh --llzk-lib ../llzk-lib` continues to

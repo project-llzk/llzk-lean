@@ -1,0 +1,10 @@
+// Phase 7: registered-field arithmetic folds through the accepted field
+// registry. For babybear, (p - 1) + 2 reduces to 1; both LLZK
+// canonicalization and VeIR `felt-combine,dce` emit the reduced constant.
+
+function.def @fold_add_wrap() -> !felt.type<"babybear"> {
+  %a = felt.const 2013265920 : !felt.type<"babybear">
+  %b = felt.const 2 : !felt.type<"babybear">
+  %c = felt.add %a, %b : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}

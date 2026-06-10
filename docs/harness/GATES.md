@@ -6,8 +6,8 @@ Last reviewed: 2026-06-10
 
 | Gate | Command | Expected behavior | What it proves |
 |---|---|---|---|
-| Strategy A Phase 6 bootstrap | `scripts/harness/check-doc-freshness.sh` | Passes only when Phase 6 is active, the Phase 6 review workspace exists, Phase 5 is marked completed, exact-polarity guard evidence remains present, and the source ledger records the Phase 6 phase file plus local test infrastructure | Phase 6 starts from the clean-pin exact-polarity corpus without claiming full Strategy A acceptance |
-| Felt operation gap ledger | `scripts/harness/check-doc-freshness.sh` | Passes only when the Phase 3 review workspace exists, `docs/harness/FELT_OP_GAPS.md` is present, exactly 18 accepted LLZK Felt mnemonic rows appear, and every unsupported or incomplete Strategy A/E row is still marked as a gap | Phase 5 continues from the complete documented operation-gap map instead of implicit Strategy A/E coverage claims |
+| Strategy A Phase 8 bootstrap | `scripts/harness/check-doc-freshness.sh` | Passes only when Phase 8 is active, the Phase 8 review workspace exists, Phase 7 is marked completed, exact-polarity guard evidence remains present, and the source ledger records the Phase 8 phase file plus local test infrastructure | Phase 8 starts from the Phase 7 clean-pin exact-polarity corpus without claiming full Strategy A acceptance |
+| Felt operation gap ledger | `scripts/harness/check-doc-freshness.sh` | Passes only when the Phase 3 review workspace exists, `docs/harness/FELT_OP_GAPS.md` is present, exactly 18 accepted LLZK Felt mnemonic rows appear, and every unsupported or incomplete Strategy A/E row is still marked as a gap | Phase 8 continues from the complete documented operation-gap map instead of implicit Strategy A/E coverage claims |
 | LLZK source truth | `scripts/harness/verify-llzk-source.sh --llzk-lib ../llzk-lib` | Passes only when the accepted LLZK source remote, commit, and `origin/main` match, the source ledger records every gated source file, the accepted Felt op set and representative syntax/fold facts match the ledger, the pinned VeIR dependency's `feltPrime` matches the accepted field registry, and checker/certificate artifacts enumerate the accepted built-ins | Phase 2 source facts are exact-ref and exact-remote based, the consumed VeIR pin mirrors the LLZK registry, and certificate/checker comments match the LLZK source registry |
 | Pin verification | `scripts/harness/verify-pins.sh --workspace-veir ../veir` | Passes only when Lake file URLs/revs, manifest `type`/`inputRev`, and dependency HEAD agree on the accepted commit, the dependency is clean, and workspace VeIR is either the accepted commit or a descendant used only for metadata context | llzk-lean is not relying on hidden `.lake/packages/VeIR` edits or a spoofed source |
 | Strict doctor | `scripts/harness/doctor.sh --workspace-veir ../veir` | Passes after the pin gate and layout checks pass | Current strict harness state is complete |
@@ -15,11 +15,13 @@ Last reviewed: 2026-06-10
 | Lake build | `lake build` | Builds against the clean accepted VeIR dependency | The selected pin is buildable by llzk-lean |
 | Doc freshness | `scripts/harness/check-doc-freshness.sh` | Passes when current phase docs, Phase 3 review workspace, required Phase 3 evidence outputs, Phase 2 source evidence, dated harness docs, and expected success markers in the evidence are present | Canonical phase metadata, review state, and closeout evidence are current |
 | Differential smoke | `scripts/harness/diff-smoke.sh` | Keeps smoke status classification behavior | Strategy A status remains classified without becoming an acceptance claim |
-| Certificate smoke | `scripts/harness/cert-smoke.sh` | Keeps smoke status classification behavior | Strategy E status remains classified without becoming an acceptance claim |
+| Certificate smoke | `scripts/harness/cert-smoke.sh` | Builds the checker smoke binaries, loads the committed certificate snapshot, checks schema metadata and parity dispatch, and reports whether MLIR matcher support is active or absent | Strategy E snapshot/checker drift is caught without claiming runtime MLIR rewrite verification |
 | Skill validation | `scripts/harness/validate-skills.sh` | Passes when repo-local skills have required sections | Repo-local skills remain auditable |
 | Phase 4 workspace differential gate | `LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt VEIR_DIFF=../veir/scripts/llzk-diff.sh ./differential/run-differential.sh --canonicalize differential/corpus` | Runs workspace VeIR's canonicalization-aware diff script over the reviewed seed corpus | Initial Phase 4 evidence exists, but remains workspace evidence until the clean VeIR dependency pin consumes the updated script |
 | Phase 5 clean-pin implementation gate | `LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt ./differential/run-differential.sh --canonicalize differential/corpus` | Runs the canonical differential through the default clean `.lake/packages/VeIR` dependency script with no `VEIR_DIFF` override | The canonicalization-aware diff script has been consumed through a clean dependency pin and supports the Phase 6 divergence burn-down baseline |
 | Phase 6 divergence burn-down baseline | same as Phase 5 clean-pin implementation gate | Reports `21 pass (incl. expected-diverge), 0 fail` with 7 PASS cases, 13 `EXPECTED-DIVERGE` canonical cases, and 1 `EXPECTED-LLZK-FAIL` parser/verifier gap | Confirms Phase 6 reduced the expected-divergence matrix without weakening the clean-pin baseline |
+| Phase 7 modular-reduction burn-down | `scripts/harness/check-doc-freshness.sh`, `scripts/harness/cert-smoke.sh`, plus the Phase 5 clean-pin implementation gate | Requires Phase 7 docs and evidence to identify `registered_add_wrap.llzk` and `constant_fold_neg.llzk` as the first registered-field modular-reduction targets, preserve the canonical corpus result `21 pass (incl. expected-diverge), 0 fail` after reclassification, and keep the committed Strategy E snapshot loadable after the `constant_fold_add` parity update | Phase 7 closes the narrow modular-reduction target without broadening Strategy A acceptance or leaving checker/catalog drift |
+| Phase 8 field-precondition burn-down | `scripts/harness/check-doc-freshness.sh` plus the Phase 5 clean-pin implementation gate | Requires Phase 8 docs and evidence to identify `unspecified_add_fold.llzk` as the first bare/unknown-field precondition target while preserving the canonical corpus result `21 pass (incl. expected-diverge), 0 fail` at bootstrap | Phase 8 starts the next narrow burn-down without reclassifying unrelated algebraic canonicalization divergences |
 
 ## Reproducible-Pin Failures
 
@@ -27,16 +29,22 @@ Last reviewed: 2026-06-10
 
 `scripts/harness/check-doc-freshness.sh` must fail if:
 
-- `docs/phases/PHASE-06-strategy-a-divergence-burndown.md` is missing.
+- `docs/phases/PHASE-08-strategy-a-field-preconditions.md` is missing.
+- Any phase file other than
+  `docs/phases/PHASE-08-strategy-a-field-preconditions.md` is marked active.
+- `docs/phases/PHASE-07-strategy-a-modular-reduction.md` is not marked
+  completed and superseded by Phase 8.
+- `docs/phases/PHASE-06-strategy-a-divergence-burndown.md` is not marked
+  completed and superseded by Phase 7.
 - `docs/phases/PHASE-05-strategy-a-pin-and-corpus.md` is not marked completed
   and superseded by Phase 6.
 - `docs/phases/PHASE-04-strategy-a-differential.md` is missing.
 - `docs/phases/PHASE-03-felt-op-gap-ledger.md` is missing.
-- `docs/harness/CURRENT.md` does not name Phase 6 as active.
+- `docs/harness/CURRENT.md` does not name Phase 8 as active.
 - `docs/harness/SOURCES.md` does not record `differential/run-differential.sh`,
   `differential/corpus/`,
-  `docs/phases/PHASE-06-strategy-a-divergence-burndown.md`, Phase 5
-  exact-polarity guard evidence,
+  `docs/phases/PHASE-08-strategy-a-field-preconditions.md`, Phase 7 closeout
+  evidence, Phase 5 exact-polarity guard evidence,
   `/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt`,
   and `/home/alh/llvm-project`.
 - `docs/harness/FELT_OP_GAPS.md` is missing.
@@ -59,6 +67,10 @@ Last reviewed: 2026-06-10
   adversarial-review file, or evidence README.
 - `reviews/PHASE-06` lacks a request, findings file, disposition file,
   adversarial-review file, or evidence README.
+- `reviews/PHASE-07` lacks a request, findings file, disposition file,
+  adversarial-review file, or evidence README.
+- `reviews/PHASE-08` lacks a request, findings file, disposition file,
+  adversarial-review file, or evidence README.
 - `reviews/PHASE-03/evidence` lacks nonempty Phase 3 outputs for doc
   freshness, LLZK source truth, pin verification, strict doctor, skill
   validation, lake build, or adversarial review.
@@ -76,6 +88,15 @@ Last reviewed: 2026-06-10
   default dependency canonicalization command and corpus evidence exist.
 - Phase 6 bootstrap docs claim full Strategy A acceptance, omit the Phase 5
   exact-polarity baseline, or fail to mark Phase 5 completed.
+- Phase 7 bootstrap docs claim full Strategy A acceptance, omit the Phase 6
+  closeout baseline, fail to mark Phase 6 completed, or broaden the first
+  implementation target beyond registered-field modular reduction without
+  implementation evidence.
+- Phase 7 evidence omits a passing certificate-smoke run after changing
+  `constant_fold_add` parity or the committed certificate snapshot.
+- Phase 8 bootstrap docs claim full Strategy A acceptance, omit the Phase 7
+  closeout baseline, fail to mark Phase 7 completed, or broaden the first
+  implementation target beyond bare/unknown-field fold-precondition parity.
 
 `scripts/harness/verify-llzk-source.sh --llzk-lib ../llzk-lib` must fail if:
 
@@ -98,7 +119,7 @@ Last reviewed: 2026-06-10
   `grumpkin`, `babybear`, `goldilocks`, `mersenne31`, and `koalabear` as
   recorded in `docs/harness/LLZK_SOURCE.md`.
 - `.lake/packages/VeIR` is missing, not at
-  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`, or its
+  `8e9c08925fce1caf8d6eb1d69239aae263629802`, or its
   `Veir/Passes/Felt/InterpModel.lean` `feltPrime` mirror disagrees with the
   accepted LLZK field registry.
 - Checker registry comments omit an accepted built-in field.
@@ -110,9 +131,9 @@ Last reviewed: 2026-06-10
   `https://github.com/project-llzk/veir.git`.
 - `lake-manifest.json` does not record VeIR as a `git` dependency.
 - Either Lake file names a commit other than
-  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
+  `8e9c08925fce1caf8d6eb1d69239aae263629802`.
 - `lake-manifest.json` records a VeIR `inputRev` other than
-  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
+  `8e9c08925fce1caf8d6eb1d69239aae263629802`.
 - `.lake/packages/VeIR` HEAD differs from the manifest rev.
 - `.lake/packages/VeIR` has any modified, deleted, staged, or untracked file.
 - A supplied workspace VeIR path neither equals nor descends from the accepted
@@ -129,8 +150,9 @@ The current harness does not prove:
 - Full Lean proof audit beyond buildability of the selected pin.
 - CI coverage when external tooling is missing.
 - Missing Felt operation semantics beyond the registry source facts.
-- Phase 6 divergence burn-down has reduced the DCE-only expected divergences,
-  but this does not expand certificates, complete all Strategy A corpus
-  coverage, or port missing operations. Phase 4 workspace evidence remains
-  historical seed evidence; Phase 6 implementation evidence must preserve the
-  clean dependency baseline.
+- Phase 6 divergence burn-down reduced the DCE-only expected divergences, and
+  Phase 7 reduced registered-field modular-reduction divergences, but this does
+  not expand certificates, complete all Strategy A corpus coverage, or port
+  missing operations. Phase 4 workspace evidence remains historical seed
+  evidence; Phase 8 implementation evidence must preserve the clean dependency
+  baseline while targeting bare/unknown-field fold-precondition parity.

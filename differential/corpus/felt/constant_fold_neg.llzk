@@ -1,0 +1,9 @@
+// Phase 7: registered-field negation folds through the accepted field
+// registry. For babybear, `-5` reduces to `2013265916`; both LLZK
+// canonicalization and VeIR `felt-combine,dce` emit the reduced constant.
+
+function.def @fold_neg() -> !felt.type<"babybear"> {
+  %a = felt.const 5 : !felt.type<"babybear">
+  %c = felt.neg %a : !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}

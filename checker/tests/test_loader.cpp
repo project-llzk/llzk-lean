@@ -202,7 +202,7 @@ TEST(load_committed_snapshot) {
   // Spot-check cert[1]: constant_fold_add
   const Cert &c1 = catalog->certs[1];
   EXPECT(c1.patternId == "constant_fold_add", "cert[1] patternId");
-  EXPECT(c1.llzkParityStatus == LlzkParityStatus::AlignedWithCaveats,
+  EXPECT(c1.llzkParityStatus == LlzkParityStatus::Aligned,
          "cert[1] parity");
   EXPECT(c1.conditions.size() == 2, "cert[1] has 2 conditions");
   EXPECT(c1.conditions[0].kind == SideCondition::Kind::SameAttr,

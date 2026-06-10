@@ -275,16 +275,10 @@ def feltCombineCatalog : List Cert := [
     (conditions := [])
     (llzkParityStatus := .veirOnly)
     (description := "felt.add x (felt.const 0) → x. Sound over any ZMod p."),
-  -- LLZK does this fold but with two caveats VEIR doesn't fully
-  -- share today:
-  --   (a) LLZK short-circuits unless both operands have a registered
-  --       field name (`tryGetBinaryFoldData` in
-  --       lib/Dialect/Felt/IR/Ops.cpp); VEIR now guards equal field
-  --       types, but does not model LLZK's registry membership check.
-  --   (b) LLZK applies modular reduction (`Field::reduce` in
-  --       lib/Util/Field.cpp); VEIR's implementation stores c1+c2 as
-  --       an unreduced Int.
-  -- v0.2.0 expresses LLZK's actual fold conditions structurally:
+  -- LLZK does this fold when both operands share a registered field name.
+  -- Phase 7 aligns VEIR's registered-field fold result with LLZK's
+  -- `Field::reduce`; the side conditions below express LLZK's actual fold
+  -- preconditions structurally:
   --   - both operands' fieldName attrs must match (sameAttr)
   --   - the shared fieldName must resolve in LLZK's Field registry
   --     (attrInRegistry)
@@ -297,8 +291,8 @@ def feltCombineCatalog : List Cert := [
       .sameAttr "fieldName" ["lhs", "rhs"],
       .attrInRegistry "lhs" "fieldName" "field"
     ])
-    (llzkParityStatus := .alignedWithCaveats)
-    (description := "felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2). Sound over any ZMod p. Caveat: LLZK applies modular reduction (Field::reduce); VEIR's runtime fold stores c1+c2 unreduced. Otherwise aligned.")
+    (llzkParityStatus := .aligned)
+    (description := "felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2 reduced through the registered field). Sound over any ZMod p and aligned with LLZK's Field::reduce under the recorded registry side conditions.")
   -- TODO: derive the remaining 13 entries from
   --   Veir.Passes.Felt.Combine reflectively. Hand-listed here as
   --   stub-quality scaffolding — the real emitter walks the Lean

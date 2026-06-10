@@ -4,15 +4,15 @@ Last reviewed: 2026-06-10
 
 ## Active Phase
 
-- Active phase: Phase 6, Strategy A divergence burn-down.
-- Phase bootstrap file: `docs/phases/PHASE-06-strategy-a-divergence-burndown.md`.
+- Active phase: Phase 8, Strategy A field preconditions.
+- Phase bootstrap file: `docs/phases/PHASE-08-strategy-a-field-preconditions.md`.
 - Companion repository: `../veir`.
-- Companion phase file: `../veir/docs/phases/PHASE-06-strategy-a-divergence-burndown.md`.
+- Companion phase file: `../veir/docs/phases/PHASE-08-strategy-a-field-preconditions.md`.
 
 ## Accepted VeIR Pin
 
 - Accepted VeIR commit:
-  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
+  `8e9c08925fce1caf8d6eb1d69239aae263629802`.
 - Accepted source branch: `felt-review-structural-close`.
 - Accepted source remote: `https://github.com/project-llzk/veir.git`.
 - Pin mode: remote commit, consumed through Lake metadata and a clean
@@ -74,10 +74,12 @@ the clean dependency checkout remains the source of truth.
   Phase 4 reviewed workspace canonicalization evidence for the seed corpus.
   Phase 5 consumed the canonicalization-aware VeIR driver through the clean
   dependency pin and recorded the expanded 21-input canonical corpus on that
-  path. Phase 6 starts from that exact-polarity baseline and has reclassified
-  the DCE-only registered add/sub/mul fold cases after the clean VeIR driver
-  began running `felt-combine,dce`. The corpus covers all 15 current VeIR Felt
-  rewrite-pattern definitions as PASS or EXPECTED-DIVERGE, plus one
+  path. Phase 6 started from that exact-polarity baseline and reclassified the
+  DCE-only registered add/sub/mul fold cases after the clean VeIR driver began
+  running `felt-combine,dce`. Phase 7 reclassified the registered-field
+  modular-reduction add-wrap and negation cases after VeIR began reducing fold
+  results through the accepted registry. The corpus covers all 15 current VeIR
+  Felt rewrite-pattern definitions as PASS or EXPECTED-DIVERGE, plus one
   EXPECTED-LLZK-FAIL parser/verifier gap, but this is not full Strategy A
   acceptance.
 - The local `../llzk-lib` worktree is behind fetched `origin/main`. Current
@@ -87,30 +89,36 @@ the clean dependency checkout remains the source of truth.
   differential coverage through a workspace `VEIR_DIFF` override. Phase 5 pinned
   the canonicalization-aware VeIR driver, recorded expanded corpus evidence on
   the clean dependency path, and fixed expected-divergence polarity to exact
-  file-header markers. Phase 6's first burn-down target aligns VeIR's canonical
-  diff path with LLZK's dead-input cleanup by consuming the DCE-enabled VeIR
-  pin.
+  file-header markers. Phase 6's first burn-down target aligned VeIR's
+  canonical diff path with LLZK's dead-input cleanup by consuming the
+  DCE-enabled VeIR pin. Phase 7 targeted registered-field modular reduction for
+  `registered_add_wrap.llzk` and `constant_fold_neg.llzk`. Phase 8 starts from
+  that baseline and targets field-precondition parity for
+  `unspecified_add_fold.llzk`.
 
 ## Acceptance Rule
 
-Phase 6 bootstrap is current only when:
+Phase 8 bootstrap is current only when:
 
 - `docs/harness/FELT_OP_GAPS.md` records every accepted LLZK Felt mnemonic and
   explicitly marks unsupported Strategy A/E coverage as gaps.
-- `docs/phases/PHASE-06-strategy-a-divergence-burndown.md` exists and
-  `docs/harness/CURRENT.md` names Phase 6 as active.
+- `docs/phases/PHASE-08-strategy-a-field-preconditions.md` exists and
+  `docs/harness/CURRENT.md` names Phase 8 as active.
 - `docs/harness/SOURCES.md` records `differential/run-differential.sh`, the
-  Phase 6 phase file, Phase 5 exact-polarity guard evidence, the accepted
-  `llzk-opt` binary path, and `/home/alh/llvm-project`.
+  Phase 8 phase file, Phase 7 closeout evidence, Phase 5 exact-polarity guard
+  evidence, the accepted `llzk-opt` binary path, and `/home/alh/llvm-project`.
 - `scripts/harness/verify-llzk-source.sh --llzk-lib ../llzk-lib` passes.
 - `scripts/harness/verify-pins.sh --workspace-veir ../veir` passes.
 - `scripts/harness/doctor.sh --workspace-veir ../veir` passes in strict mode.
 - `lake build` succeeds against the clean dependency checkout.
+- `scripts/harness/cert-smoke.sh` passes against the committed certificate
+  snapshot.
 - `scripts/harness/check-doc-freshness.sh` passes.
 - `scripts/harness/validate-skills.sh` passes.
 
-Phase 6 implementation evidence additionally requires reducing or reclassifying
-expected divergences without weakening the clean-pin canonical baseline. The
-current clean-pin canonical run remains `21 pass (incl. expected-diverge), 0
-fail` and records 7 PASS cases, 13 `EXPECTED-DIVERGE` canonical cases, and 1
-`EXPECTED-LLZK-FAIL` parser/verifier gap.
+Phase 8 implementation evidence additionally requires reducing or reclassifying
+the bare/unknown-field fold-precondition divergence without weakening the
+clean-pin canonical baseline. The current clean-pin canonical run remains
+`21 pass (incl. expected-diverge), 0 fail` and records 9 PASS cases, 11
+`EXPECTED-DIVERGE` canonical cases, and 1 `EXPECTED-LLZK-FAIL`
+parser/verifier gap.

@@ -11,7 +11,7 @@ Last reviewed: 2026-06-10
   `git@github.com:project-llzk/llzk-lib.git`.
 - Consumed VeIR dependency:
   `.lake/packages/VeIR` at
-  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
+  `8e9c08925fce1caf8d6eb1d69239aae263629802`.
 - Current certificate catalog:
   `LlzkLean/Cert.lean` and `certs/felt-combine.cert.json`.
 - Current differential corpus:
@@ -31,10 +31,10 @@ and an adversarial review disposition.
 | LLZK mnemonic | Consumed VeIR semantic status | Strategy A differential status | Strategy E certificate status | Phase 3 status |
 |---|---|---|---|---|
 | `const` | Covered baseline in `Data.Felt.const` and `InterpModel.interpretConst` | Smoke corpus only; no acceptance claim | Used by existing cert shapes | Covered baseline |
-| `add` | Covered baseline in `Data.Felt.add` and `InterpModel.interpretAdd` | Smoke corpus only; no acceptance claim | `right_identity_zero_add` and `constant_fold_add` certs exist | Covered with known LLZK modular-reduction caveat |
-| `sub` | Covered baseline in `Data.Felt.sub` and `InterpModel.interpretSub` | No complete accepted corpus coverage | No committed cert yet for existing VeIR sub rewrites | Gap in Strategy A/E coverage |
-| `mul` | Covered baseline in `Data.Felt.mul` and `InterpModel.interpretMul` | No complete accepted corpus coverage | No committed cert yet for existing VeIR mul rewrites | Gap in Strategy A/E coverage |
-| `neg` | Covered baseline in `Data.Felt.neg` and `InterpModel.interpretNeg` | No complete accepted corpus coverage | No committed cert yet for existing VeIR neg rewrites | Gap in Strategy A/E coverage |
+| `add` | Covered baseline in `Data.Felt.add` and `InterpModel.interpretAdd` | Smoke corpus plus Phase 7 registered-field reduction coverage; Phase 8 targets bare/unknown-field fold preconditions | `right_identity_zero_add` and `constant_fold_add` certs exist | Registered-field fold reduction aligned; bare/unknown-field preconditions remain scoped gaps |
+| `sub` | Covered baseline in `Data.Felt.sub` and `InterpModel.interpretSub` | Phase 6 registered-field constant subtraction PASS only; no complete accepted corpus coverage | No committed cert yet for existing VeIR sub rewrites | Gap in Strategy A/E coverage |
+| `mul` | Covered baseline in `Data.Felt.mul` and `InterpModel.interpretMul` | Phase 6 registered-field constant multiplication PASS only; no complete accepted corpus coverage | No committed cert yet for existing VeIR mul rewrites | Gap in Strategy A/E coverage |
+| `neg` | Covered baseline in `Data.Felt.neg` and `InterpModel.interpretNeg` | Phase 7 registered-field constant negation PASS only; no complete accepted corpus coverage | No committed cert yet for existing VeIR neg rewrites | Gap in Strategy A/E coverage |
 | `pow` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
 | `div` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
 | `uintdiv` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |

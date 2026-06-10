@@ -4,8 +4,8 @@ Last reviewed: 2026-06-10
 
 ## Accepted VeIR Pin
 
-- Commit: `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`
-- Short ref: `a0bb2fc8e6d3`
+- Commit: `8e9c08925fce1caf8d6eb1d69239aae263629802`
+- Short ref: `8e9c08925fce`
 - Remote: `https://github.com/project-llzk/veir.git`
 - Branch at selection time: `felt-review-structural-close`
 - Mode: remote commit pinned through Lake metadata and a clean Lake package
@@ -17,9 +17,12 @@ the Phase 1 accepted pin `d52917ca4a57c4094b1aa61dd413aca4e1c2a56e`.
 
 This pin preserves the Phase 2 VeIR field-registry update and source-truth
 gate, preserves the Phase 5 canonicalization-aware `scripts/llzk-diff.sh`
-driver consumed by the default llzk-lean dependency checkout, and adds the
-Phase 6 DCE-enabled canonical differential path. The script uses a built
-`.lake/build/bin/veir-opt` when present and falls back to `lake exec`.
+driver consumed by the default llzk-lean dependency checkout, adds the
+Phase 6 DCE-enabled canonical differential path, and adds Phase 7
+registered-field fold-result reduction. Phase 8 starts from the same accepted
+pin while targeting bare/unknown-field fold-precondition parity. The script
+uses a built `.lake/build/bin/veir-opt` when present and falls back to
+`lake exec`.
 
 ## Required State
 
@@ -42,7 +45,7 @@ The following must all identify the accepted commit:
   acceptance evidence.
 - Exploratory workspace: `scripts/harness/verify-pins.sh --mode exploratory
   --workspace-veir PATH` may warn about a workspace mismatch. This output must
-  not be used to close Phase 5.
+  not be used as phase closeout evidence.
 
 ## Forbidden Hidden State
 

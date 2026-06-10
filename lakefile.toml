@@ -26,7 +26,7 @@ moreServerArgs = ["--tstack=400000"]
 [[require]]
 name = "VeIR"
 git = "https://github.com/project-llzk/veir.git"
-rev = "a0bb2fc8e6d38ab068247dfc6506ba63f5feb953"
+rev = "8e9c08925fce1caf8d6eb1d69239aae263629802"
 
 [[lean_lib]]
 name = "LlzkLean"

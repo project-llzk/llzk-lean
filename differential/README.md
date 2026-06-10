@@ -12,15 +12,18 @@ specific corpus and reporting.
 
 ## Status
 
-**Canonicalization-aware, clean-pin expanded corpus with Phase 6 burn-down.**
+**Canonicalization-aware, clean-pin expanded corpus with Phase 8 bootstrap.**
 `run-differential.sh` wraps VEIR's script, supports parse/print mode
 and canonicalization mode, and classifies output divergence, LLZK
 failure, VEIR failure, missing tools, and mode-skipped corpus entries
 separately. The Phase 6 clean-pin corpus covers all 15 current VeIR
 Felt rewrite-pattern definitions as PASS or EXPECTED-DIVERGE, with
 registered add/sub/mul constant folds reclassified to PASS after VeIR
-canonical mode started running `felt-combine,dce`. This is not full
-Strategy A acceptance coverage.
+canonical mode started running `felt-combine,dce`. Phase 7 reclassifies
+the registered-field add-wrap and negation folds after VeIR began reducing
+registered fold results through the accepted field registry. Phase 8 starts
+from that baseline and targets the remaining bare/unknown-field fold
+precondition gap. This is not full Strategy A acceptance coverage.
 
 ## Running locally
 
@@ -31,7 +34,7 @@ lake build                # Builds llzk-lean's own Lean code
 export LLZK_OPT=/path/to/llzk-opt
 ./differential/run-differential.sh
 
-# Phase 6 clean-pin canonical evidence path:
+# Phase 8 clean-pin canonical evidence path:
 ./differential/run-differential.sh --canonicalize differential/corpus
 
 # Historical Phase 4 workspace implementation run:
@@ -72,7 +75,7 @@ non-zero if any input lands in the FAIL column.
 
 ## Corpus expansion targets
 
-Current Phase 6 bar:
+Current Phase 8 bootstrap bar:
 - `corpus/felt/const_identities.mlir` — live const proof-of-life.
 - `corpus/felt/types_smoke.llzk` — custom-asm lowering smoke.
 - `corpus/felt/arithmetic_no_fold.llzk` — canonical no-fire arithmetic.
@@ -82,9 +85,13 @@ Current Phase 6 bar:
   `corpus/felt/constant_fold_sub.llzk`, and
   `corpus/felt/constant_fold_mul.llzk` — Phase 6 positives closed by the
   clean `felt-combine,dce` pipeline.
-- `corpus/expected-divergence/canonical/*` — classified clean-pin
-  canonicalization gaps for modular reduction, field-registry
-  preconditions, and VeIR-only algebraic rewrites.
+- `corpus/felt/registered_add_wrap.llzk` and
+  `corpus/felt/constant_fold_neg.llzk` — Phase 7 positives closed by
+  registered-field modular reduction in VeIR folds.
+- `corpus/expected-divergence/canonical/unspecified_add_fold.llzk` — Phase 8
+  target for unresolved bare/unknown-field fold preconditions.
+- The remaining `corpus/expected-divergence/canonical/*` files — classified
+  clean-pin canonicalization gaps for VeIR-only algebraic rewrites.
 - `corpus/README.md` — the current 21-input inventory and 15-pattern
   rewrite coverage matrix.
 
@@ -152,9 +159,8 @@ differences:
 Any *remaining* difference after normalization is a real divergence
 and either:
 
-1. A canonical-form mismatch (e.g., VEIR emits `42` where LLZK emits
-   `42 mod p` because VEIR's folds don't apply modular reduction —
-   tracked in `../../veir/REVIEW.md` VH3)
-   — fix on the VEIR side.
+1. A canonical-form mismatch, such as a remaining field-registry or
+   canonicalization precondition gap — fix on the side whose behavior
+   disagrees with the reviewed source fact.
 2. An LLZK bug — file against `llzk-lib`.
 3. A spec disagreement — escalate to the strategy doc.

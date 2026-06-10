@@ -123,8 +123,8 @@ checker TCB small.
         {"kind": "attrInRegistry", "pos": "lhs", "attr": "fieldName", "registry": "field"}
       ],
       "theoremName": "Veir.Data.Felt.constant_fold_add",
-      "llzkParityStatus": "aligned-with-caveats",
-      "description": "felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2). Caveat: LLZK applies modular reduction; VEIR's runtime fold stores c1+c2 unreduced."
+      "llzkParityStatus": "aligned",
+      "description": "felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2 reduced through the registered field)."
     },
     ...
   ]

@@ -16,9 +16,10 @@ The harness supports two modes:
 - canonicalization mode: `llzk-opt --canonicalize` is compared against
   `veir-opt -p=felt-combine,dce`.
 
-The workspace VeIR script now implements canonicalization mode. Until
-llzk-lean bumps its clean VeIR pin, llzk-lean runs this implementation
-with an explicit `VEIR_DIFF=../veir/scripts/llzk-diff.sh` override.
+The clean llzk-lean VeIR dependency now implements canonicalization mode, so
+the default evidence path uses the pinned dependency script without a
+`VEIR_DIFF=../veir/scripts/llzk-diff.sh` override. Historical Phase 4
+workspace evidence still records that override as seed implementation context.
 
 ### Known alignment caveats (read before adding to the corpus)
 
@@ -49,11 +50,11 @@ claims to `llzk-lib` commit
    outer-typed named-field `FeltConstAttr` remains classified as
    EXPECTED-LLZK-FAIL.
 
-4. **VEIR's folds don't apply modular reduction.** LLZK's
-   `Field::reduce` in `lib/Util/Field.cpp` normalizes constants
-   modulo the prime; VEIR's `constant_fold_add` stores the raw
-   integer. For named-field inputs, this modular-reduction difference
-   is the expected arithmetic divergence to classify.
+4. **Registered-field folds now apply modular reduction.** Phase 7
+   aligns VeIR's registered-field add-wrap and negation folds with LLZK's
+   `Field::reduce` behavior. Phase 8 starts the follow-on
+   bare/unknown-field fold-precondition burn-down, with
+   `unspecified_add_fold.llzk` as the first target.
 
 The Phase 4 ordering is now:
    - Re-test the named-field corpus and keep the generic parser edge
@@ -61,18 +62,17 @@ The Phase 4 ordering is now:
    - Enable canonicalization in the diff script and classify the first
      canonical divergences.
    - Add field-registry and modular-reduction parity on VEIR's side so
-     remaining modular-reduction corpus cases can move from expected-divergence
-     to positive coverage.
+     closed corpus cases can move from expected-divergence to positive
+     coverage.
 
 Without that ordering, named-field corpus additions will mostly document
-the known modular-reduction gap rather than demonstrate alignment.
+the known field-registry/precondition gaps rather than demonstrate alignment.
 
 When the outputs diverge, the harness reports the diff inline. The
 divergence is then classified as one of:
 
-1. A canonical-form mismatch (e.g., VEIR's folds don't apply modular
-   reduction yet — see `../veir/REVIEW.md` VH3 for the current
-   parity-gap framing).
+1. A canonical-form mismatch, such as a remaining field-registry or
+   rewrite-precondition parity gap.
 2. An LLZK bug to file against `llzk-lib`.
 3. A spec disagreement to escalate.
 
@@ -120,7 +120,9 @@ Current state (2026-06-09):
   `docs/REVIEW.md`.
 - ✅ Clean-pin harness has a canonicalization mode. Phase 6's first burn-down
   pin runs VeIR `felt-combine,dce`, which reclassifies registered add/sub/mul
-  constant folds from expected divergence to positive coverage.
+  constant folds from expected divergence to positive coverage. Phase 7 now
+  reclassifies registered-field modular reduction for add-wrap and negation.
+  Phase 8 targets the remaining bare/unknown-field fold-precondition gap.
 - 🚧 CI workflow stubbed in `.github/workflows/differential.yml`.
   Skips green if `llzk-opt` not provisioned — CI provisioning is
   v1 work.
@@ -130,7 +132,9 @@ Outstanding work to reach v1:
 1. **Continue burning down classified divergences.** The consumed clean pin now
    invokes both tools with their canonicalize pipelines
    (`llzk-opt --canonicalize` and `veir-opt -p=felt-combine,dce`). The next
-   VeIR-side target is modular reduction for registered-field folds.
+   VeIR-side targets are the remaining classified algebraic and field
+   precondition divergences, starting with the Phase 8
+   `unspecified_add_fold.llzk` target.
 
 2. **Corpus expansion.** Hand-author a Felt corpus that exercises every
    pattern in VEIR's `Combine.lean` against an equivalent LLZK input.
@@ -159,11 +163,9 @@ Outstanding work to reach v1:
    [`differential/corpus/README.md`](../differential/corpus/README.md)
    for the polarity convention.
 
-6. **Field-registry parity.** VEIR currently folds constants without
-   modular reduction; LLZK does. Until VEIR's folds model the accepted
-   Field registry, named-field constant arithmetic can diverge
-   textually. Tracked in `../veir/REVIEW.md` VH3 — fix lives upstream
-   in VEIR, not in llzk-lean.
+6. **Field-registry parity.** VEIR now reduces registered-field fold results,
+   but it still folds bare or unknown-field constants in cases LLZK can leave
+   unresolved. Phase 8 tracks this as the active field-precondition workstream.
 
 ## Effort
 
