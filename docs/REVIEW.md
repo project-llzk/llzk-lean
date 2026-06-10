@@ -63,8 +63,8 @@ normalizer. See §8.
 
 | Item | Finding | How confirmed |
 |---|---|---|
-| Build | `llzk-lean` builds clean (1244 jobs) under Lean v4.30.0 | full `lake build` |
-| Toolchain split | `veir` pins `v4.30.0-rc2`, `llzk-lean` pins `v4.30.0`; did **not** break this build | observed |
+| Build | `llzk-lean` builds clean (1240 jobs) under Lean v4.30.0-rc2 | full `lake build` |
+| Toolchain alignment | `veir`, `mathlib`, and `llzk-lean` pin `v4.30.0-rc2`; this avoids the mathlib cache hook mismatch seen with mixed pins | observed |
 | **Stale manifest (H4)** | **RESOLVED by Phase 1.** `lakefile.toml`, `lake-manifest.json`, and `.lake/packages/VeIR` now point at `project-llzk/veir @ d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3`; the gate also checks manifest `url`, `type`, `rev`, and `inputRev`. | `scripts/harness/verify-pins.sh --workspace-veir ../veir` |
 | 15 theorems | axiom-clean: `[propext, Quot.sound]` only — no `sorryAx` | axiom audit |
 | 15 patterns + the `Combine` pass | ~~carry `sorryAx`~~ **RESOLVED (F1, 2026-06-02):** all 15 patterns now axiom-clean `[propext, Classical.choice, Quot.sound]` — no `sorryAx`, no `WfIRContext.Dom`. See §3 joint 2. | axiom audit (veir `lake build` + `#print axioms`) |
