@@ -1,0 +1,10 @@
+// Canonical positive for VeIR `add_const_swap`.
+//
+// Both LLZK canonicalization and VeIR `felt-combine` normalize
+// `felt.add (felt.const c) x` to `felt.add x (felt.const c)`.
+
+function.def @add_const_swap(%x: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %c = felt.const 3 : !felt.type<"babybear">
+  %y = felt.add %c, %x : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %y : !felt.type<"babybear">
+}

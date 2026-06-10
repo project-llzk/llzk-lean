@@ -1,0 +1,10 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// VeIR's `neg_neg_to_self` rewrites `felt.neg (felt.neg x)` to `x`.
+// LLZK currently leaves the outer negation chain in place.
+
+function.def @neg_neg(%x: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %n1 = felt.neg %x : !felt.type<"babybear">
+  %n2 = felt.neg %n1 : !felt.type<"babybear">
+  function.return %n2 : !felt.type<"babybear">
+}

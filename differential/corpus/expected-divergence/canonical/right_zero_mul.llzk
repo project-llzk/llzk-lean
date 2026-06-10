@@ -1,0 +1,10 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// VeIR's `right_zero_mul` rewrites `felt.mul x 0` to a new zero constant.
+// LLZK currently leaves this non-constant multiplication in place.
+
+function.def @mul_zero(%x: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %zero = felt.const 0 : !felt.type<"babybear">
+  %y = felt.mul %x, %zero : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %y : !felt.type<"babybear">
+}

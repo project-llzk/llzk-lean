@@ -50,3 +50,42 @@ the dirty state as non-release local work.
 Disposition: fixed by selecting VeIR commit
 `d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3`, updating Lake metadata, and
 refreshing `.lake/packages/VeIR` to a clean checkout of that commit.
+
+## P2-L5 - Accepted LLZK source remote is stale and ungated
+
+Severity: High
+
+`docs/harness/LLZK_SOURCE.md` recorded
+`git@github.com:Veridise/llzk-lib.git`, but the checked and fetched source
+repository uses `git@github.com:project-llzk/llzk-lib.git`. The source gate
+checked only the commit and `origin/main`, so it could not catch a remote
+provenance mismatch.
+
+Disposition: fixed by recording
+`git@github.com:project-llzk/llzk-lib.git` in the source ledger and requiring
+that exact `origin` URL in `scripts/harness/verify-llzk-source.sh` and doc
+freshness evidence.
+
+## P2-L6 - Consumed VeIR field registry was not directly source-checked
+
+Severity: Medium
+
+The pin gate proved `.lake/packages/VeIR` was clean and at the accepted commit,
+but the llzk-lean source gate did not directly check the consumed dependency's
+`Veir/Passes/Felt/InterpModel.lean` field registry mirror against the accepted
+LLZK source.
+
+Disposition: fixed by making `scripts/harness/verify-llzk-source.sh` check the
+pinned dependency HEAD and its exact `feltPrime` field-to-prime branches.
+
+## P2-L7 - Source ledger files were listed but not all gated
+
+Severity: Medium
+
+The source ledger listed `OpInterfaces.td`, Felt lit tests, and unit tests, but
+the source gate only checked a subset of paths and parsed only ops/types/field
+registry facts deeply. That made the ledger broader than the mechanical gate.
+
+Disposition: fixed by checking every ledgered source path at the accepted
+commit and adding representative checks for Felt attrs, op interfaces, folder
+source, lit tests, and unit tests.

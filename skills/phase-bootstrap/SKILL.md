@@ -8,7 +8,8 @@ Use this skill when creating or closing a phase bootstrap file.
 
 - Start from `docs/phases/PHASE_TEMPLATE.md`.
 - Update `docs/harness/CURRENT.md`, `docs/harness/SOURCES.md`, and
-  `docs/harness/GATES.md` with exact refs and dependency mode.
+  `docs/harness/GATES.md` with exact refs and dependency mode; update
+  `docs/harness/PINS.md` when the phase changes dependency state.
 - Create `reviews/<PHASE>/request.md`, `findings.md`, `disposition.md`, and
   `evidence/`.
 
@@ -16,4 +17,4 @@ Use this skill when creating or closing a phase bootstrap file.
 
 Run `scripts/harness/check-doc-freshness.sh`,
 `scripts/harness/validate-skills.sh`, and
-`scripts/harness/doctor.sh --mode exploratory`.
+`scripts/harness/doctor.sh --workspace-veir ../veir`.

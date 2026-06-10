@@ -72,7 +72,7 @@ normalizer. See §8.
 | Interpreter link | partially started — VEIR now has a value-level `add x 0 → x` interpreter bridge, but no whole-program rewrite soundness theorem and no full 18-op Felt interpreter | `veir/FOLLOWUP.md` §F2 |
 | Catalog | 2 of 15 patterns; `#assertCatalogCoverage` lists the 13 uncovered | build output |
 | C++ matcher | fail-closed stub ("MLIR not found"); the "26 tests" are internal `EXPECT`s across 2 ctest exes driven by a **mock** matcher — no real-IR matching is built or tested | cmake log + ctest |
-| Strategy A | one positive corpus file, parse-print only (no canonicalization) | inspection |
+| Strategy A | seed corpus now covers parse/print and canonicalization mode, with positives plus classified expected divergences; still not complete coverage | inspection + Phase 4 differential runs |
 
 ---
 
@@ -88,7 +88,7 @@ Veir.FeltPass.Combine      (the pass)→  [propext, Classical.choice, Quot.sound
 ```
 
 **Update (F1, 2026-06-02):** joint 2 below is now CLOSED. The executable
-rewriter that `veir-opt -p felt-combine` actually runs no longer depends on
+rewriter that `veir-opt -p=felt-combine` actually runs no longer depends on
 `sorryAx` — all 15 patterns and the pass are axiom-clean (no `sorryAx`, no
 `WfIRContext.Dom`), verified by a full `lake build` of the veir source +
 `#print axioms` on each. Joints **1 and 3 remain open** (the theorem↔pattern
@@ -146,11 +146,11 @@ Two framing caveats worth stating to non-Lean readers:
   (one-sided). Harmless today (it's `veir-only`) but a real instance of the
   C2 risk that nothing catches.
 - **H2** `#certThmExists` is a weak invariant (name-resolution only).
-- **H3** Strategy A demonstrates little yet: 1 file, parse-print only; LLZK has
-  zero Felt canonicalizers and its folds no-op on unnamed fields. Named-field
-  parser parity is now empirically resolved for the generic output path, so the
-  next blockers are meaningful canonicalization plus field-registry/modular
-  reduction parity.
+- **H3** Strategy A is still seed coverage: Phase 4 now runs a
+  canonicalization-aware differential over a reviewed small corpus, but the
+  corpus is not close to full `llzk-lib/test/Dialect/Felt/` coverage. The next
+  blockers are clean-pin consumption, field-registry/modular-reduction parity,
+  and broader fold/no-fire cases.
 - **H4** Stale `lake-manifest.json` (see §2) — **resolved by Phase 1 gates**.
 
 **Medium:** M1 no CI axiom-gate (the `warn.sorry false` admits are gone as of

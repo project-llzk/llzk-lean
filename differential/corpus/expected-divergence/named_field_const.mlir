@@ -1,7 +1,9 @@
-// EXPECT: DIVERGE — named-field FeltConstAttr is parser-incompatible.
-// VEIR's parser doesn't accept LLZK's inner `#felt<const N : <"name">>`
-// syntax; LLZK's parser silently strips VEIR's outer field annotation,
-// which then fails the result-type-matches-value-type verifier.
+// EXPECTED-LLZK-FAIL — generic named-field FeltConstAttr remains
+// parser/verifier-incompatible on the LLZK side.
+//
+// VEIR accepts this outer-typed generic form, but LLZK's parser/verifier path
+// rejects it before a comparable output is produced. LLZK custom assembly
+// named-field cases should use .llzk plus --lower-first instead.
 // Tracked as a documented alignment gap; see docs/strategy-a-oracle.md.
 
 "builtin.module"() ({

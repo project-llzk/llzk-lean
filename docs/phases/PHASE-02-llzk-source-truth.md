@@ -23,6 +23,7 @@ source facts those strategies depend on are current and mechanically checked.
 - llzk-lean currently pins VeIR to:
   `d52917ca4a57c4094b1aa61dd413aca4e1c2a56e`.
 - Local `llzk-lib` checkout after fetch:
+  - origin remote: `git@github.com:project-llzk/llzk-lib.git`
   - local `main`: `30b0fa1eb77de154ff60c13fa88ef286d8b01c65`
   - fetched `origin/main`: `db922857bc5a88a9107627ef6b36a8b5e57bc5c2`
   - local checkout is behind `origin/main` and must not be treated as current
@@ -87,7 +88,9 @@ The initial accepted LLZK source ref defines these built-in fields:
 ## Gates To Implement
 
 - `scripts/harness/verify-llzk-source.sh --llzk-lib ../llzk-lib` fails if the
-  accepted source ref is unavailable or unrecorded.
+  `../llzk-lib origin` remote is not
+  `git@github.com:project-llzk/llzk-lib.git`, or if the accepted source ref is
+  unavailable or unrecorded.
 - The source gate checks the 18 Felt op mnemonics:
   `const`, `add`, `sub`, `mul`, `pow`, `div`, `uintdiv`, `sintdiv`, `umod`,
   `smod`, `neg`, `inv`, `bit_and`, `bit_or`, `bit_xor`, `bit_not`, `shl`,
@@ -100,8 +103,9 @@ The initial accepted LLZK source ref defines these built-in fields:
 ## Review Requirements
 
 - Every LLZK source claim must cite an exact `llzk-lib` commit and file path.
-- Review evidence must include `git -C ../llzk-lib rev-parse HEAD origin/main`
-  and source extraction output.
+- Review evidence must include `git -C ../llzk-lib remote get-url origin`,
+  `git -C ../llzk-lib rev-parse HEAD origin/main`, and source extraction
+  output.
 - The reviewer must explicitly reject stale local `llzk-lib` checkout facts
   unless they match the accepted source ref.
 - The reviewer must confirm llzk-lean docs and checker comments include
@@ -111,8 +115,10 @@ The initial accepted LLZK source ref defines these built-in fields:
 ## Done Criteria
 
 - `docs/harness/LLZK_SOURCE.md` records the accepted LLZK Felt source ref and
-  files.
+  files, including the accepted `llzk-lib` remote URL.
 - llzk-lean docs and checker assumptions match the accepted source ledger.
+- The source-truth gate checks the consumed `.lake/packages/VeIR`
+  `feltPrime` mirror against the accepted LLZK field registry.
 - A source-truth gate catches missing `grumpkin`, missing `koalabear`, or
   stale `bn128`/`bn254` registry facts.
 - `scripts/harness/verify-pins.sh --workspace-veir ../veir` passes.

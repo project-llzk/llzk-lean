@@ -1,0 +1,13 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// LLZK folds registered-field arithmetic through Field::reduce. For babybear,
+// (p - 1) + 2 reduces to 1. VEIR's current constant fold records the raw
+// integer result and therefore emits 2013265922. This documents the modular
+// reduction gap tracked by Strategy A.
+
+function.def @fold_add_wrap() -> !felt.type<"babybear"> {
+  %a = felt.const 2013265920 : !felt.type<"babybear">
+  %b = felt.const 2 : !felt.type<"babybear">
+  %c = felt.add %a, %b : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}

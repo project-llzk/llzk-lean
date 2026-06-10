@@ -1,0 +1,12 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// LLZK intentionally skips binary Felt folds when either operand has no
+// registered field name. VEIR currently folds bare `!felt.type` constants.
+// This records the field-registry precondition gap.
+
+function.def @no_fold_unspecified_add() -> !felt.type {
+  %a = felt.const 5
+  %b = felt.const 7
+  %c = felt.add %a, %b
+  function.return %c : !felt.type
+}

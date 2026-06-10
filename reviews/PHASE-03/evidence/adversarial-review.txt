@@ -1,0 +1,101 @@
+$ operation-row count in docs/harness/FELT_OP_GAPS.md
+18
+
+$ exact-once operation rows
+const 1
+add 1
+sub 1
+mul 1
+pow 1
+div 1
+uintdiv 1
+sintdiv 1
+umod 1
+smod 1
+neg 1
+inv 1
+bit_and 1
+bit_or 1
+bit_xor 1
+bit_not 1
+shl 1
+shr 1
+
+$ required Strategy A/E and consumed-VeIR gap rows
+| `sub` | Covered baseline in `Data.Felt.sub` and `InterpModel.interpretSub` | No complete accepted corpus coverage | No committed cert yet for existing VeIR sub rewrites | Gap in Strategy A/E coverage |
+| `mul` | Covered baseline in `Data.Felt.mul` and `InterpModel.interpretMul` | No complete accepted corpus coverage | No committed cert yet for existing VeIR mul rewrites | Gap in Strategy A/E coverage |
+| `neg` | Covered baseline in `Data.Felt.neg` and `InterpModel.interpretNeg` | No complete accepted corpus coverage | No committed cert yet for existing VeIR neg rewrites | Gap in Strategy A/E coverage |
+| `pow` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `div` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `uintdiv` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `sintdiv` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `umod` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `smod` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `inv` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `bit_and` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `bit_or` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `bit_xor` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `bit_not` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `shl` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+| `shr` | Missing from consumed VeIR `Data.Felt` and `InterpModel` | No complete accepted corpus coverage | No committed cert | Gap |
+
+$ freshness gate hardening hooks
+48:require_op_once() {
+59:require_op_row_contains() {
+151:op_rows="$(grep -Ec '^\| `[^`]+` \|' "${ROOT}/docs/harness/FELT_OP_GAPS.md")"
+152:if [[ "$op_rows" == "18" ]]; then
+155:  fail "FELT_OP_GAPS has ${op_rows} operation rows, expected 18"
+161:  require_op_once "$mnemonic"
+165:  require_op_row_contains "$mnemonic" "Gap in Strategy A/E coverage" "FELT_OP_GAPS marks ${mnemonic} Strategy A/E coverage gap"
+169:  require_op_row_contains "$mnemonic" 'Missing from consumed VeIR `Data.Felt` and `InterpModel`' "FELT_OP_GAPS marks ${mnemonic} consumed VeIR semantic model missing"
+170:  require_op_row_contains "$mnemonic" "| Gap |" "FELT_OP_GAPS marks ${mnemonic} as a gap"
+208:require_contains reviews/PHASE-03/evidence/verify-llzk-source.txt "LLZK source verification summary: 0 fail" "verify-llzk-source evidence reports no failures"
+209:require_contains reviews/PHASE-03/evidence/verify-pins.txt "pin verification summary: 0 fail" "pin evidence reports no failures"
+210:require_contains reviews/PHASE-03/evidence/doctor-workspace.txt "doctor summary: 0 fail" "strict doctor evidence reports no failures"
+211:require_contains reviews/PHASE-03/evidence/validate-skills.txt "skill validation summary: 0 fail" "skill evidence reports no failures"
+212:require_contains reviews/PHASE-03/evidence/lake-build.txt "Build completed successfully" "lake build evidence reports success"
+213:require_contains reviews/PHASE-03/evidence/lake-build.txt "catalog covers 2 of them; 13 uncovered" "lake build evidence records expected certificate coverage gap"
+214:require_contains reviews/PHASE-03/evidence/adversarial-review.txt "PASS: no missing-op semantic definitions found in consumed VeIR Felt semantics" "adversarial evidence confirms missing-op semantics were not added"
+215:require_contains reviews/PHASE-03/evidence/adversarial-review.txt "PASS: no modified, staged, or untracked files under Lean cert/catalog/corpus implementation paths" "adversarial evidence confirms no Strategy E/A implementation changes"
+
+$ consumed VeIR Felt semantic definitions
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:85:def interpretConst (a : FeltConstAttr) : Option FeltVal :=
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:91:def interpretAdd : FeltVal → FeltVal → Option FeltVal
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:95:def interpretSub : FeltVal → FeltVal → Option FeltVal
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:99:def interpretMul : FeltVal → FeltVal → Option FeltVal
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:103:def interpretNeg : FeltVal → Option FeltVal
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:118:theorem interpretAdd_const_zero
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:122:    (interpretConst cst).bind (interpretAdd (.felt p a)) = some (.felt p a) := by
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:123:  simp only [interpretConst, hp, hval, reduce, Int.zero_emod, Int.toNat_zero,
+.lake/packages/VeIR/Veir/Passes/Felt/InterpModel.lean:124:    Option.bind_some, interpretAdd, ↓reduceIte, Nat.add_zero, Nat.mod_eq_of_lt ha]
+.lake/packages/VeIR/Veir/Data/Felt/Basic.lean:42:def const (p : Nat) (n : Int) : Felt p := (n : ZMod p)
+.lake/packages/VeIR/Veir/Data/Felt/Basic.lean:45:def add {p : Nat} (a b : Felt p) : Felt p := a + b
+.lake/packages/VeIR/Veir/Data/Felt/Basic.lean:48:def sub {p : Nat} (a b : Felt p) : Felt p := a - b
+.lake/packages/VeIR/Veir/Data/Felt/Basic.lean:51:def mul {p : Nat} (a b : Felt p) : Felt p := a * b
+.lake/packages/VeIR/Veir/Data/Felt/Basic.lean:54:def neg {p : Nat} (a : Felt p) : Felt p := -a
+
+$ no missing-op semantic definitions are present in consumed VeIR pin
+PASS: no missing-op semantic definitions found in consumed VeIR Felt semantics
+
+$ certificate coverage and smoke-classification facts
+docs/harness/FELT_OP_GAPS.md:34:| `add` | Covered baseline in `Data.Felt.add` and `InterpModel.interpretAdd` | Smoke corpus only; no acceptance claim | `right_identity_zero_add` and `constant_fold_add` certs exist | Covered with known LLZK modular-reduction caveat |
+docs/harness/FELT_OP_GAPS.md:56:- `scripts/harness/diff-smoke.sh` classifies missing `llzk-opt` as exit 77 in
+docs/harness/FELT_OP_GAPS.md:58:- The Strategy E checker still lacks the runtime MLIR matcher, so existing
+scripts/harness/diff-smoke.sh:27:  exit 77
+scripts/harness/diff-smoke.sh:32:  exit 77
+scripts/harness/diff-smoke.sh:68:    exit 77
+certs/felt-combine.cert.json:7:    {"patternId":"right_identity_zero_add","rootKind":"felt.add","lhs":{"kind":"opResult","opKind":"felt.add","operands":[{"kind":"any"},{"kind":"const","opKind":"felt.const","value":0}],"commutative":true},"rhs":{"kind":"any"},"conditions":[],"theoremName":"Veir.Data.Felt.right_identity_zero_add","llzkParityStatus":"veir-only","description":"felt.add x (felt.const 0) → x. Sound over any ZMod p."},
+certs/felt-combine.cert.json:8:    {"patternId":"constant_fold_add","rootKind":"felt.add","lhs":{"kind":"opResult","opKind":"felt.add","operands":[{"kind":"const","opKind":"felt.const"},{"kind":"const","opKind":"felt.const"}],"commutative":true},"rhs":{"kind":"const","opKind":"felt.const"},"conditions":[{"kind":"sameAttr","attr":"fieldName","positions":["lhs","rhs"]},{"kind":"attrInRegistry","pos":"lhs","attr":"fieldName","registry":"field"}],"theoremName":"Veir.Data.Felt.constant_fold_add","llzkParityStatus":"aligned-with-caveats","description":"felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2). Sound over any ZMod p. Caveat: LLZK applies modular reduction (Field::reduce); VEIR's runtime fold stores c1+c2 unreduced. Otherwise aligned."}
+LlzkLean/Cert.lean:175:      `"right_identity_zero_add"`. -/
+LlzkLean/Cert.lean:188:      `Veir.Data.Felt.right_identity_zero_add`) that proves LHS = RHS
+LlzkLean/Cert.lean:235:  **Status**: 2-of-15 stub. The remaining 13 verified VEIR patterns
+LlzkLean/Cert.lean:271:    (patternId := "right_identity_zero_add")
+LlzkLean/Cert.lean:292:    (patternId := "constant_fold_add")
+LlzkLean/CertValidate.lean:24:     because the catalog is intentionally a 2-of-15 stub. When the
+LlzkLean/CertValidate.lean:63:  catalog is intentionally a 2-of-15 stub) and `throwError` for
+LlzkLean/CertValidate.lean:114:  logInfo s!"[#assertCatalogCoverage] {veirPatternIds.length} VEIR rewrite-pattern defs found in Veir.FeltPass; catalog covers {catalogIds.length} of them; {uncovered.length} uncovered (stub status; expected 13 today). Uncovered: {uncovered}"
+LlzkLean/CertValidate.lean:121:#certThmExists "Veir.Data.Felt.right_identity_zero_add"
+LlzkLean/CertValidate.lean:122:#certThmExists "Veir.Data.Felt.constant_fold_add"
+
+$ no Phase 3 cert/corpus/Lean implementation diff
+PASS: no modified, staged, or untracked files under Lean cert/catalog/corpus implementation paths

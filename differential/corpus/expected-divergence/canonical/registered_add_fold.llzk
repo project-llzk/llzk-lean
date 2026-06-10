@@ -1,0 +1,13 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// Both tools fold the registered-field add to 12, but their pipelines are not
+// observationally aligned yet: LLZK's canonicalizer removes the now-dead input
+// constants, while VEIR's `felt-combine` does not run DCE. This is a Phase 4
+// Strategy A pipeline gap, not a parser failure.
+
+function.def @fold_add() -> !felt.type<"babybear"> {
+  %a = felt.const 5 : !felt.type<"babybear">
+  %b = felt.const 7 : !felt.type<"babybear">
+  %c = felt.add %a, %b : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}

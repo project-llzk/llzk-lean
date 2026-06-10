@@ -1,21 +1,24 @@
 # Dependency Pins
 
-Last reviewed: 2026-06-06
+Last reviewed: 2026-06-10
 
 ## Accepted VeIR Pin
 
-- Commit: `d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3`
-- Short ref: `d4cc1bf2d31b`
+- Commit: `220cd215579b435c3c22ce86b34a3f4ce2ca276e`
+- Short ref: `220cd215579b`
 - Remote: `https://github.com/project-llzk/veir.git`
 - Branch at selection time: `felt-review-structural-close`
 - Mode: remote commit pinned through Lake metadata and a clean Lake package
   checkout
 
-This commit is a descendant of the Phase 1 accepted pin
-`d52917ca4a57c4094b1aa61dd413aca4e1c2a56e`, which was itself a descendant of
-the previous Lake pin `09d5f00f0d2b4a8710afbe53dfdd7cf468578a04`.
+This commit is a descendant of the Phase 2 accepted pin
+`d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3`, which was itself a descendant of
+the Phase 1 accepted pin `d52917ca4a57c4094b1aa61dd413aca4e1c2a56e`.
 
-This pin includes the Phase 2 VeIR field-registry update and source-truth gate.
+This pin preserves the Phase 2 VeIR field-registry update and source-truth
+gate, and adds the Phase 5 canonicalization-aware `scripts/llzk-diff.sh`
+driver consumed by the default llzk-lean dependency checkout. The script uses a
+built `.lake/build/bin/veir-opt` when present and falls back to `lake exec`.
 
 ## Required State
 
@@ -38,7 +41,7 @@ The following must all identify the accepted commit:
   acceptance evidence.
 - Exploratory workspace: `scripts/harness/verify-pins.sh --mode exploratory
   --workspace-veir PATH` may warn about a workspace mismatch. This output must
-  not be used to close Phase 2.
+  not be used to close Phase 5.
 
 ## Forbidden Hidden State
 

@@ -9,17 +9,16 @@ and `veir-opt`, normalizes the outputs through
 `scripts/llzk-diff.sh`), and asserts they are textually identical
 modulo documented cosmetic differences.
 
-**Today (v0)** the harness is a *parse-and-print round-trip
-differential*: both tools parse the input and emit generic-MLIR,
-which is then normalized and compared. This catches dialect-port
-divergences but does not (yet) exercise either tool's
-canonicalization pipeline.
+The harness supports two modes:
 
-**v1** will enable canonicalization on both sides
-(`llzk-opt --canonicalize` and `veir-opt -p felt-combine`) so the
-differential covers each tool's verified Felt-rewrite catalog. The
-script today does *not* pass these flags — see "What this v1 needs"
-below.
+- parse/print mode: both tools parse the input and emit generic MLIR,
+  which is then normalized and compared.
+- canonicalization mode: `llzk-opt --canonicalize` is compared against
+  `veir-opt -p=felt-combine`.
+
+The workspace VeIR script now implements canonicalization mode. Until
+llzk-lean bumps its clean VeIR pin, llzk-lean runs this implementation
+with an explicit `VEIR_DIFF=../veir/scripts/llzk-diff.sh` override.
 
 ### Known alignment caveats (read before adding to the corpus)
 
@@ -44,13 +43,11 @@ claims to `llzk-lib` commit
    Bare `!felt.type` inputs short-circuit to a no-op, and the
    parse-print round-trip is what the differential actually catches.
 
-3. **Named-field FeltConstAttr parser parity is resolved on the
-   generic-MLIR path.** VEIR accepts the generic form emitted by
-   `llzk-opt --mlir-print-op-generic`, and the outer
-   `!felt.type<"name">` retains the field. The remaining difference
-   is cosmetic printer style: LLZK prints a redundant inner
-   annotation, while VEIR relies on the outer type annotation; the
-   normalizer strips only that redundant inner form.
+3. **Named-field generic MLIR still has an LLZK parser/verifier edge.**
+   LLZK custom assembly lowered through `llzk-opt --mlir-print-op-generic`
+   is the preferred named-field corpus path. A hand-authored generic
+   outer-typed named-field `FeltConstAttr` remains classified as
+   EXPECTED-LLZK-FAIL.
 
 4. **VEIR's folds don't apply modular reduction.** LLZK's
    `Field::reduce` in `lib/Util/Field.cpp` normalizes constants
@@ -58,13 +55,14 @@ claims to `llzk-lib` commit
    integer. For named-field inputs, this modular-reduction difference
    is the expected arithmetic divergence to classify.
 
-The right v1 ordering, given these gaps:
-   - First **re-test the named-field corpus** under the Phase 1 pin and
-     reclassify stale expected-divergence inputs.
-   - Then add a Field registry on VEIR's side so its folds
-     short-circuit-or-reduce consistent with LLZK.
-   - Then enable canonicalization in the diff script and start
-     mirroring `llzk-lib/test/Dialect/Felt/`.
+The Phase 4 ordering is now:
+   - Re-test the named-field corpus and keep the generic parser edge
+     classified as EXPECTED-LLZK-FAIL.
+   - Enable canonicalization in the diff script and classify the first
+     canonical divergences.
+   - Add field-registry and modular-reduction parity on VEIR's side so
+     constant-fold corpus cases can move from expected-divergence to
+     positive coverage.
 
 Without that ordering, named-field corpus additions will mostly document
 the known modular-reduction gap rather than demonstrate alignment.
@@ -108,31 +106,32 @@ No user-visible change to `llzk-opt`.
 
 ## What this v1 needs
 
-Current state (2026-06-05):
+Current state (2026-06-09):
 - ✅ `differential/run-differential.sh` wraps VEIR's diff script;
-  recurses into directory args; plumbs `LOWER_FIRST=1` through to
-  `--lower-first` for LLZK custom-asm inputs.
-- 🌱 Seed input: `corpus/felt/const_identities.mlir` (one file).
-  Corpus expansion is the headline v1 work item.
+  recurses into directory args; resolves targets to absolute paths; applies
+  `--lower-first` automatically to `.llzk` inputs; and supports
+  `--canonicalize`.
+- 🌱 Seed corpus: live const/type positives, canonical no-fire arithmetic,
+  and canonical-only expected divergences for DCE, modular reduction, and
+  field-registry preconditions.
 - ✅ VEIR has 15 Felt rewrite patterns whose structural preconditions are
   sorry-free and axiom-clean under the accepted Phase 1 pin. This still does
   not close the theorem↔pattern or IR-semantics joints; see
   `docs/REVIEW.md`.
-- 🚧 Harness is a **parse-print round-trip differential**, not a
-  pass-pipeline differential. v1 adds `--canonicalize` /
-  `-p felt-combine` invocations (see #1 below).
+- ✅ Workspace harness has a canonicalization mode. llzk-lean acceptance still
+  needs either an explicit reviewed `VEIR_DIFF=../veir/scripts/llzk-diff.sh`
+  run or a clean VeIR pin bump.
 - 🚧 CI workflow stubbed in `.github/workflows/differential.yml`.
   Skips green if `llzk-opt` not provisioned — CI provisioning is
   v1 work.
 
 Outstanding work to reach v1:
 
-1. **Enable canonicalization in the diff script.** Today's harness
-   compares parse-print outputs. v1 invokes both tools with their
-   canonicalize pipelines (`llzk-opt --canonicalize` and `veir-opt
-   -p felt-combine`) so the differential covers each tool's verified
-   Felt-rewrite catalog. Lands as an upstream PR to VEIR's
-   `scripts/llzk-diff.sh`; this repo bumps the SHA pin to pull it.
+1. **Land the canonicalization script in the consumed pin.** The
+   workspace script invokes both tools with their canonicalize pipelines
+   (`llzk-opt --canonicalize` and `veir-opt -p=felt-combine`). llzk-lean
+   still needs a clean pin bump before the default wrapper consumes that
+   implementation without `VEIR_DIFF=...`.
 
 2. **Corpus expansion.** Hand-author a Felt corpus that exercises every
    pattern in VEIR's `Combine.lean` against an equivalent LLZK input.
@@ -144,9 +143,7 @@ Outstanding work to reach v1:
    format (`%c = felt.add %a, %b : !felt.type`). Options:
    (a) Author corpus inputs in generic form (current approach).
    (b) Pipe LLZK inputs through `llzk-opt --mlir-print-op-generic`
-       before comparison — supported via `LOWER_FIRST=1`
-       (`run-differential.sh` plumbs it through to the diff script's
-       `--lower-first` flag).
+       before comparison — automatic for `.llzk` corpus inputs.
    (b) is cheaper to scale; (a) gives us VEIR-native authoring. Either
    way we can mirror `llzk-lib/test/Dialect/Felt/` quickly.
 
@@ -195,7 +192,7 @@ not a code change.
 ## Acceptance criteria for v1
 
 - Diff script invokes both tools with canonicalization enabled
-  (`llzk-opt --canonicalize`, `veir-opt -p felt-combine`).
+  (`llzk-opt --canonicalize`, `veir-opt -p=felt-combine`).
 - Every input under `llzk-lib/test/Dialect/Felt/` (or its
   generic-form equivalent) passes the differential.
 - Every pattern in VEIR's `Veir.Passes.Felt.Combine` is exercised by

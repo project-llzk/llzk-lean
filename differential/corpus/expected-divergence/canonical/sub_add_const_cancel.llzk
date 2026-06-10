@@ -1,0 +1,11 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// VeIR's `sub_add_const_cancel` rewrites `(x - c) + c` to `x`.
+// LLZK currently leaves the sub/add pair in place.
+
+function.def @sub_add_cancel(%x: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %c = felt.const 5 : !felt.type<"babybear">
+  %inner = felt.sub %x, %c : !felt.type<"babybear">, !felt.type<"babybear">
+  %outer = felt.add %inner, %c : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %outer : !felt.type<"babybear">
+}

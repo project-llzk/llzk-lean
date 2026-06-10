@@ -1,0 +1,11 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// Both tools fold the multiplication to 42, but LLZK also erases the now-dead
+// input constants while VeIR `felt-combine` does not run DCE.
+
+function.def @fold_mul() -> !felt.type<"babybear"> {
+  %a = felt.const 6 : !felt.type<"babybear">
+  %b = felt.const 7 : !felt.type<"babybear">
+  %c = felt.mul %a, %b : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}

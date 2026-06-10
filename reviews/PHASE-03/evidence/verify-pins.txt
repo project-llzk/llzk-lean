@@ -1,0 +1,15 @@
+accepted VeIR pin: d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3
+accepted VeIR source: https://github.com/project-llzk/veir.git felt-review-structural-close
+PASS: lakefile.toml uses accepted VeIR remote https://github.com/project-llzk/veir.git
+PASS: lakefile.toml pins VeIR d4cc1bf2d31b
+PASS: lake-manifest.json pins VeIR d4cc1bf2d31b
+PASS: lake-manifest.json inputRev pins VeIR d4cc1bf2d31b
+PASS: lake-manifest.json uses accepted VeIR remote https://github.com/project-llzk/veir.git
+PASS: lake-manifest.json records VeIR as a git dependency
+PASS: Lake files agree on VeIR d4cc1bf2d31b
+PASS: dependency checkout HEAD is d4cc1bf2d31b
+PASS: dependency checkout HEAD equals manifest rev
+PASS: dependency checkout is clean
+WARN: workspace VeIR HEAD 0c5280de5715dc0fa518e7e3782e784a5962d4d8 is a descendant of accepted pin d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3; dependency checkout remains the source of truth
+
+pin verification summary: 0 fail, 1 warn, mode=strict
