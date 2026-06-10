@@ -43,12 +43,13 @@ VEIR_DIFF=../veir/scripts/llzk-diff.sh \
   ./differential/run-differential.sh --canonicalize
 ```
 
-**First-run cost.** The differential script prefers
-`.lake/packages/VeIR/.lake/build/bin/veir-opt` when that executable is
-present. On a cold checkout it falls back to `lake exec veir-opt` inside
-`.lake/packages/VeIR/`, which builds VEIR (the Felt port + the IR machinery)
-and its Mathlib dependency. Expect a multi-minute build the first time;
-subsequent runs use the built executable and finish in seconds.
+**First-run cost.** The llzk-lean wrapper refreshes the default clean
+dependency executable with `lake build veir-opt` inside `.lake/packages/VeIR/`
+before running the corpus. That keeps a stale `.lake/build/bin/veir-opt` from
+becoming acceptance evidence. On a cold checkout this builds VEIR (the Felt
+port + the IR machinery) and its Mathlib dependency. Expect a multi-minute
+build the first time; subsequent runs use the refreshed executable and finish
+in seconds.
 
 If you already have VEIR built elsewhere on the filesystem (say,
 `~/veir`), you can skip the wait by reusing the existing build:

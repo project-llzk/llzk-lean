@@ -14,3 +14,9 @@ F8-LLZK-01 is resolved by consuming VeIR commit
 `differential/corpus/felt/unspecified_add_fold.llzk` as a positive no-fold
 case, and the other nonconstant algebraic canonicalization divergences remain
 classified as `EXPECTED-DIVERGE`.
+
+F8-LLZK-02 and F8-LLZK-03 are resolved by strengthening the default clean
+dependency differential path and Phase 8 evidence checks. The wrapper refreshes
+the pinned dependency `veir-opt` executable before running, rejects hidden
+`VEIR_OPT` overrides on the clean path, and the evidence records the exact
+override-clearing command.

@@ -18,3 +18,7 @@ Expected evidence:
 - `cert-smoke.txt`
 - `differential-clean-pin-canonicalize.txt`
 - `adversarial-review.txt`
+
+The differential evidence must record the exact `env -u VEIR_DIFF -u VEIR_OPT`
+clean-pin command and the `CLEAN-VEIR-OPT` marker emitted after refreshing the
+pinned dependency executable.

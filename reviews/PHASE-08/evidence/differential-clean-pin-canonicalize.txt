@@ -1,3 +1,5 @@
+$ env -u VEIR_DIFF -u VEIR_OPT LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt ./differential/run-differential.sh --canonicalize differential/corpus
+CLEAN-VEIR-OPT: lake build veir-opt succeeded for /home/alh/LLZK/llzk-lean/.lake/packages/VeIR
 EXPECTED-DIVERGE: /home/alh/LLZK/llzk-lean/differential/corpus/expected-divergence/canonical/add_neg_to_zero.llzk
 EXPECTED-DIVERGE: /home/alh/LLZK/llzk-lean/differential/corpus/expected-divergence/canonical/add_sub_const_cancel.llzk
 EXPECTED-DIVERGE: /home/alh/LLZK/llzk-lean/differential/corpus/expected-divergence/canonical/assoc_const_fold_add.llzk

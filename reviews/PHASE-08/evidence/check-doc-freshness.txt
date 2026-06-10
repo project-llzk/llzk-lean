@@ -278,12 +278,17 @@ PASS: Phase 8 skill evidence reports no failures
 PASS: Phase 8 lake build evidence reports success
 PASS: Phase 8 certificate smoke evidence reports success
 PASS: Phase 8 certificate smoke evidence validates theorem metadata
+PASS: Phase 8 differential evidence records exact clean-pin command
+PASS: Phase 8 differential evidence records pinned veir-opt refresh
 PASS: Phase 8 differential evidence records reclassified target
 PASS: Phase 8 clean-pin canonical baseline reports no failures
 PASS: Phase 8 adversarial evidence records target scope
 PASS: Phase 8 adversarial evidence records consumed pin
 PASS: Phase 8 adversarial evidence records reclassified target case
 PASS: Phase 8 adversarial evidence records clean-pin baseline
+PASS: Phase 8 adversarial evidence records veir-opt refresh
+PASS: Phase 8 adversarial evidence records hidden override guard
+PASS: Phase 8 adversarial evidence records exact command evidence
 PASS: Phase 8 adversarial evidence reports no open findings
 PASS: differential README records clean-pin expanded corpus status
 PASS: differential README documents exact expected-divergence markers

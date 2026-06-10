@@ -10,9 +10,12 @@
 #   ./differential/run-differential.sh --canonicalize      # canonical Phase 4 mode
 #
 # Requires:
-#   - VEIR built (via `lake build`); used through `lake exec veir-opt`.
-#     First-run cost is the VEIR + Mathlib build inside .lake/packages/VeIR/
-#     (~10 min). To reuse a pre-built VEIR checkout, symlink it in:
+#   - VEIR can build its `veir-opt` executable. The default clean dependency
+#     path refreshes `.lake/packages/VeIR/.lake/build/bin/veir-opt` with
+#     `lake build veir-opt` before comparing, so stale executable artifacts do
+#     not become acceptance evidence. First-run cost is the VEIR + Mathlib build
+#     inside .lake/packages/VeIR/ (~10 min). To reuse a pre-built VEIR checkout,
+#     symlink it in:
 #       ln -sf /path/to/veir/.lake/build \
 #           .lake/packages/VeIR/.lake/build
 #   - llzk-opt on $PATH or via $LLZK_OPT.
@@ -36,7 +39,13 @@ CORPUS="${ROOT}/differential/corpus"
 # Locate VEIR's diff script in the Lake-managed dependency tree. After
 # `lake update`, the VEIR source lives under `.lake/packages/VeIR/`.
 VEIR_PACKAGE="${ROOT}/.lake/packages/VeIR"
-DIFF="${VEIR_DIFF:-${VEIR_PACKAGE}/scripts/llzk-diff.sh}"
+if [[ -n "${VEIR_DIFF:-}" ]]; then
+  DIFF="${VEIR_DIFF}"
+  CLEAN_DEPENDENCY_DIFF=0
+else
+  DIFF="${VEIR_PACKAGE}/scripts/llzk-diff.sh"
+  CLEAN_DEPENDENCY_DIFF=1
+fi
 
 if [[ ! -x "${DIFF}" ]]; then
   echo "ERROR: VEIR diff script not found at ${DIFF}" >&2
@@ -97,6 +106,41 @@ if [[ "${CANONICALIZE:-0}" == "1" ]] && ! grep -Fq -- "--canonicalize" "${DIFF}"
   exit 2
 fi
 
+refresh_clean_dependency_veir_opt() {
+  if [[ "${CLEAN_DEPENDENCY_DIFF}" != "1" ]]; then
+    return 0
+  fi
+
+  if [[ -n "${VEIR_OPT:-}" ]]; then
+    echo "ERROR: VEIR_OPT override is incompatible with default clean dependency evidence." >&2
+    echo "Unset VEIR_OPT for clean-pin evidence, or set VEIR_DIFF for an explicit workspace run." >&2
+    return 2
+  fi
+
+  if [[ ! -d "${VEIR_PACKAGE}" ]]; then
+    echo "ERROR: VEIR package checkout missing at ${VEIR_PACKAGE}" >&2
+    return 2
+  fi
+
+  local build_log
+  build_log="$(mktemp -t llzk-veir-opt-build-XXXXXX)" || return 2
+  if (cd "${VEIR_PACKAGE}" && lake build veir-opt >"${build_log}" 2>&1); then
+    rm -f "${build_log}"
+  else
+    echo "ERROR: failed to refresh pinned VeIR veir-opt with 'lake build veir-opt'" >&2
+    sed 's/^/  /' "${build_log}" >&2
+    rm -f "${build_log}"
+    return 2
+  fi
+
+  if [[ ! -x "${VEIR_PACKAGE}/.lake/build/bin/veir-opt" ]]; then
+    echo "ERROR: lake build veir-opt did not produce an executable at ${VEIR_PACKAGE}/.lake/build/bin/veir-opt" >&2
+    return 2
+  fi
+
+  echo "CLEAN-VEIR-OPT: lake build veir-opt succeeded for ${VEIR_PACKAGE}"
+}
+
 expand_arg() {
   local a="$1"
   if [[ -f "$a" ]]; then
@@ -124,6 +168,8 @@ if (( ${#TARGETS[@]} == 0 )); then
   echo "Add inputs under differential/corpus/, or pass a file/directory arg." >&2
   exit 2
 fi
+
+refresh_clean_dependency_veir_opt || exit 2
 
 # Common flags for every input. Per-file flags are added in the loop below.
 DIFF_ARGS=()

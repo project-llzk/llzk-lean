@@ -104,7 +104,7 @@ evidence.
 - Build:
   `lake build` succeeds.
 - Strategy A baseline:
-  `LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt ./differential/run-differential.sh --canonicalize differential/corpus`
+  `env -u VEIR_DIFF -u VEIR_OPT LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt ./differential/run-differential.sh --canonicalize differential/corpus`
   continues to report `21 pass (incl. expected-diverge), 0 fail` with 10 PASS
   cases, 10 `EXPECTED-DIVERGE` canonical cases, and 1 `EXPECTED-LLZK-FAIL`.
 - Target guard:

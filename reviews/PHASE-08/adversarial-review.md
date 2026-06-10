@@ -22,6 +22,10 @@ remaining nonconstant algebraic rewrite divergences.
 - Confirm `docs/harness/CURRENT.md` names Phase 8 as active.
 - Confirm Phase 8 reclassifies only
   `differential/corpus/felt/unspecified_add_fold.llzk`.
+- Confirm the clean-pin differential path refreshes the pinned dependency
+  `veir-opt` executable and rejects hidden `VEIR_OPT` overrides.
+- Confirm the differential evidence records the exact override-clearing command
+  line and accepted `LLZK_OPT` path.
 - Confirm nonconstant algebraic rewrite divergences remain out of scope until a
   reviewed implementation change lands.
 

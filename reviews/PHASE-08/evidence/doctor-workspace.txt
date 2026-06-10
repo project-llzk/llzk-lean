@@ -3,7 +3,7 @@ PASS: tool lake is available
 PASS: optional tool cmake is available
 PASS: optional tool ctest is available
 PASS: git root is /home/alh/LLZK/llzk-lean
-PASS: llzk-lean HEAD bb836ca1862b descends from bootstrap input 617702beadfb
+PASS: llzk-lean HEAD 4589d1f37773 descends from bootstrap input 617702beadfb
 PASS: found AGENTS.md
 PASS: found docs/phases/PHASE-00-harness-reset.md
 PASS: found docs/phases/PHASE-01-pins-and-repro.md
