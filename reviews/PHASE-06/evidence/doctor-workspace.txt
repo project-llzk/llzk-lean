@@ -1,9 +1,10 @@
+$ scripts/harness/doctor.sh --workspace-veir ../veir
 PASS: tool git is available
 PASS: tool lake is available
 PASS: optional tool cmake is available
 PASS: optional tool ctest is available
 PASS: git root is /home/alh/LLZK/llzk-lean
-PASS: llzk-lean HEAD matches bootstrap input 617702beadfb
+PASS: llzk-lean HEAD 3b3ae2b0cf16 descends from bootstrap input 617702beadfb
 PASS: found AGENTS.md
 PASS: found docs/phases/PHASE-00-harness-reset.md
 PASS: found docs/phases/PHASE-01-pins-and-repro.md
@@ -54,19 +55,19 @@ PASS: executable scripts/harness/cert-smoke.sh
 PASS: executable scripts/harness/verify-pins.sh
 PASS: executable scripts/harness/verify-llzk-source.sh
 PASS: executable scripts/harness/validate-skills.sh
-accepted VeIR pin: 220cd215579b435c3c22ce86b34a3f4ce2ca276e
+accepted VeIR pin: a0bb2fc8e6d38ab068247dfc6506ba63f5feb953
 accepted VeIR source: https://github.com/project-llzk/veir.git felt-review-structural-close
 PASS: lakefile.toml uses accepted VeIR remote https://github.com/project-llzk/veir.git
-PASS: lakefile.toml pins VeIR 220cd215579b
-PASS: lake-manifest.json pins VeIR 220cd215579b
-PASS: lake-manifest.json inputRev pins VeIR 220cd215579b
+PASS: lakefile.toml pins VeIR a0bb2fc8e6d3
+PASS: lake-manifest.json pins VeIR a0bb2fc8e6d3
+PASS: lake-manifest.json inputRev pins VeIR a0bb2fc8e6d3
 PASS: lake-manifest.json uses accepted VeIR remote https://github.com/project-llzk/veir.git
 PASS: lake-manifest.json records VeIR as a git dependency
-PASS: Lake files agree on VeIR 220cd215579b
-PASS: dependency checkout HEAD is 220cd215579b
+PASS: Lake files agree on VeIR a0bb2fc8e6d3
+PASS: dependency checkout HEAD is a0bb2fc8e6d3
 PASS: dependency checkout HEAD equals manifest rev
 PASS: dependency checkout is clean
-PASS: workspace VeIR HEAD equals accepted pin 220cd215579b
+PASS: workspace VeIR HEAD equals accepted pin a0bb2fc8e6d3
 
 pin verification summary: 0 fail, 0 warn, mode=strict
 PASS: pin verification passed

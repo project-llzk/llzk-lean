@@ -19,7 +19,7 @@ Last reviewed: 2026-06-10
 | Skill validation | `scripts/harness/validate-skills.sh` | Passes when repo-local skills have required sections | Repo-local skills remain auditable |
 | Phase 4 workspace differential gate | `LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt VEIR_DIFF=../veir/scripts/llzk-diff.sh ./differential/run-differential.sh --canonicalize differential/corpus` | Runs workspace VeIR's canonicalization-aware diff script over the reviewed seed corpus | Initial Phase 4 evidence exists, but remains workspace evidence until the clean VeIR dependency pin consumes the updated script |
 | Phase 5 clean-pin implementation gate | `LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt ./differential/run-differential.sh --canonicalize differential/corpus` | Runs the canonical differential through the default clean `.lake/packages/VeIR` dependency script with no `VEIR_DIFF` override | The canonicalization-aware diff script has been consumed through a clean dependency pin and supports the Phase 6 divergence burn-down baseline |
-| Phase 6 divergence burn-down baseline | same as Phase 5 clean-pin implementation gate | Remains `21 pass (incl. expected-diverge), 0 fail` until a reviewed Phase 6 change reduces or reclassifies a divergence | Prevents Phase 6 from starting on a weakened Strategy A baseline |
+| Phase 6 divergence burn-down baseline | same as Phase 5 clean-pin implementation gate | Reports `21 pass (incl. expected-diverge), 0 fail` with 7 PASS cases, 13 `EXPECTED-DIVERGE` canonical cases, and 1 `EXPECTED-LLZK-FAIL` parser/verifier gap | Confirms Phase 6 reduced the expected-divergence matrix without weakening the clean-pin baseline |
 
 ## Reproducible-Pin Failures
 
@@ -98,7 +98,7 @@ Last reviewed: 2026-06-10
   `grumpkin`, `babybear`, `goldilocks`, `mersenne31`, and `koalabear` as
   recorded in `docs/harness/LLZK_SOURCE.md`.
 - `.lake/packages/VeIR` is missing, not at
-  `220cd215579b435c3c22ce86b34a3f4ce2ca276e`, or its
+  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`, or its
   `Veir/Passes/Felt/InterpModel.lean` `feltPrime` mirror disagrees with the
   accepted LLZK field registry.
 - Checker registry comments omit an accepted built-in field.
@@ -110,9 +110,9 @@ Last reviewed: 2026-06-10
   `https://github.com/project-llzk/veir.git`.
 - `lake-manifest.json` does not record VeIR as a `git` dependency.
 - Either Lake file names a commit other than
-  `220cd215579b435c3c22ce86b34a3f4ce2ca276e`.
+  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
 - `lake-manifest.json` records a VeIR `inputRev` other than
-  `220cd215579b435c3c22ce86b34a3f4ce2ca276e`.
+  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
 - `.lake/packages/VeIR` HEAD differs from the manifest rev.
 - `.lake/packages/VeIR` has any modified, deleted, staged, or untracked file.
 - A supplied workspace VeIR path neither equals nor descends from the accepted
@@ -129,8 +129,8 @@ The current harness does not prove:
 - Full Lean proof audit beyond buildability of the selected pin.
 - CI coverage when external tooling is missing.
 - Missing Felt operation semantics beyond the registry source facts.
-- Phase 6 divergence burn-down has not yet reduced expected divergences. Phase 5
-  clean-pin corpus evidence expands the Felt rewrite-pattern matrix but does not
-  expand certificates, complete all Strategy A corpus coverage, or port missing
-  operations. Phase 4 workspace evidence remains historical seed evidence; Phase
-  6 implementation evidence must preserve the clean dependency baseline.
+- Phase 6 divergence burn-down has reduced the DCE-only expected divergences,
+  but this does not expand certificates, complete all Strategy A corpus
+  coverage, or port missing operations. Phase 4 workspace evidence remains
+  historical seed evidence; Phase 6 implementation evidence must preserve the
+  clean dependency baseline.

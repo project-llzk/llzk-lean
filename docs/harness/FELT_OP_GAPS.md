@@ -11,7 +11,7 @@ Last reviewed: 2026-06-10
   `git@github.com:project-llzk/llzk-lib.git`.
 - Consumed VeIR dependency:
   `.lake/packages/VeIR` at
-  `220cd215579b435c3c22ce86b34a3f4ce2ca276e`.
+  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
 - Current certificate catalog:
   `LlzkLean/Cert.lean` and `certs/felt-combine.cert.json`.
 - Current differential corpus:

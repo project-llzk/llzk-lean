@@ -12,13 +12,15 @@ specific corpus and reporting.
 
 ## Status
 
-**Canonicalization-aware, clean-pin expanded corpus.**
+**Canonicalization-aware, clean-pin expanded corpus with Phase 6 burn-down.**
 `run-differential.sh` wraps VEIR's script, supports parse/print mode
 and canonicalization mode, and classifies output divergence, LLZK
 failure, VEIR failure, missing tools, and mode-skipped corpus entries
-separately. The Phase 5 clean-pin corpus covers all 15 current VeIR
-Felt rewrite-pattern definitions as PASS or EXPECTED-DIVERGE, but it is
-not full Strategy A acceptance coverage.
+separately. The Phase 6 clean-pin corpus covers all 15 current VeIR
+Felt rewrite-pattern definitions as PASS or EXPECTED-DIVERGE, with
+registered add/sub/mul constant folds reclassified to PASS after VeIR
+canonical mode started running `felt-combine,dce`. This is not full
+Strategy A acceptance coverage.
 
 ## Running locally
 
@@ -29,7 +31,7 @@ lake build                # Builds llzk-lean's own Lean code
 export LLZK_OPT=/path/to/llzk-opt
 ./differential/run-differential.sh
 
-# Phase 5 clean-pin canonical evidence path:
+# Phase 6 clean-pin canonical evidence path:
 ./differential/run-differential.sh --canonicalize differential/corpus
 
 # Historical Phase 4 workspace implementation run:
@@ -70,14 +72,18 @@ non-zero if any input lands in the FAIL column.
 
 ## Corpus expansion targets
 
-Current Phase 5 bar:
+Current Phase 6 bar:
 - `corpus/felt/const_identities.mlir` — live const proof-of-life.
 - `corpus/felt/types_smoke.llzk` — custom-asm lowering smoke.
 - `corpus/felt/arithmetic_no_fold.llzk` — canonical no-fire arithmetic.
 - `corpus/felt/add_const_swap.llzk` — positive coverage for the current
   rewrite pattern that both tools normalize the same way.
+- `corpus/felt/registered_add_fold.llzk`,
+  `corpus/felt/constant_fold_sub.llzk`, and
+  `corpus/felt/constant_fold_mul.llzk` — Phase 6 positives closed by the
+  clean `felt-combine,dce` pipeline.
 - `corpus/expected-divergence/canonical/*` — classified clean-pin
-  canonicalization gaps for DCE, modular reduction, field-registry
+  canonicalization gaps for modular reduction, field-registry
   preconditions, and VeIR-only algebraic rewrites.
 - `corpus/README.md` — the current 21-input inventory and 15-pattern
   rewrite coverage matrix.

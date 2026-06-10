@@ -14,7 +14,7 @@ The harness supports two modes:
 - parse/print mode: both tools parse the input and emit generic MLIR,
   which is then normalized and compared.
 - canonicalization mode: `llzk-opt --canonicalize` is compared against
-  `veir-opt -p=felt-combine`.
+  `veir-opt -p=felt-combine,dce`.
 
 The workspace VeIR script now implements canonicalization mode. Until
 llzk-lean bumps its clean VeIR pin, llzk-lean runs this implementation
@@ -61,8 +61,8 @@ The Phase 4 ordering is now:
    - Enable canonicalization in the diff script and classify the first
      canonical divergences.
    - Add field-registry and modular-reduction parity on VEIR's side so
-     constant-fold corpus cases can move from expected-divergence to
-     positive coverage.
+     remaining modular-reduction corpus cases can move from expected-divergence
+     to positive coverage.
 
 Without that ordering, named-field corpus additions will mostly document
 the known modular-reduction gap rather than demonstrate alignment.
@@ -118,20 +118,19 @@ Current state (2026-06-09):
   sorry-free and axiom-clean under the accepted Phase 1 pin. This still does
   not close the theorem↔pattern or IR-semantics joints; see
   `docs/REVIEW.md`.
-- ✅ Workspace harness has a canonicalization mode. llzk-lean acceptance still
-  needs either an explicit reviewed `VEIR_DIFF=../veir/scripts/llzk-diff.sh`
-  run or a clean VeIR pin bump.
+- ✅ Clean-pin harness has a canonicalization mode. Phase 6's first burn-down
+  pin runs VeIR `felt-combine,dce`, which reclassifies registered add/sub/mul
+  constant folds from expected divergence to positive coverage.
 - 🚧 CI workflow stubbed in `.github/workflows/differential.yml`.
   Skips green if `llzk-opt` not provisioned — CI provisioning is
   v1 work.
 
 Outstanding work to reach v1:
 
-1. **Land the canonicalization script in the consumed pin.** The
-   workspace script invokes both tools with their canonicalize pipelines
-   (`llzk-opt --canonicalize` and `veir-opt -p=felt-combine`). llzk-lean
-   still needs a clean pin bump before the default wrapper consumes that
-   implementation without `VEIR_DIFF=...`.
+1. **Continue burning down classified divergences.** The consumed clean pin now
+   invokes both tools with their canonicalize pipelines
+   (`llzk-opt --canonicalize` and `veir-opt -p=felt-combine,dce`). The next
+   VeIR-side target is modular reduction for registered-field folds.
 
 2. **Corpus expansion.** Hand-author a Felt corpus that exercises every
    pattern in VEIR's `Combine.lean` against an equivalent LLZK input.
@@ -192,7 +191,7 @@ not a code change.
 ## Acceptance criteria for v1
 
 - Diff script invokes both tools with canonicalization enabled
-  (`llzk-opt --canonicalize`, `veir-opt -p=felt-combine`).
+  (`llzk-opt --canonicalize`, `veir-opt -p=felt-combine,dce`).
 - Every input under `llzk-lib/test/Dialect/Felt/` (or its
   generic-form equivalent) passes the differential.
 - Every pattern in VEIR's `Veir.Passes.Felt.Combine` is exercised by

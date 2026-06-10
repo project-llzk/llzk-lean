@@ -1,7 +1,8 @@
-// EXPECTED-DIVERGE in canonicalization mode.
+// Canonical positive for registered-field multiplication folding.
 //
-// Both tools fold the multiplication to 42, but LLZK also erases the now-dead
-// input constants while VeIR `felt-combine` does not run DCE.
+// Phase 6 reclassified this from expected divergence after VeIR canonical
+// differential mode started running `felt-combine,dce`, matching LLZK's
+// removal of now-dead input constants.
 
 function.def @fold_mul() -> !felt.type<"babybear"> {
   %a = felt.const 6 : !felt.type<"babybear">

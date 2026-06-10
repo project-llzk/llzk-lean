@@ -1,0 +1,12 @@
+// Canonical positive for registered-field addition folding.
+//
+// Phase 6 reclassified this from expected divergence after VeIR canonical
+// differential mode started running `felt-combine,dce`, matching LLZK's
+// removal of now-dead input constants.
+
+function.def @fold_add() -> !felt.type<"babybear"> {
+  %a = felt.const 5 : !felt.type<"babybear">
+  %b = felt.const 7 : !felt.type<"babybear">
+  %c = felt.add %a, %b : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}

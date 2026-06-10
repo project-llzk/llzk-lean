@@ -1,3 +1,4 @@
+$ scripts/harness/validate-skills.sh
 PASS: skills/cert-checker-review/SKILL.md has title
 PASS: skills/cert-checker-review/SKILL.md has usage trigger
 PASS: skills/cert-checker-review/SKILL.md has validation path

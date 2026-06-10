@@ -21,7 +21,7 @@
 #   VEIR_DIFF=/path   use an explicit VEIR scripts/llzk-diff.sh. By default
 #                     the clean pinned Lake dependency is used.
 #   CANONICALIZE=1    pass --canonicalize to llzk-diff.sh so it compares
-#                     `llzk-opt --canonicalize` with `veir-opt -p=felt-combine`.
+#                     `llzk-opt --canonicalize` with `veir-opt -p=felt-combine,dce`.
 #   LOWER_FIRST=1     force --lower-first for every input. The wrapper already
 #                     applies --lower-first automatically to .llzk inputs.
 #

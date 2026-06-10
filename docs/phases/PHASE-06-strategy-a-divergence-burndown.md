@@ -22,7 +22,7 @@ the next implementation target explicit.
   `617702beadfbad6be784945e2bd98e8a788d357c`.
 - Workspace VeIR HEAD at Phase 6 bootstrap:
   `220cd215579b435c3c22ce86b34a3f4ce2ca276e`.
-- Consumed VeIR dependency pin remains:
+- Consumed VeIR dependency pin at bootstrap:
   `220cd215579b435c3c22ce86b34a3f4ce2ca276e`.
 - Accepted LLZK source commit remains:
   `db922857bc5a88a9107627ef6b36a8b5e57bc5c2`.
@@ -31,6 +31,22 @@ the next implementation target explicit.
   1 `EXPECTED-LLZK-FAIL` named-field parser/verifier gap.
 - Phase 5 final review fixed exact expected-divergence polarity so a canonical
   output-divergence test no longer passes on a wrong LLZK/VEIR failure mode.
+
+## Phase 6 Implementation Update
+
+- First burn-down VeIR commit:
+  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
+- llzk-lean now consumes that clean VeIR pin through Lake metadata and a clean
+  `.lake/packages/VeIR` checkout.
+- VeIR canonical differential mode now compares `llzk-opt --canonicalize`
+  against `veir-opt -p=felt-combine,dce`, aligning VeIR's diff path with
+  LLZK's dead-input cleanup after constant folds.
+- The clean-pin corpus still has 21 inputs and `0 fail`, but the classification
+  is now 7 PASS cases, 13 `EXPECTED-DIVERGE` canonical cases, and
+  1 `EXPECTED-LLZK-FAIL` named-field parser/verifier gap.
+- Reclassified positives:
+  `felt/registered_add_fold.llzk`, `felt/constant_fold_sub.llzk`, and
+  `felt/constant_fold_mul.llzk`.
 
 ## Non-Goals
 
@@ -52,6 +68,8 @@ the next implementation target explicit.
   exact-polarity closeout evidence.
 - `docs/harness/GATES.md`: document Phase 6 bootstrap and divergence burn-down
   gates.
+- `lakefile.toml`, `lake-manifest.json`, and `.lake/packages/VeIR`: consume the
+  Phase 6 DCE-enabled VeIR pin.
 - `scripts/harness/check-doc-freshness.sh`: require Phase 6 to be active while
   preserving Phase 2 through Phase 5 evidence checks.
 - `scripts/harness/doctor.sh`: require Phase 6 docs and review workspace.
@@ -76,8 +94,8 @@ the next implementation target explicit.
   `lake build` succeeds.
 - Strategy A baseline:
   `LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt ./differential/run-differential.sh --canonicalize differential/corpus`
-  remains `21 pass (incl. expected-diverge), 0 fail` until Phase 6 deliberately
-  reduces or reclassifies a divergence.
+  reports `21 pass (incl. expected-diverge), 0 fail` with the Phase 6
+  reclassification above.
 
 ## Review Requirements
 
@@ -97,5 +115,6 @@ the next implementation target explicit.
   closeout evidence.
 - Freshness, source truth, pin verification, strict doctor, skill validation,
   `lake build`, and the clean-pin canonical differential baseline pass.
-- The first Phase 6 implementation target is explicit: reduce or reclassify at
-  least one expected divergence without broadening unproved Strategy A claims.
+- The first Phase 6 implementation target is complete: reclassify the three
+  DCE-only constant-fold divergences without broadening unproved Strategy A
+  claims.

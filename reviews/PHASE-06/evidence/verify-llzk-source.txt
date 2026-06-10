@@ -1,3 +1,4 @@
+$ scripts/harness/verify-llzk-source.sh --llzk-lib ../llzk-lib
 PASS: llzk-lib path is /home/alh/LLZK/llzk-lib
 PASS: found docs/harness/LLZK_SOURCE.md
 PASS: LLZK source ledger records db922857bc5a
@@ -89,7 +90,7 @@ PASS: LLZK source ledger mentions babybear
 PASS: LLZK source ledger mentions goldilocks
 PASS: LLZK source ledger mentions mersenne31
 PASS: LLZK source ledger mentions koalabear
-PASS: pinned VeIR dependency HEAD is 220cd215579b
+PASS: pinned VeIR dependency HEAD is a0bb2fc8e6d3
 PASS: pinned VeIR dependency feltPrime cites current LLZK registry path
 PASS: pinned VeIR dependency feltPrime mentions bn128
 PASS: pinned VeIR dependency feltPrime mentions bn254

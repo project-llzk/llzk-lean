@@ -6,7 +6,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 MODE="strict"
 WORKSPACE_VEIR=""
 
-EXPECTED_LLZK_LEAN_HEAD="617702beadfb"
+EXPECTED_LLZK_LEAN_HEAD="617702beadfbad6be784945e2bd98e8a788d357c"
+EXPECTED_LLZK_LEAN_SHORT="${EXPECTED_LLZK_LEAN_HEAD:0:12}"
 
 FAIL=0
 WARN=0
@@ -114,10 +115,12 @@ else
 fi
 
 head_short="$(git -C "$ROOT" rev-parse --short=12 HEAD 2>/dev/null || true)"
-if [[ "$head_short" == "$EXPECTED_LLZK_LEAN_HEAD" ]]; then
-  ok "llzk-lean HEAD matches bootstrap input ${EXPECTED_LLZK_LEAN_HEAD}"
+if [[ "$head_short" == "$EXPECTED_LLZK_LEAN_SHORT" ]]; then
+  ok "llzk-lean HEAD matches bootstrap input ${EXPECTED_LLZK_LEAN_SHORT}"
+elif git -C "$ROOT" merge-base --is-ancestor "$EXPECTED_LLZK_LEAN_HEAD" HEAD 2>/dev/null; then
+  ok "llzk-lean HEAD ${head_short:-<none>} descends from bootstrap input ${EXPECTED_LLZK_LEAN_SHORT}"
 else
-  warn "llzk-lean HEAD ${head_short:-<none>} differs from bootstrap input ${EXPECTED_LLZK_LEAN_HEAD}"
+  warn "llzk-lean HEAD ${head_short:-<none>} differs from bootstrap input ${EXPECTED_LLZK_LEAN_SHORT}"
 fi
 
 require_file AGENTS.md
