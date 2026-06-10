@@ -24,12 +24,20 @@ without claiming full Strategy A acceptance.
 - Confirm the consumed VeIR pin is
   `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953`.
 - Confirm canonical differential mode runs `felt-combine,dce`.
+- Confirm the clean dependency checkout under `.lake/packages/VeIR` is exactly
+  `a0bb2fc8e6d38ab068247dfc6506ba63f5feb953` and its diff script invokes
+  `-p=felt-combine,dce`.
 - Confirm only `registered_add_fold.llzk`, `constant_fold_sub.llzk`, and
   `constant_fold_mul.llzk` moved from expected divergence to `felt/`.
+- Confirm those three moved inputs pass independently in canonical mode.
 - Confirm remaining expected-divergence files keep exact `EXPECTED-*` polarity.
+- Confirm the Phase 6 llzk-lean change did not edit Lean implementation files
+  while changing corpus classification, pins, harness scripts, docs, and
+  evidence.
 
 ## Result
 
 F6-LLZK-01 is resolved. Phase 6 implementation evidence under
 `reviews/PHASE-06/evidence/` records the clean-pin corpus at
-`21 pass (incl. expected-diverge), 0 fail`.
+`21 pass (incl. expected-diverge), 0 fail`. A fresh post-implementation
+adversarial pass found no new findings.

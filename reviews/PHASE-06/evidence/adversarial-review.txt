@@ -10,3 +10,13 @@ PASS: DCE-only registered add/sub/mul folds moved to the positive corpus.
 PASS: remaining expected-divergence cases still use exact EXPECTED-* markers.
 PASS: Phase 6 docs preserve the clean-pin canonical baseline without claiming full Strategy A acceptance.
 PASS: no Phase 6 findings remain open.
+
+$ Fresh post-implementation adversarial checks
+
+PASS: clean dependency checkout HEAD is a0bb2fc8e6d38ab068247dfc6506ba63f5feb953.
+PASS: clean dependency llzk-diff.sh contains veir-opt -p=felt-combine,dce in canonical mode.
+PASS: targeted canonical run passes registered_add_fold.llzk, constant_fold_sub.llzk, and constant_fold_mul.llzk individually.
+PASS: positive corpus contains no EXPECTED-* markers.
+PASS: reclassified files no longer appear under differential/corpus/expected-divergence.
+PASS: Phase 6 llzk-lean changes touch no Lean implementation files.
+PASS: fresh post-implementation adversarial pass found no new findings.
