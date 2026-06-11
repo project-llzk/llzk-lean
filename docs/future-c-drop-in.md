@@ -1,4 +1,9 @@
-# Strategy C — Full replacement of llzk-opt (future, dialect-narrow does not apply)
+# Strategy C — Full replacement of llzk-opt (future, LLZK-wide)
+
+For the active Felt-only drop-in goal, see
+[`drop-in-roadmap.md`](drop-in-roadmap.md). This Strategy C document is about
+replacing the entire `llzk-opt` binary and all dialect/backend surfaces, not the
+narrower Felt dialect replacement path.
 
 ## Concrete picture
 
@@ -33,10 +38,11 @@ Everything LLZK does, but in Lean. Independent of LLZK going forward.
    MLIR-text exchange format the existing C++ backends parse (~3-4
    months each backend, conservatively, without verification).
 
-**Felt-only**: doesn't apply at the dialect level. You can't binary-
-replace one dialect — the surrounding tool wants the dialect's C++
-headers. The dialect-narrow equivalent of "replacement" is Strategy D
-or B applied to that dialect.
+**Felt-only**: does not mean replacing the `llzk-opt` binary. The practical
+Felt-only target is a replacement path for the Felt dialect implementation and
+Felt-affecting canonicalization/folding behavior, with explicit integration
+through a wrapper, plugin, or upstream pass. That path is now tracked in the
+drop-in roadmap.
 
 ## Why this is documented, not pursued
 

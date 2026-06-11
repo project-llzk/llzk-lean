@@ -21,7 +21,7 @@ pattern: identifier, LHS shape, RHS shape, side conditions, and the
 name of the Lean theorem that justifies it.
 
 The current certificate proof basis is pinned to VEIR commit
-`d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3` from
+`d899d95004d4bd988c8456d686c33b11a7a5eb4a` from
 `project-llzk/veir`. Under that pin, the Lean catalog scan still finds
 15 Felt pattern definitions, with 2 covered by the hand-authored
 certificate catalog and 13 reported as uncovered. The pin gate is a

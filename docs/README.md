@@ -21,9 +21,19 @@ LLZK maintainers.
 - [Dependency pins](harness/PINS.md). Exact VEIR commit, allowed modes, update
   procedure, rollback procedure, and forbidden hidden state.
 - [Harness gates](harness/GATES.md). Strict checks required before claiming
-  Phase 1 acceptance.
-- [Phase 1 — reproducible pins](phases/PHASE-01-pins-and-repro.md). Current
-  phase plan and review requirements.
+  phase acceptance.
+- [Phase 8 — field preconditions](phases/PHASE-08-strategy-a-field-preconditions.md).
+  Current completed implementation milestone.
+- [Phase 9 — drop-in roadmap and claim reset](phases/PHASE-09-drop-in-roadmap.md).
+  Completed planning baseline after the Phase 8 merge.
+- [Phase 10 — toolchain replacement spike](phases/PHASE-10-toolchain-replacement-spike.md).
+  Bootstrap phase for the external-driver smoke and profile split.
+
+## Drop-in roadmap
+
+- [Felt drop-in replacement roadmap](drop-in-roadmap.md). The current
+  project-wide plan for moving from Phase 8 assurance infrastructure toward
+  a high-assurance replacement for the C++ Felt dialect path.
 
 ## Documented future options
 
@@ -35,8 +45,8 @@ LLZK maintainers.
 - [Strategy D — Lean MLIR dialect plugin via FFI](future-d-ffi-plugin.md).
   LLZK loads a Lean `.so` as the dialect implementation.
 - [Strategy C — Full replacement of `llzk-opt`](future-c-drop-in.md).
-  `veir-opt` replaces `llzk-opt`. Multi-year scope; documented here
-  for completeness rather than as an active plan.
+  `veir-opt` replaces all of `llzk-opt`. Multi-year scope; documented here
+  for completeness rather than as the current Felt-only roadmap.
 
 ## Picking among them
 
