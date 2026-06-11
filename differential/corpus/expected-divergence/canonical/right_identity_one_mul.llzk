@@ -1,0 +1,10 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// VeIR's `right_identity_one_mul` rewrites `felt.mul x 1` to `x`.
+// LLZK currently leaves this non-constant multiplication in place.
+
+function.def @mul_identity(%x: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %one = felt.const 1 : !felt.type<"babybear">
+  %y = felt.mul %x, %one : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %y : !felt.type<"babybear">
+}

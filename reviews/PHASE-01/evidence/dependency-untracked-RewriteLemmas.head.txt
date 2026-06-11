@@ -1,0 +1,260 @@
+import Veir.Passes.Matching
+import Veir.Passes.Felt.Matching
+
+namespace Veir
+
+theorem matchOp_spec {op : OperationPtr} {ctx : IRContext OpCode} {opType : OpCode}
+    {n : Nat} {r : Array ValuePtr × propertiesOf opType}
+    (h : matchOp op ctx opType n = some r) :
+    op.getOpType! ctx = opType ∧ op.getNumOperands! ctx = n ∧ op.getNumResults! ctx = 1 := by
+  simp only [matchOp, bind, Option.bind, guard, pure, failure] at h
+  grind
+
+/-- Generalized in-bounds: a successful `matchOp` for ANY `opType` (whose value differs
+    from the default operation's opType) implies the matched op is in bounds. The
+    per-opcode wrappers below pin `opType` so `decide` discharges the inequality. -/
+theorem matchOp_inBounds {op : OperationPtr} {ctx : IRContext OpCode} {opType : OpCode}
+    {n : Nat} {r : Array ValuePtr × propertiesOf opType}
+    (hd : (default : Operation OpCode).opType ≠ opType)
+    (h : matchOp op ctx opType n = some r) : op.InBounds ctx := by
+  have hspec := (matchOp_spec h).1
+  refine Decidable.byContradiction (fun hb => ?_)
+  rw [OperationPtr.getOpType!, OperationPtr.get!_of_not_inBounds hb] at hspec
+  exact absurd hspec hd
+
+theorem matchOp_inBounds_add {op : OperationPtr} {ctx : IRContext OpCode} {n : Nat}
+    {r : Array ValuePtr × propertiesOf (OpCode.felt Felt.add)}
+    (h : matchOp op ctx (OpCode.felt Felt.add) n = some r) : op.InBounds ctx :=
+  matchOp_inBounds (by decide) h
+
+theorem matchOp_inBounds_mul {op : OperationPtr} {ctx : IRContext OpCode} {n : Nat}
+    {r : Array ValuePtr × propertiesOf (OpCode.felt Felt.mul)}
+    (h : matchOp op ctx (OpCode.felt Felt.mul) n = some r) : op.InBounds ctx :=
+  matchOp_inBounds (by decide) h
+
+theorem matchOp_inBounds_sub {op : OperationPtr} {ctx : IRContext OpCode} {n : Nat}
+    {r : Array ValuePtr × propertiesOf (OpCode.felt Felt.sub)}
+    (h : matchOp op ctx (OpCode.felt Felt.sub) n = some r) : op.InBounds ctx :=
+  matchOp_inBounds (by decide) h
+
+theorem matchOp_inBounds_neg {op : OperationPtr} {ctx : IRContext OpCode} {n : Nat}
+    {r : Array ValuePtr × propertiesOf (OpCode.felt Felt.neg)}
+    (h : matchOp op ctx (OpCode.felt Felt.neg) n = some r) : op.InBounds ctx :=
+  matchOp_inBounds (by decide) h
+
+theorem matchOp_inBounds_const {op : OperationPtr} {ctx : IRContext OpCode} {n : Nat}
+    {r : Array ValuePtr × propertiesOf (OpCode.felt Felt.const)}
+    (h : matchOp op ctx (OpCode.felt Felt.const) n = some r) : op.InBounds ctx :=
+  matchOp_inBounds (by decide) h
+
+namespace FeltPass
+
+theorem matchAdd_inBounds {op : OperationPtr} {ctx : IRContext OpCode}
+    {r : ValuePtr × ValuePtr × propertiesOf (OpCode.felt Felt.add)}
+    (h : matchAdd op ctx = some r) : op.InBounds ctx := by
+  unfold matchAdd at h
+  simp only [bind, Option.bind] at h
+  split at h <;> first | exact matchOp_inBounds_add (by assumption) | simp_all
+
+theorem matchMul_inBounds {op : OperationPtr} {ctx : IRContext OpCode}
+    {r : ValuePtr × ValuePtr × propertiesOf (OpCode.felt Felt.mul)}
+    (h : matchMul op ctx = some r) : op.InBounds ctx := by
+  unfold matchMul at h
+  simp only [bind, Option.bind] at h
+  split at h <;> first | exact matchOp_inBounds_mul (by assumption) | simp_all
+
+theorem matchSub_inBounds {op : OperationPtr} {ctx : IRContext OpCode}
+    {r : ValuePtr × ValuePtr × propertiesOf (OpCode.felt Felt.sub)}
+    (h : matchSub op ctx = some r) : op.InBounds ctx := by
+  unfold matchSub at h
+  simp only [bind, Option.bind] at h
+  split at h <;> first | exact matchOp_inBounds_sub (by assumption) | simp_all
+
+theorem matchNeg_inBounds {op : OperationPtr} {ctx : IRContext OpCode}
+    {r : ValuePtr × propertiesOf (OpCode.felt Felt.neg)}
+    (h : matchNeg op ctx = some r) : op.InBounds ctx := by
+  unfold matchNeg at h
+  simp only [bind, Option.bind] at h
+  split at h <;> first | exact matchOp_inBounds_neg (by assumption) | simp_all
+
+theorem matchConst_inBounds {op : OperationPtr} {ctx : IRContext OpCode}
+    {r : propertiesOf (OpCode.felt Felt.const)}
+    (h : matchConst op ctx = some r) : op.InBounds ctx := by
+  unfold matchConst at h
+  simp only [bind, Option.bind] at h
+  split at h <;> first | exact matchOp_inBounds_const (by assumption) | simp_all
+
+/-- The `PatternRewriter.replaceValue` postcondition, exposed as a relation between the
+    raw contexts via `Rewriter.replaceValue?`. -/
+theorem replaceValue_post
+    (rewriter rewriter' : PatternRewriter OpCode) (oldVal newVal : ValuePtr)
+    (oldIn : oldVal.InBounds rewriter.ctx.raw) (newIn : newVal.InBounds rewriter.ctx.raw)
+    (h : rewriter.replaceValue oldVal newVal oldIn newIn = some rewriter') :
+    ∃ o n c d,
+      Rewriter.replaceValue? rewriter.ctx.raw oldVal newVal o n c d = some rewriter'.ctx.raw := by
+  -- `(addUsersInWorklist …)` only touches the worklist, leaving `.ctx = rewriter.ctx`; after
+  -- unfolding, `simp_all` closes the goal using that equation together with the inner
+  -- `replaceValue?` result equation.
+  unfold PatternRewriter.replaceValue WfRewriter.replaceValue at h
+  simp only [pure] at h
+  split at h
+  · simp at h
+  · rename_i rawCtx hreplace
+    split at hreplace
+    · simp at hreplace
+    · rename_i c hc
+      have hctx := PatternRewriter.addUsersInWorklist_same_ctx (rewriter := rewriter)
+        (value := oldVal) (hv := oldIn)
+      refine ⟨oldIn, newIn, ?_, 1_000_000_000, ?_⟩
+      · grind
+      · -- `hc` gives the raw result `c`; tie it back to `rewriter'.ctx.raw`.
+        simp only [Option.some.injEq] at h hreplace
+        subst h
+        simp only [← hreplace, ← hctx]
+        exact hc
+
+/-- `replaceValue` preserves an operation's region count. -/
+theorem getNumRegions!_replaceValue
+    (rewriter rewriter' : PatternRewriter OpCode) (oldVal newVal : ValuePtr) (op : OperationPtr)
+    (oldIn : oldVal.InBounds rewriter.ctx.raw) (newIn : newVal.InBounds rewriter.ctx.raw)
+    (h : rewriter.replaceValue oldVal newVal oldIn newIn = some rewriter') :
+    op.getNumRegions! rewriter'.ctx.raw = op.getNumRegions! rewriter.ctx.raw := by
+  obtain ⟨o, n, c, d, hrv⟩ := replaceValue_post rewriter rewriter' oldVal newVal oldIn newIn h
+  exact OperationPtr.getNumRegions!_replaceValue? hrv
+
+/-- `replaceValue` preserves `InBounds` of an operation. -/
+theorem inBounds_replaceValue
+    (rewriter rewriter' : PatternRewriter OpCode) (oldVal newVal : ValuePtr) (op : OperationPtr)
+    (oldIn : oldVal.InBounds rewriter.ctx.raw) (newIn : newVal.InBounds rewriter.ctx.raw)
+    (hOp : op.InBounds rewriter.ctx.raw)
+    (h : rewriter.replaceValue oldVal newVal oldIn newIn = some rewriter') :
+    op.InBounds rewriter'.ctx.raw := by
+  obtain ⟨o, n, c, d, hrv⟩ := replaceValue_post rewriter rewriter' oldVal newVal oldIn newIn h
+  have := Rewriter.replaceValue?_inBounds (GenericPtr.operation op) hrv
+  grind
+
+/-- `replaceValue` preserves an operation's result count. -/
+theorem getNumResults!_replaceValue
+    (rewriter rewriter' : PatternRewriter OpCode) (oldVal newVal : ValuePtr) (op : OperationPtr)
+    (oldIn : oldVal.InBounds rewriter.ctx.raw) (newIn : newVal.InBounds rewriter.ctx.raw)
+    (hOp : op.InBounds rewriter.ctx.raw)
+    (h : rewriter.replaceValue oldVal newVal oldIn newIn = some rewriter') :
+    op.getNumResults! rewriter'.ctx.raw = op.getNumResults! rewriter.ctx.raw := by
+  obtain ⟨o, n, c, d, hrv⟩ := replaceValue_post rewriter rewriter' oldVal newVal oldIn newIn h
+  exact Rewriter.replaceValue?_preserves_results_size op hOp hrv
+
+/-- After `replaceValue oldVal newVal` (with `oldVal ≠ newVal`), `oldVal` has no uses. -/
+theorem hasUses!_oldVal_replaceValue
+    (rewriter rewriter' : PatternRewriter OpCode) (oldVal newVal : ValuePtr)
+    (oldIn : oldVal.InBounds rewriter.ctx.raw) (newIn : newVal.InBounds rewriter.ctx.raw)
+    (hNe : oldVal ≠ newVal)
+    (h : rewriter.replaceValue oldVal newVal oldIn newIn = some rewriter') :
+    oldVal.hasUses! rewriter'.ctx.raw = false := by
+  obtain ⟨o, n, c, d, hrv⟩ := replaceValue_post rewriter rewriter' oldVal newVal oldIn newIn h
+  exact ValuePtr.hasUses!_replaceValue_oldValue rewriter.ctx.wellFormed hNe hrv
+
+/-- `felt.add x (felt.const 0) → x`, fully sorry-free. The two defensive guards
+    (`hRegNe`, `hEq`) supply the only two facts `WfIRContext` does not carry —
+    `felt.add`'s region count and SSA acyclicity (result ≠ operand) — so the
+    `eraseOp` preconditions discharge WITHOUT VEIR's `WfIRContext.Dom` axiom. The
+    guards are sound: they only skip the rewrite in degenerate states impossible
+    in well-formed IR. -/
+def right_identity_zero_add (rewriter : PatternRewriter OpCode) (op : OperationPtr) :
+    Option (PatternRewriter OpCode) := do
+  match h : matchAdd op rewriter.ctx with
+  | none => return rewriter
+  | some (lhs, _rhs, _) =>
+    let some rhsOp := _rhs.getDefiningOp! rewriter.ctx.raw | return rewriter
+    let some cst := matchConst rhsOp rewriter.ctx | return rewriter
+    if cst.value.value ≠ 0 then return rewriter
+    -- Defensive guards for the two facts WfIRContext does not carry.
+    if hRegNe : op.getNumRegions! rewriter.ctx.raw ≠ 0 then return rewriter else
+    if hEq : (op.getResult 0 : ValuePtr) = lhs then return rewriter else
+    have hReg0 : op.getNumRegions! rewriter.ctx.raw = 0 := by omega
+    have hNe : (op.getResult 0 : ValuePtr) ≠ lhs := hEq
+    -- Facts established from the match.
+    have hIn : op.InBounds rewriter.ctx.raw := matchAdd_inBounds h
+    have hWf : rewriter.ctx.raw.WellFormed := rewriter.ctx.wellFormed
+    have hFib : rewriter.ctx.raw.FieldsInBounds := hWf.inBounds
+    -- The guards inside `matchOp` must have passed for `matchAdd` to succeed, so `matchOp`
+    -- returns `some (getOperands!, getProperties!)`.
+    -- The `matchOp` inside `matchAdd` returned some value; its spec gives the operand/result
+    -- counts, and `lhs` is operand 0.
+    have key : op.getNumOperands! rewriter.ctx.raw = 2 ∧
+        op.getNumResults! rewriter.ctx.raw = 1 ∧
+        lhs = (op.getOperands! rewriter.ctx.raw)[0]! := by
+      have h' := h
+      simp only [matchAdd] at h'
+      rcases hb : matchOp op rewriter.ctx.raw (OpCode.felt Felt.add) 2 with _ | ⟨o, p⟩
+      · simp [hb] at h'
+      · have hsp := matchOp_spec hb
+        rw [hb] at h'
+        simp only [bind, Option.bind, pure, Option.some.injEq, Prod.mk.injEq] at h'
+        have hoeq : o = op.getOperands! rewriter.ctx.raw := by
+          simp only [matchOp, bind, Option.bind, guard, pure] at hb; grind
+        grind
+    have hNumOps : op.getNumOperands! rewriter.ctx.raw = 2 := key.1
+    have hNumRes : op.getNumResults! rewriter.ctx.raw = 1 := key.2.1
+    have hLhsEq : lhs = (op.getOperands! rewriter.ctx.raw)[0]! := key.2.2
+    -- Obligation #1: `(op.getResult 0).InBounds`.
+    have hResIn : (op.getResult 0 : ValuePtr).InBounds rewriter.ctx.raw := by
+      rw [ValuePtr.inBounds_opResult]
+      exact op.getResult_inBounds hIn 0 (by grind)
+    -- Obligation #2: `lhs.InBounds`. `lhs = (op.getOperands! ctx)[0]!`, a member of the
+    -- operands array (size = numOperands = 2 > 0), hence in bounds.
+    have hLhsMem : lhs ∈ op.getOperands! rewriter.ctx.raw := by
+      have hsize : (op.getOperands! rewriter.ctx.raw).size = 2 := by
+        rw [OperationPtr.getOperands!.size_eq_getNumOperands!]; exact hNumOps
+      rw [hLhsEq, OperationPtr.getOperands!.getElem!_eq_getOperand!,
+        ← OperationPtr.getOperands!.getElem_eq_getOperand! (h := by omega)]
+      exact Array.getElem_mem (by omega)
+    have hLhsIn : lhs.InBounds rewriter.ctx.raw :=
+      OperationPtr.getOperands!_inBounds hFib hIn hLhsMem
+    match hrep : rewriter.replaceValue (op.getResult 0) lhs hResIn hLhsIn with
+    | none => none
+    | some rewriter' =>
+      -- Obligation #3: `replaceValue` preserves region count, reducing to the pre-state count
+      -- (which the matcher does not constrain — see report).
+      have hRegions : op.getNumRegions! rewriter'.ctx.raw = op.getNumRegions! rewriter.ctx.raw :=
+        getNumRegions!_replaceValue rewriter rewriter' _ _ op hResIn hLhsIn hrep
+      -- Obligation #5: `replaceValue` preserves `InBounds`.
+      have hOpIn' : op.InBounds rewriter'.ctx.raw :=
+        inBounds_replaceValue rewriter rewriter' _ _ op hResIn hLhsIn hIn hrep
+      -- Obligation #4: after replacing all uses of `op.getResult 0` by `lhs`, the (sole)
+      -- result has no uses, hence neither does `op`.
+      have hNumRes' : op.getNumResults! rewriter'.ctx.raw = 1 := by
+        rw [getNumResults!_replaceValue rewriter rewriter' _ _ op hResIn hLhsIn hIn hrep]
+        exact hNumRes
+      have hNoUses : op.hasUses! rewriter'.ctx.raw = false := by
+        rw [OperationPtr.hasUses!_eq_false_iff_hasUses!_getResult_eq_false]
+        intro i hi
+        rw [hNumRes'] at hi
+        obtain rfl : i = 0 := by omega
+        exact hasUses!_oldVal_replaceValue rewriter rewriter' _ _ hResIn hLhsIn hNe hrep
+      -- eraseOp opRegions: via `hRegions` (replaceValue preserves region count) this
+      -- reduces to the guarded `hReg0`.
+      rewriter'.eraseOp op (hRegions.trans hReg0) (by simp [hNoUses]) hOpIn'
+
+/-- The `PatternRewriter.createOp` postcondition, exposed as a relation between the raw
+    contexts via `Rewriter.createOp`. -/
+theorem createOp_post
+    (rewriter rewriter' : PatternRewriter OpCode) (opType : OpCode)
+    (resultTypes : Array TypeAttr) (operands : Array ValuePtr) (blockOperands : Array BlockPtr)
+    (regions : Array RegionPtr) (properties : propertiesOf opType)
+    (insertionPoint : Option InsertPoint) (newOp : OperationPtr)
+    (hoper : ∀ oper, oper ∈ operands → oper.InBounds rewriter.ctx.raw)
+    (hblockOperands : ∀ blockOper, blockOper ∈ blockOperands → blockOper.InBounds rewriter.ctx.raw)
+    (hregions : ∀ region, region ∈ regions → region.InBounds rewriter.ctx.raw)
+    (hins : insertionPoint.maybe InsertPoint.InBounds rewriter.ctx.raw)
+    (h : rewriter.createOp opType resultTypes operands blockOperands regions properties
+      insertionPoint hoper hblockOperands hregions hins = some (rewriter', newOp)) :
+    ∃ h₅,
+      Rewriter.createOp rewriter.ctx.raw opType resultTypes operands blockOperands regions
+        properties insertionPoint hoper hblockOperands hregions hins h₅
+        = some (rewriter'.ctx.raw, newOp) := by
+  unfold PatternRewriter.createOp WfRewriter.createOp at h
+  simp only [pure] at h
+  -- The inner `Rewriter.createOp` either fails (contradiction) or yields `(ctx, op)`.
+  split at h
+  · -- inner createOp returned none
+    rename_i hnone

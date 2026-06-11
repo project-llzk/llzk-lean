@@ -1,0 +1,117 @@
+✔ [1018/1240] Built Veir.IR.OpInfo (388ms)
+✔ [1155/1240] Built Veir.Prelude (561ms)
+✔ [1156/1240] Built Veir.IR.Simp (773ms)
+✔ [1157/1240] Built Veir.Meta.Attrs (812ms)
+✔ [1158/1240] Built Veir.Rewriter.WfRewriter.GetSetTactic (1.2s)
+✔ [1159/1240] Built Veir.ForLean (1.5s)
+✔ [1160/1240] Built Veir.Data.Felt.Basic (1.1s)
+✔ [1161/1240] Built Veir.Meta.OpCode (1.1s)
+✔ [1162/1240] Built Veir.Passes.Felt.Proofs (1.0s)
+✔ [1163/1240] Built Veir.OpCode (2.8s)
+✔ [1164/1240] Built Veir.IR.Attribute (5.8s)
+✔ [1165/1240] Built Veir.Passes.Felt.InterpModel (281ms)
+✔ [1166/1240] Built Veir.Properties (1.6s)
+✔ [1167/1240] Built Veir.Dialects.RISCV_Cf.OpInfo (594ms)
+✔ [1168/1240] Built Veir.Dialects.LLZK.Felt.Properties (613ms)
+✔ [1169/1240] Built Veir.Dialects.ModArith.OpInfo (678ms)
+✔ [1170/1240] Built Veir.Dialects.LLZK.Include.Properties (675ms)
+✔ [1171/1240] Built Veir.Dialects.Cf.OpInfo (788ms)
+✔ [1172/1240] Built Veir.Dialects.LLZK.Function.Properties (739ms)
+✔ [1173/1240] Built Veir.Dialects.LLZK.String.Properties (881ms)
+✔ [1174/1240] Built Veir.Dialects.LLZK.Bool.Properties (859ms)
+✔ [1175/1240] Built Veir.Dialects.LLZK.Global.Properties (980ms)
+✔ [1176/1240] Built Veir.Dialects.Comb.OpInfo (1.1s)
+✔ [1177/1240] Built Veir.Dialects.LLZK.Include.OpInfo (640ms)
+✔ [1178/1240] Built Veir.Dialects.LLZK.Function.OpInfo (477ms)
+✔ [1179/1240] Built Veir.Dialects.HW.OpInfo (696ms)
+✔ [1180/1240] Built Veir.Dialects.LLZK.String.OpInfo (474ms)
+✔ [1181/1240] Built Veir.Dialects.LLZK.Bool.OpInfo (612ms)
+✔ [1182/1240] Built Veir.Dialects.LLZK.Felt.OpInfo (978ms)
+✔ [1183/1240] Built Veir.Dialects.LLZK.Global.OpInfo (589ms)
+✔ [1184/1240] Built Veir.Dialects.Arith.OpInfo (1.7s)
+✔ [1185/1240] Built Veir.Dialects.LLVM.OpInfo (2.2s)
+✔ [1186/1240] Built Veir.IR.Basic (8.1s)
+✔ [1187/1240] Built Veir.Dialects.RISCV.OpInfo (9.5s)
+✔ [1188/1240] Built Veir.GlobalOpInfo (11s)
+✔ [1189/1240] Built Veir.IR.GetSet (27s)
+✔ [1190/1240] Built Veir.IR.InBounds (31s)
+✔ [1191/1240] Built Veir.IR.Fields (20s)
+✔ [1192/1240] Built Veir.IR.Grind (278ms)
+✔ [1193/1240] Built Veir.IR.WellFormed (22s)
+✔ [1194/1240] Built Veir.IR (375ms)
+✔ [1195/1240] Built Veir.Rewriter.LinkedList.Basic (4.4s)
+⚠ [1196/1240] Built Veir.Verifier (9.5s)
+warning: Veir/Verifier.lean:2107:23: This simp argument is unused:
+  throw
+
+Hint: Omit it from the simp argument list.
+  simp only [Verified, verifyLocalInvariants, ← getOpType!_eq_getOpType, opType, ne_eq,
+  ̵  ̵ ̵ ̵bind,
+  ̲  ̲ ̲ ̲Except.bind, throw,̵ ̵t̵h̵r̵o̵w̵The, MonadExceptOf.throw, pure, Except.pure, dite_not,
+  ̵  ̵ ̵ ̵ite_not] at opVerify
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Veir/Verifier.lean:2107:30: This simp argument is unused:
+  throwThe
+
+Hint: Omit it from the simp argument list.
+  simp only [Verified, verifyLocalInvariants, ← getOpType!_eq_getOpType, opType, ne_eq,
+  ̵  ̵ ̵ ̵bind,
+  ̲  ̲ ̲ ̲Except.bind, throw, t̵h̵r̵o̵w̵T̵h̵e̵,̵ ̵MonadExceptOf.throw, pure, Except.pure, dite_not,
+  ̵  ̵ ̵ ̵ite_not] at opVerify
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Veir/Verifier.lean:2107:40: This simp argument is unused:
+  MonadExceptOf.throw
+
+Hint: Omit it from the simp argument list.
+  simp only [Verified, verifyLocalInvariants, ← getOpType!_eq_getOpType, opType, ne_eq,
+  ̵  ̵ ̵ ̵bind,
+  ̲  ̲ ̲ ̲Except.bind, throw, throwThe, M̵o̵n̵a̵d̵E̵x̵c̵e̵pt̵O̵f̵.̵t̵h̵r̵o̵w̵,̵ ̵p̵ure, Except.pure, dite_not,
+  ̵  ̵ ̵ ̵ite_not] at opVerify
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+✔ [1197/1240] Built Veir.Pass (763ms)
+✔ [1198/1240] Built Veir.Rewriter.InsertPoint (11s)
+✔ [1199/1240] Built Veir.Rewriter.LinkedList.GetSet (9.5s)
+✔ [1200/1240] Built Veir.IR.DeallocLemmas (14s)
+✔ [1201/1240] Built Veir.Rewriter.LinkedList.WellFormed (33s)
+✔ [1202/1240] Built Veir.Rewriter.LinkedList (265ms)
+✔ [1203/1240] Built Veir.Rewriter.Basic (11s)
+✔ [1204/1240] Built Veir.Rewriter.GetSet.CreateRegion (2.1s)
+✔ [1205/1240] Built Veir.Rewriter.GetSet.InsertOp (2.4s)
+✔ [1206/1240] Built Veir.Rewriter.GetSet.InsertBlock (4.1s)
+✔ [1207/1240] Built Veir.Rewriter.GetSet.Results (5.3s)
+✔ [1208/1240] Built Veir.Rewriter.GetSet.DetachBlockOperands (5.8s)
+✔ [1209/1240] Built Veir.Rewriter.GetSet.DetachOperands (5.9s)
+✔ [1210/1240] Built Veir.Rewriter.GetSet.BlockArguments (6.3s)
+✔ [1211/1240] Built Veir.Rewriter.GetSet.ReplaceUse (7.4s)
+✔ [1212/1240] Built Veir.Rewriter.GetSet.DetachOp (2.9s)
+✔ [1213/1240] Built Veir.Rewriter.GetSet.Regions (9.7s)
+✔ [1214/1240] Built Veir.Rewriter.GetSet.BlockOperands (12s)
+✔ [1215/1240] Built Veir.Rewriter.GetSet.Operands (23s)
+✔ [1216/1240] Built Veir.Rewriter.GetSet.CreateOp (58s)
+✔ [1217/1240] Built Veir.Rewriter.GetSet (260ms)
+✔ [1218/1240] Built Veir.Rewriter.WellFormed.Region (2.6s)
+✔ [1219/1240] Built Veir.Rewriter.WellFormed.OpResults (3.5s)
+✔ [1220/1240] Built Veir.Rewriter.WellFormed.OpRegion (3.6s)
+✔ [1221/1240] Built Veir.Rewriter.WellFormed.BlockArguments (4.1s)
+✔ [1222/1240] Built Veir.Rewriter.WellFormed.Block (3.3s)
+✔ [1223/1240] Built Veir.Rewriter.WellFormed.Value (7.7s)
+✔ [1224/1240] Built Veir.Rewriter.WellFormed.OpOperands (9.2s)
+✔ [1225/1240] Built Veir.Rewriter.WellFormed.BlockOperands (26s)
+✔ [1226/1240] Built Veir.Rewriter.WellFormed.Operation (22s)
+✔ [1227/1240] Built Veir.Rewriter.WellFormed.IRContext (553ms)
+✔ [1228/1240] Built Veir.Rewriter.WellFormed.ReplaceOp (1.5s)
+✔ [1229/1240] Built Veir.Rewriter.WellFormed (234ms)
+✔ [1230/1240] Built Veir.Rewriter.WfRewriter.Basic (839ms)
+✔ [1231/1240] Built Veir.Rewriter.WfRewriter.GetSet (3.5s)
+✔ [1232/1240] Built Veir.Rewriter.WfRewriter (447ms)
+✔ [1233/1240] Built Veir.PatternRewriter.Basic (2.2s)
+✔ [1234/1240] Built Veir.Passes.Matching (980ms)
+✔ [1235/1240] Built Veir.Passes.Felt.Matching (817ms)
+✔ [1236/1240] Built Veir.Passes.Felt.RewriteLemmas (1.8s)
+✔ [1237/1240] Built Veir.Passes.Felt.Combine (1.2s)
+ℹ [1238/1240] Replayed LlzkLean.CertValidate
+info: LlzkLean/CertValidate.lean:147:0: [#assertCatalogCoverage] 15 VEIR rewrite-pattern defs found in Veir.FeltPass; catalog covers 2 of them; 13 uncovered (stub status; expected 13 today). Uncovered: [assoc_const_fold_add, right_zero_mul, constant_fold_mul, neg_neg_to_self, assoc_const_fold_mul, add_const_swap, right_identity_one_mul, constant_fold_sub, add_sub_const_cancel, self_subtraction_to_zero, add_neg_to_zero, constant_fold_neg, sub_add_const_cancel]
+Build completed successfully (1240 jobs).

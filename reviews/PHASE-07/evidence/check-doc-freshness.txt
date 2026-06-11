@@ -1,0 +1,265 @@
+PASS: found docs/phases/PHASE-00-harness-reset.md
+PASS: found docs/phases/PHASE-01-pins-and-repro.md
+PASS: found docs/phases/PHASE-02-llzk-source-truth.md
+PASS: found docs/phases/PHASE-03-felt-op-gap-ledger.md
+PASS: found docs/phases/PHASE-04-strategy-a-differential.md
+PASS: found docs/phases/PHASE-05-strategy-a-pin-and-corpus.md
+PASS: found docs/phases/PHASE-06-strategy-a-divergence-burndown.md
+PASS: found docs/phases/PHASE-07-strategy-a-modular-reduction.md
+PASS: found docs/phases/PHASE_TEMPLATE.md
+PASS: found docs/harness/CURRENT.md
+PASS: found docs/harness/SOURCES.md
+PASS: found docs/harness/GATES.md
+PASS: found docs/harness/FELT_OP_GAPS.md
+PASS: found docs/harness/LLZK_SOURCE.md
+PASS: found docs/harness/PINS.md
+PASS: found docs/harness/REVIEWS.md
+PASS: found reviews/PHASE-01/disposition.md
+PASS: found reviews/PHASE-01/findings.md
+PASS: found reviews/PHASE-01/request.md
+PASS: found reviews/PHASE-01/adversarial-review.md
+PASS: found reviews/PHASE-02/disposition.md
+PASS: found reviews/PHASE-02/findings.md
+PASS: found reviews/PHASE-02/request.md
+PASS: found reviews/PHASE-02/adversarial-review.md
+PASS: found reviews/PHASE-03/disposition.md
+PASS: found reviews/PHASE-03/findings.md
+PASS: found reviews/PHASE-03/request.md
+PASS: found reviews/PHASE-03/adversarial-review.md
+PASS: found reviews/PHASE-03/evidence/README.md
+PASS: found reviews/PHASE-04/disposition.md
+PASS: found reviews/PHASE-04/findings.md
+PASS: found reviews/PHASE-04/request.md
+PASS: found reviews/PHASE-04/adversarial-review.md
+PASS: found reviews/PHASE-04/evidence/README.md
+PASS: found reviews/PHASE-05/disposition.md
+PASS: found reviews/PHASE-05/findings.md
+PASS: found reviews/PHASE-05/request.md
+PASS: found reviews/PHASE-05/adversarial-review.md
+PASS: found reviews/PHASE-05/evidence/README.md
+PASS: found reviews/PHASE-06/disposition.md
+PASS: found reviews/PHASE-06/findings.md
+PASS: found reviews/PHASE-06/request.md
+PASS: found reviews/PHASE-06/adversarial-review.md
+PASS: found reviews/PHASE-06/evidence/README.md
+PASS: found reviews/PHASE-07/disposition.md
+PASS: found reviews/PHASE-07/findings.md
+PASS: found reviews/PHASE-07/request.md
+PASS: found reviews/PHASE-07/adversarial-review.md
+PASS: found reviews/PHASE-07/evidence/README.md
+PASS: phase review date has ISO format
+PASS: docs/harness/CURRENT.md review date agrees with phase
+PASS: docs/harness/SOURCES.md review date agrees with phase
+PASS: docs/harness/GATES.md review date agrees with phase
+PASS: docs/harness/FELT_OP_GAPS.md review date agrees with phase
+PASS: docs/harness/LLZK_SOURCE.md review date agrees with phase
+PASS: docs/harness/PINS.md review date agrees with phase
+PASS: docs/harness/REVIEWS.md review date agrees with phase
+PASS: CURRENT names active phase
+PASS: only Phase 7 phase file is marked active
+PASS: Phase 1 phase file is marked completed
+PASS: Phase 2 phase file is marked completed
+PASS: Phase 3 phase file is marked completed
+PASS: Phase 4 phase file is marked completed
+PASS: Phase 5 phase file is marked completed
+PASS: Phase 6 phase file is marked completed
+PASS: CURRENT no longer says corpus expansion is future work
+PASS: CURRENT no longer says clean-pin corpus migration is only starting
+PASS: CURRENT no longer describes the canonical corpus as seed-only
+PASS: SOURCES records accepted VeIR pin
+PASS: SOURCES records accepted LLZK source commit
+PASS: SOURCES records Felt operation gap ledger
+PASS: SOURCES records Phase 4 phase file
+PASS: SOURCES records Phase 5 phase file
+PASS: SOURCES records Phase 6 phase file
+PASS: SOURCES records Phase 7 phase file
+PASS: SOURCES records Phase 4 implementation and fresh review evidence
+PASS: SOURCES records Strategy A differential wrapper and corpus
+PASS: SOURCES records accepted local llzk-opt binary
+PASS: SOURCES records local llvm-project test infrastructure
+PASS: SOURCES and LLZK_SOURCE record accepted LLZK remote
+PASS: PINS records accepted VeIR commit
+PASS: FELT_OP_GAPS has exactly 18 operation rows
+PASS: FELT_OP_GAPS records const exactly once
+PASS: FELT_OP_GAPS records add exactly once
+PASS: FELT_OP_GAPS records sub exactly once
+PASS: FELT_OP_GAPS records mul exactly once
+PASS: FELT_OP_GAPS records pow exactly once
+PASS: FELT_OP_GAPS records div exactly once
+PASS: FELT_OP_GAPS records uintdiv exactly once
+PASS: FELT_OP_GAPS records sintdiv exactly once
+PASS: FELT_OP_GAPS records umod exactly once
+PASS: FELT_OP_GAPS records smod exactly once
+PASS: FELT_OP_GAPS records neg exactly once
+PASS: FELT_OP_GAPS records inv exactly once
+PASS: FELT_OP_GAPS records bit_and exactly once
+PASS: FELT_OP_GAPS records bit_or exactly once
+PASS: FELT_OP_GAPS records bit_xor exactly once
+PASS: FELT_OP_GAPS records bit_not exactly once
+PASS: FELT_OP_GAPS records shl exactly once
+PASS: FELT_OP_GAPS records shr exactly once
+PASS: FELT_OP_GAPS marks sub Strategy A/E coverage gap
+PASS: FELT_OP_GAPS marks mul Strategy A/E coverage gap
+PASS: FELT_OP_GAPS marks neg Strategy A/E coverage gap
+PASS: FELT_OP_GAPS marks pow consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks pow as a gap
+PASS: FELT_OP_GAPS marks div consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks div as a gap
+PASS: FELT_OP_GAPS marks uintdiv consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks uintdiv as a gap
+PASS: FELT_OP_GAPS marks sintdiv consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks sintdiv as a gap
+PASS: FELT_OP_GAPS marks umod consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks umod as a gap
+PASS: FELT_OP_GAPS marks smod consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks smod as a gap
+PASS: FELT_OP_GAPS marks inv consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks inv as a gap
+PASS: FELT_OP_GAPS marks bit_and consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks bit_and as a gap
+PASS: FELT_OP_GAPS marks bit_or consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks bit_or as a gap
+PASS: FELT_OP_GAPS marks bit_xor consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks bit_xor as a gap
+PASS: FELT_OP_GAPS marks bit_not consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks bit_not as a gap
+PASS: FELT_OP_GAPS marks shl consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks shl as a gap
+PASS: FELT_OP_GAPS marks shr consumed VeIR semantic model missing
+PASS: FELT_OP_GAPS marks shr as a gap
+PASS: Phase 2 disposition exists
+PASS: Phase 3 disposition exists
+PASS: Phase 4 disposition exists
+PASS: Phase 5 disposition exists
+PASS: Phase 6 disposition exists
+PASS: Phase 7 disposition exists
+PASS: evidence present reviews/PHASE-02/evidence/llzk-lib-refs.txt
+PASS: evidence present reviews/PHASE-02/evidence/llzk-field-registry.txt
+PASS: evidence present reviews/PHASE-02/evidence/llzk-felt-ops.txt
+PASS: evidence present reviews/PHASE-02/evidence/verify-llzk-source-after.txt
+PASS: evidence present reviews/PHASE-02/evidence/verify-pins-after.txt
+PASS: evidence present reviews/PHASE-02/evidence/lake-build-after.txt
+PASS: evidence present reviews/PHASE-02/evidence/adversarial-review.txt
+PASS: evidence present reviews/PHASE-03/evidence/README.md
+PASS: evidence present reviews/PHASE-03/evidence/check-doc-freshness.txt
+PASS: evidence present reviews/PHASE-03/evidence/verify-llzk-source.txt
+PASS: evidence present reviews/PHASE-03/evidence/verify-pins.txt
+PASS: evidence present reviews/PHASE-03/evidence/doctor-workspace.txt
+PASS: evidence present reviews/PHASE-03/evidence/validate-skills.txt
+PASS: evidence present reviews/PHASE-03/evidence/lake-build.txt
+PASS: evidence present reviews/PHASE-03/evidence/adversarial-review.txt
+PASS: evidence present reviews/PHASE-04/evidence/README.md
+PASS: evidence present reviews/PHASE-04/evidence/check-doc-freshness.txt
+PASS: evidence present reviews/PHASE-04/evidence/verify-llzk-source.txt
+PASS: evidence present reviews/PHASE-04/evidence/verify-pins.txt
+PASS: evidence present reviews/PHASE-04/evidence/doctor-workspace.txt
+PASS: evidence present reviews/PHASE-04/evidence/validate-skills.txt
+PASS: evidence present reviews/PHASE-04/evidence/lake-build.txt
+PASS: evidence present reviews/PHASE-04/evidence/adversarial-review.txt
+PASS: evidence present reviews/PHASE-04/evidence/adversarial-review-fresh.txt
+PASS: evidence present reviews/PHASE-04/evidence/differential-bootstrap.txt
+PASS: evidence present reviews/PHASE-04/evidence/differential-canonicalize.txt
+PASS: evidence present reviews/PHASE-04/evidence/corpus-classification.txt
+PASS: evidence present reviews/PHASE-05/evidence/README.md
+PASS: evidence present reviews/PHASE-05/evidence/check-doc-freshness.txt
+PASS: evidence present reviews/PHASE-05/evidence/verify-llzk-source.txt
+PASS: evidence present reviews/PHASE-05/evidence/verify-pins.txt
+PASS: evidence present reviews/PHASE-05/evidence/doctor-workspace.txt
+PASS: evidence present reviews/PHASE-05/evidence/validate-skills.txt
+PASS: evidence present reviews/PHASE-05/evidence/lake-build.txt
+PASS: evidence present reviews/PHASE-05/evidence/skip-guard.txt
+PASS: evidence present reviews/PHASE-05/evidence/polarity-guard.txt
+PASS: evidence present reviews/PHASE-05/evidence/differential-clean-pin-canonicalize.txt
+PASS: evidence present reviews/PHASE-05/evidence/adversarial-review.txt
+PASS: evidence present reviews/PHASE-06/evidence/README.md
+PASS: evidence present reviews/PHASE-06/evidence/check-doc-freshness.txt
+PASS: evidence present reviews/PHASE-06/evidence/verify-llzk-source.txt
+PASS: evidence present reviews/PHASE-06/evidence/verify-pins.txt
+PASS: evidence present reviews/PHASE-06/evidence/doctor-workspace.txt
+PASS: evidence present reviews/PHASE-06/evidence/validate-skills.txt
+PASS: evidence present reviews/PHASE-06/evidence/lake-build.txt
+PASS: evidence present reviews/PHASE-06/evidence/differential-clean-pin-canonicalize.txt
+PASS: evidence present reviews/PHASE-06/evidence/adversarial-review.txt
+PASS: evidence present reviews/PHASE-07/evidence/README.md
+PASS: evidence present reviews/PHASE-07/evidence/check-doc-freshness.txt
+PASS: evidence present reviews/PHASE-07/evidence/verify-llzk-source.txt
+PASS: evidence present reviews/PHASE-07/evidence/verify-pins.txt
+PASS: evidence present reviews/PHASE-07/evidence/doctor-workspace.txt
+PASS: evidence present reviews/PHASE-07/evidence/validate-skills.txt
+PASS: evidence present reviews/PHASE-07/evidence/lake-build.txt
+PASS: evidence present reviews/PHASE-07/evidence/cert-smoke.txt
+PASS: evidence present reviews/PHASE-07/evidence/differential-clean-pin-canonicalize.txt
+PASS: evidence present reviews/PHASE-07/evidence/adversarial-review.txt
+PASS: verify-llzk-source evidence reports no failures
+PASS: pin evidence reports no failures
+PASS: strict doctor evidence reports no failures
+PASS: skill evidence reports no failures
+PASS: lake build evidence reports success
+PASS: lake build evidence records expected certificate coverage gap
+PASS: adversarial evidence confirms missing-op semantics were not added
+PASS: adversarial evidence confirms no Strategy E/A implementation changes
+PASS: Phase 4 source evidence reports no failures
+PASS: Phase 4 pin evidence reports no failures
+PASS: Phase 4 strict doctor evidence reports no failures
+PASS: Phase 4 skill evidence reports no failures
+PASS: Phase 4 lake build evidence reports success
+PASS: Phase 4 adversarial evidence confirms llzk-opt is executable
+PASS: Phase 4 adversarial evidence dispositions differential wrapper and corpus edits
+PASS: Phase 4 parse/print differential evidence records workspace VeIR script
+PASS: Phase 4 parse/print differential evidence reports no failures
+PASS: Phase 4 canonical differential evidence records accepted llzk-opt
+PASS: Phase 4 canonical differential evidence records canonicalization command
+PASS: Phase 4 canonical differential evidence reports no failures
+PASS: Phase 4 corpus evidence records canonical expected-divergence cases
+PASS: Phase 4 fresh adversarial evidence records clean-pin guard
+PASS: Phase 5 source evidence reports no failures
+PASS: Phase 5 source evidence captures known stale llzk-lib warning detail
+PASS: Phase 5 pin evidence reports no failures
+PASS: Phase 5 strict doctor evidence reports no failures
+PASS: Phase 5 skill evidence reports no failures
+PASS: Phase 5 lake build evidence reports success
+PASS: Phase 5 skip guard rejects missing-tool evidence
+PASS: Phase 5 polarity guard rejects wrong expected-divergence failure mode
+PASS: Phase 5 polarity guard records nonzero exit
+PASS: Phase 5 clean-pin canonical evidence records default dependency command
+PASS: Phase 5 clean-pin canonical evidence records expanded positive corpus
+PASS: Phase 5 clean-pin canonical evidence records expanded expected-divergence corpus
+PASS: Phase 5 clean-pin canonical evidence reports no failures
+PASS: Phase 5 adversarial evidence records exact polarity guard
+PASS: Phase 5 adversarial evidence reports no open findings
+PASS: Phase 6 source evidence reports no failures
+PASS: Phase 6 pin evidence reports no failures
+PASS: Phase 6 strict doctor evidence reports no failures
+PASS: Phase 6 skill evidence reports no failures
+PASS: Phase 6 lake build evidence reports success
+PASS: Phase 6 clean-pin canonical baseline reports no failures
+PASS: Phase 6 adversarial evidence records Phase 5 closeout
+PASS: Phase 6 adversarial evidence records exact polarity baseline
+PASS: Phase 7 source evidence reports no failures
+PASS: Phase 7 pin evidence reports no failures
+PASS: Phase 7 strict doctor evidence reports no failures
+PASS: Phase 7 skill evidence reports no failures
+PASS: Phase 7 lake build evidence reports success
+PASS: Phase 7 certificate smoke evidence reports success
+PASS: Phase 7 certificate smoke evidence validates theorem metadata
+PASS: Phase 7 clean-pin canonical baseline reports no failures
+PASS: Phase 7 adversarial evidence records Phase 6 closeout
+PASS: Phase 7 adversarial evidence records exact polarity baseline
+PASS: Phase 7 adversarial evidence records singular active phase
+PASS: Phase 7 adversarial evidence records target scope
+PASS: Phase 7 adversarial evidence records target cases
+PASS: Phase 7 adversarial evidence records certificate-smoke closeout
+PASS: differential README records clean-pin expanded corpus status
+PASS: differential README documents exact expected-divergence markers
+PASS: differential README no longer calls the Phase 5 corpus intentionally small
+PASS: differential README no longer calls the Phase 5 corpus a seed
+PASS: differential README no longer carries the stale seed bar
+PASS: corpus README documents expected LLZK failure polarity
+PASS: corpus README documents expected VEIR failure polarity
+PASS: corpus README documents exact output-divergence polarity
+PASS: Phase 5 docs record clean-pin Strategy A corpus expansion
+PASS: Phase 6 docs record divergence burn-down baseline
+PASS: Phase 7 docs record modular-reduction target and baseline
+PASS: Phase 2 llzk-lib ref evidence records accepted remote
+
+doc freshness summary: 0 fail

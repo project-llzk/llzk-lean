@@ -1,0 +1,26 @@
+// Canonical positive no-fire Felt arithmetic.
+//
+// These operations use non-constant function arguments, so neither LLZK's
+// canonicalizer nor VEIR's felt-combine pass should rewrite them. This gives
+// Phase 4 a canonicalization-mode PASS that exercises live add/sub/mul/neg
+// syntax without relying on constant-fold parity.
+
+function.def @add_no_fold(%a: !felt.type<"babybear">, %b: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %c = felt.add %a, %b : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}
+
+function.def @sub_no_fold(%a: !felt.type<"babybear">, %b: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %c = felt.sub %a, %b : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}
+
+function.def @mul_no_fold(%a: !felt.type<"babybear">, %b: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %c = felt.mul %a, %b : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}
+
+function.def @neg_no_fold(%a: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %c = felt.neg %a : !felt.type<"babybear">
+  function.return %c : !felt.type<"babybear">
+}

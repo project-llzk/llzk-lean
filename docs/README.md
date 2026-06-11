@@ -14,6 +14,17 @@ LLZK maintainers.
   Per-rewrite cert emission from Lean + structural validation in C++.
   Requires upstream PR.
 
+## Current harness state
+
+- [Harness current state](harness/CURRENT.md). Active phase, accepted VEIR pin,
+  and acceptance rule.
+- [Dependency pins](harness/PINS.md). Exact VEIR commit, allowed modes, update
+  procedure, rollback procedure, and forbidden hidden state.
+- [Harness gates](harness/GATES.md). Strict checks required before claiming
+  Phase 1 acceptance.
+- [Phase 1 — reproducible pins](phases/PHASE-01-pins-and-repro.md). Current
+  phase plan and review requirements.
+
 ## Documented future options
 
 - [Strategy F — Folders-only replacement](future-f-folders-only.md).

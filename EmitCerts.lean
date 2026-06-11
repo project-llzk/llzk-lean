@@ -92,7 +92,7 @@ def jsonHeader (certCount : Nat) : String :=
   s!"\{\n  \"schemaVersion\": \"0.2.0\",\n  \
 \"source\": \"VEIR Veir.Passes.Felt.Combine (stub catalog — {certCount} of 15 patterns)\",\n  \
 \"_note\": \"Hand-listed catalog. The full 15-pattern catalog will be derived reflectively from VEIR's Veir.Passes.Felt.Combine; today's source is LlzkLean.Cert.feltCombineCatalog.\",\n  \
-\"_aboutLlzkParityStatus\": \"Per-cert tag indicating how a VEIR rewrite relates to LLZK's runtime: 'aligned' = LLZK performs the same rewrite exactly; 'aligned-with-caveats' = LLZK performs it under additional conditions (e.g. modular reduction, field-name guard); 'veir-only' = LLZK has no matching fold or canonicalization pattern, the cert is a Lean-side soundness statement only. The C++ checker uses this to pick assertion polarity.\",\n  \
+\"_aboutLlzkParityStatus\": \"Per-cert tag indicating how a VEIR rewrite relates to LLZK's runtime: 'aligned' = LLZK performs the same rewrite exactly; 'aligned-with-caveats' = LLZK performs it under additional source-specific conditions; 'veir-only' = LLZK has no matching fold or canonicalization pattern, the cert is a Lean-side soundness statement only. The C++ checker uses this to pick assertion polarity.\",\n  \
 \"certs\": [\n    "
 
 def main : IO Unit := do

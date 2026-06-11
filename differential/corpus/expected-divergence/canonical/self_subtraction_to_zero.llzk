@@ -1,0 +1,9 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// VeIR's `self_subtraction_to_zero` rewrites `felt.sub x x` to zero.
+// LLZK currently leaves this non-constant subtraction in place.
+
+function.def @sub_self(%x: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %y = felt.sub %x, %x : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %y : !felt.type<"babybear">
+}

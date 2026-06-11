@@ -39,6 +39,21 @@ import Veir.Passes.Felt.Proofs
 
 namespace LlzkLean.Cert
 
+section
+
+private partial def exprContainsConst (target : Lean.Name) : Lean.Expr → Bool
+  | .const n _ => n == target
+  | .app f a => exprContainsConst target f || exprContainsConst target a
+  | .lam _ t b _ => exprContainsConst target t || exprContainsConst target b
+  | .forallE _ t b _ => exprContainsConst target t || exprContainsConst target b
+  | .letE _ t v b _ =>
+      exprContainsConst target t || exprContainsConst target v || exprContainsConst target b
+  | .mdata _ b => exprContainsConst target b
+  | .proj _ _ b => exprContainsConst target b
+  | _ => false
+
+end
+
 open Lean Elab Command in
 /--
   Build-time assertion that the fully-qualified Lean name `nameStr`
@@ -77,7 +92,7 @@ elab "#assertCatalogCoverage" : command => do
   let mut veirPatternIds : List String := []
   for (n, info) in env.constants.toList do
     match n, info with
-    | .str parent baseName, .defnInfo _ =>
+    | .str parent baseName, .defnInfo defnInfo =>
       -- Filter to rewrite-pattern defs only. VEIR's pattern namespace
       -- also contains:
       --   - `matchAdd`, `matchSub`, ... — helper matchers (start with
@@ -87,12 +102,26 @@ elab "#assertCatalogCoverage" : command => do
       --   - `Combine.impl` — the pass body (compound name; filtered
       --     by the `Name.str parent baseName` pattern only matching
       --     single-segment names below the namespace).
+      --   - `projectToOperand`, `replaceWithNewOp`, and
+      --     `replaceWithBinOpOfConst` — shared rewrite tails used by the
+      --     verified patterns, not standalone rewrite patterns.
       -- A rewrite pattern's base name doesn't start with `match` or
-      -- `Combine` and isn't an internal `_*` name.
+      -- `Combine`, isn't an internal `_*` name, and isn't one of those
+      -- shared helper tails.
       let isHelper := baseName.startsWith "match"
       let isPass   := baseName == "Combine"
       let isInternal := baseName.startsWith "_"
-      if parent == nsPrefix && !isHelper && !isPass && !isInternal then
+      let isRewriteTailHelper :=
+        baseName == "projectToOperand" ||
+        baseName == "replaceWithNewOp" ||
+        baseName == "replaceWithBinOpOfConst"
+      -- Actual rewrite patterns take the active pattern rewriter plus an
+      -- operation pointer. This keeps ordinary helpers in `Veir.FeltPass`
+      -- from inflating the certificate coverage count.
+      let isPatternShaped :=
+        exprContainsConst ``Veir.PatternRewriter defnInfo.type &&
+        exprContainsConst ``Veir.OperationPtr defnInfo.type
+      if parent == nsPrefix && isPatternShaped && !isHelper && !isPass && !isInternal && !isRewriteTailHelper then
         veirPatternIds := baseName :: veirPatternIds
     | _, _ => pure ()
   let catalogIds := feltCombineCatalog.map (·.patternId)

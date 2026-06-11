@@ -1,0 +1,31 @@
+PASS: tool git is available
+PASS: tool lake is available
+WARN: optional tool cmake is not available
+WARN: optional tool ctest is not available
+PASS: git root is /home/alh/LLZK/llzk-lean
+WARN: llzk-lean HEAD 34cbe65907bf differs from bootstrap input ea2363f87bcc
+PASS: Lake files pin VeIR 09d5f00f0d2b
+PASS: dependency checkout is at 09d5f00f0d2b
+WARN: dependency checkout is dirty in exploratory mode:
+ M Veir/Passes/Felt/Combine.lean
+ M Veir/Passes/Felt/Proofs.lean
+?? Veir/Passes/Felt/RewriteLemmas.lean
+WARN: workspace VeIR repo was not checked; pass --workspace-veir PATH
+PASS: found AGENTS.md
+PASS: found docs/phases/PHASE-00-harness-reset.md
+PASS: found docs/phases/PHASE_TEMPLATE.md
+PASS: found docs/harness/CURRENT.md
+PASS: found docs/harness/SOURCES.md
+PASS: found docs/harness/GATES.md
+PASS: found docs/harness/REVIEWS.md
+PASS: found reviews/PHASE-00/request.md
+PASS: found reviews/PHASE-00/findings.md
+PASS: found reviews/PHASE-00/disposition.md
+PASS: found reviews/PHASE-00/adversarial-review.md
+PASS: executable scripts/harness/check-doc-freshness.sh
+PASS: executable scripts/harness/diff-smoke.sh
+PASS: executable scripts/harness/cert-smoke.sh
+PASS: executable scripts/harness/validate-skills.sh
+PASS: found reviews/PHASE-00/evidence
+
+doctor summary: 0 fail, 5 warn, mode=exploratory

@@ -1,0 +1,13 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// VeIR's `assoc_const_fold_mul` rewrites `(x * c1) * c2` to
+// `x * (c1 * c2)`. LLZK currently leaves the nested multiplication chain in
+// place.
+
+function.def @assoc_mul(%x: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %c1 = felt.const 2 : !felt.type<"babybear">
+  %c2 = felt.const 3 : !felt.type<"babybear">
+  %inner = felt.mul %x, %c1 : !felt.type<"babybear">, !felt.type<"babybear">
+  %outer = felt.mul %inner, %c2 : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %outer : !felt.type<"babybear">
+}

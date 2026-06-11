@@ -1,0 +1,8 @@
+$ tmp=$(mktemp -d); mkdir -p "$tmp/scripts"; cp .lake/packages/VeIR/scripts/llzk-diff.sh "$tmp/scripts/llzk-diff.sh"; PATH=/usr/bin:/bin LLZK_OPT=/nix/store/awcw2wiypa02sl5vx4xm06qwji68xz3h-llzk-debug-2.0.0/bin/llzk-opt VEIR_DIFF="$tmp/scripts/llzk-diff.sh" ./differential/run-differential.sh differential/corpus/felt/const_identities.mlir
+SKIP: /home/alh/LLZK/llzk-lean/differential/corpus/felt/const_identities.mlir (llzk-diff.sh exit 77 — required differential tool unavailable)
+
+Summary: 0 pass (incl. expected-diverge), 0 fail, 1 skip, 0 mode-skip (over 1 inputs)
+
+ERROR: 1 input(s) skipped because required tools were unavailable; this is not acceptance evidence.
+
+exit code: 2

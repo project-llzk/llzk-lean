@@ -1,0 +1,6 @@
+CERT-SMOKE: cmake/ctest unavailable; built checker from source with g++
+CERT-SMOKE: g++ schema/loader tests passed
+CERT-SMOKE: theorem metadata present for 2/2 certs
+CERT-SMOKE: driver cert summary passed
+CERT-SMOKE: MLIR matcher absent; DefaultMatcher still has W4B TODOs
+CERT-SMOKE: schema validation passed

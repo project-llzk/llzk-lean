@@ -1,0 +1,60 @@
+Script started on 2026-06-05 20:24:42+01:00 [COMMAND="rg -n 'llzkfelt_test1|2026-05-28|CI workflow stubbed|Skips green|harness/' README.md docs differential .github" <not executed on terminal>]
+README.md
+29:VEIR on the [`llzkfelt_test1`](https://github.com/project-llzk/veir/tree/llzkfelt_test1)
+
+differential/run-differential.sh
+24:# See differential/README.md for the protocol and docs/harness/GATES.md for the
+
+docs/REVIEW.md
+132:deliver; L3 VEIR README still references the dropped `llzkfelt_test1` branch.
+
+differential/README.md
+114:   [`FELT_PARITY_ASSESSMENT_2026-05-28.md`](https://github.com/alexanderlhicks/veir/blob/llzkfelt_test1/FELT_PARITY_ASSESSMENT_2026-05-28.md))
+
+docs/strategy-a-oracle.md
+86:   reduction yet — see VEIR's `FELT_PARITY_ASSESSMENT_2026-05-28.md`
+121:Current state (2026-05-28):
+131:- 🚧 CI workflow stubbed in `.github/workflows/differential.yml`.
+132:  Skips green if `llzk-opt` not provisioned — CI provisioning is
+175:   [VEIR FELT_PARITY_ASSESSMENT_2026-05-28.md](https://github.com/alexanderlhicks/veir/blob/llzkfelt_test1/FELT_PARITY_ASSESSMENT_2026-05-28.md)
+
+docs/phases/PHASE-00-harness-reset.md
+44:- `docs/harness/CURRENT.md`: active phase, refs, dependency mode, known hazards,
+46:- `docs/harness/SOURCES.md`: trusted source ledger for LLZK, VeIR, MLIR, Lean,
+48:- `docs/harness/GATES.md`: executable gate inventory and what each gate proves.
+49:- `docs/harness/REVIEWS.md`: independent review protocol, severity definitions,
+54:- `scripts/harness/doctor.sh`: validate dependency pin, dirty state, local tool
+56:- `scripts/harness/check-doc-freshness.sh`: reject stale phase metadata and
+58:- `scripts/harness/diff-smoke.sh`: run a minimal differential check and classify
+60:- `scripts/harness/cert-smoke.sh`: run a minimal Strategy E checker smoke test
+62:- `scripts/harness/validate-skills.sh`: validate any repo-local skills.
+76:references, and have a validation path in `scripts/harness/validate-skills.sh`.
+80:- `scripts/harness/doctor.sh` passes from the llzk-lean root only when the VeIR
+102:- `docs/harness/CURRENT.md` is the single source of truth for active phase,
+
+docs/harness/REVIEWS.md
+16:`docs/harness/SOURCES.md`, command output under `evidence/`, or an explicitly
+
+docs/harness/GATES.md
+9:| Strict doctor | `scripts/harness/doctor.sh` | Fails while `.lake/packages/VeIR` is dirty | Dirty dependency state is not hidden |
+10:| Exploratory doctor | `scripts/harness/doctor.sh --mode exploratory` | Passes with dirty-file warnings | Local investigation can continue with explicit dependency state |
+11:| Workspace doctor | `scripts/harness/doctor.sh --mode exploratory --workspace-veir ../veir` | Passes if workspace VeIR is at the bootstrap ref | Companion repo state is explicit |
+12:| Doc freshness | `scripts/harness/check-doc-freshness.sh` | Passes when canonical docs and review disposition exist | Phase metadata and review state are present |
+13:| Differential smoke | `scripts/harness/diff-smoke.sh` | Exits 0 on real pass, 77 on missing `llzk-opt`, 1 on divergence, 2 on tool/parse/pass failure | Strategy A smoke status is classified |
+14:| Certificate smoke | `scripts/harness/cert-smoke.sh` | Builds checker smoke binaries from source via CMake/CTest or direct `g++`, passes loader/schema smoke, and reports MLIR matcher active or absent | Strategy E smoke status is classified without pretending MLIR matching exists |
+15:| Prebuilt certificate smoke | `CERT_SMOKE_ALLOW_PREBUILT=1 scripts/harness/cert-smoke.sh` | Uses existing `checker/build` binaries only when source-build tools are unavailable | Prebuilt evidence is explicit and not confused with source-build evidence |
+16:| Skill validation | `scripts/harness/validate-skills.sh` | Passes when every repo-local skill has required sections | Repo-local skills are concise and auditable |
+
+docs/harness/SOURCES.md
+44:- Historical references to `llzkfelt_test1` and dates before 2026-06-05
+
+docs/harness/CURRENT.md
+20:`docs/harness/SOURCES.md`, and review evidence before treating the harness as
+45:  acceptance evidence unless `docs/harness/SOURCES.md` revalidates a claim.
+53:- `scripts/harness/doctor.sh` fails in strict mode on the known dirty
+55:- `scripts/harness/doctor.sh --mode exploratory` passes while reporting the
+57:- `scripts/harness/check-doc-freshness.sh` passes.
+58:- `scripts/harness/validate-skills.sh` passes.
+59:- `scripts/harness/diff-smoke.sh` and `scripts/harness/cert-smoke.sh` report
+
+Script done on 2026-06-05 20:24:42+01:00 [COMMAND_EXIT_CODE="0"]

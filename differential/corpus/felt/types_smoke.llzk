@@ -1,0 +1,10 @@
+// LOWER_FIRST smoke test. Adapted from
+// llzk-lib/test/Dialect/Felt/types_pass.llzk first section.
+//
+// Phase 4 reclassification: this used to be expected-divergence while the
+// normalizer still missed discardable-attribute key quoting and empty-region
+// whitespace. The current VEIR normalizer handles those cosmetic differences,
+// so the input is a positive parse/print and canonicalization smoke.
+
+function.def private @f(!felt.type) -> i1
+function.def private @g() -> !felt.type

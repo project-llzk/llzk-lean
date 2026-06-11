@@ -20,6 +20,14 @@ Each entry in the certificate file describes one verified rewrite
 pattern: identifier, LHS shape, RHS shape, side conditions, and the
 name of the Lean theorem that justifies it.
 
+The current certificate proof basis is pinned to VEIR commit
+`d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3` from
+`project-llzk/veir`. Under that pin, the Lean catalog scan still finds
+15 Felt pattern definitions, with 2 covered by the hand-authored
+certificate catalog and 13 reported as uncovered. The pin gate is a
+reproducibility claim only; it does not make Strategy E acceptance
+claims beyond the checker and catalog status below.
+
 ## Architecture
 
 ```
@@ -115,8 +123,8 @@ checker TCB small.
         {"kind": "attrInRegistry", "pos": "lhs", "attr": "fieldName", "registry": "field"}
       ],
       "theoremName": "Veir.Data.Felt.constant_fold_add",
-      "llzkParityStatus": "aligned-with-caveats",
-      "description": "felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2). Caveat: LLZK applies modular reduction; VEIR's runtime fold stores c1+c2 unreduced."
+      "llzkParityStatus": "aligned",
+      "description": "felt.add (felt.const c1) (felt.const c2) → felt.const (c1+c2 reduced through the registered field)."
     },
     ...
   ]
@@ -265,7 +273,7 @@ later for explicit downgrades.
 
 ## What this v1 needs
 
-Current state (2026-05-29):
+Current state (2026-06-05):
 - ✅ Schema v0.2.0 (defined here + `LlzkLean/Cert.lean`). Closes
   the v0.1.1 known schema gaps; see "Schema gaps closed in v0.2.0"
   below for the audit trail.

@@ -1,0 +1,10 @@
+// EXPECTED-DIVERGE in canonicalization mode.
+//
+// VeIR's `add_neg_to_zero` rewrites `felt.add x (felt.neg x)` to zero.
+// LLZK currently leaves this non-constant add/neg pair in place.
+
+function.def @add_neg(%x: !felt.type<"babybear">) -> !felt.type<"babybear"> {
+  %neg = felt.neg %x : !felt.type<"babybear">
+  %y = felt.add %x, %neg : !felt.type<"babybear">, !felt.type<"babybear">
+  function.return %y : !felt.type<"babybear">
+}

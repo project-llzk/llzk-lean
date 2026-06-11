@@ -88,8 +88,8 @@ enum class LlzkParityStatus {
   /// LLZK performs exactly this rewrite, same canonical output as the
   /// Lean spec. checkRewrite asserts LLZK's transformation matches.
   Aligned,
-  /// LLZK performs this rewrite under additional conditions the Lean
-  /// spec doesn't impose (e.g. field-name guard, modular reduction).
+  /// LLZK performs this rewrite under additional source-specific
+  /// conditions the Lean spec doesn't impose.
   /// checkRewrite asserts match-modulo-caveat; full alignment is a
   /// future-work item tracked per pattern.
   AlignedWithCaveats,
@@ -167,9 +167,8 @@ std::optional<CertCatalog> loadCertCatalog(const std::string &path,
 ///     AlignedWithCaveats cert — no caveat was needed).
 ///   - `matchedParity == AlignedWithCaveats` + `caveatTriggered == true`:
 ///     LHS + conditions matched but LLZK's replacement differs from
-///     the cert's RHS shape. The cert acknowledges this can happen
-///     (e.g., LLZK applies field->reduce; VEIR doesn't); the
-///     `caveatTriggered` flag surfaces the divergence in the pass
+///     the cert's RHS shape. The cert acknowledges this can happen;
+///     the `caveatTriggered` flag surfaces the divergence in the pass
 ///     diagnostics.
 ///
 /// `accepted == false` means no cert matched. `rejectReason` is a

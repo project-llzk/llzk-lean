@@ -1,0 +1,12 @@
+// Phase 8: bare felt-type binary folds stay unfired.
+//
+// LLZK intentionally skips binary Felt folds when either operand has no
+// registered field name. VEIR now mirrors that field-precondition behavior, so
+// canonicalization leaves this bare `!felt.type` add in place.
+
+function.def @no_fold_unspecified_add() -> !felt.type {
+  %a = felt.const 5
+  %b = felt.const 7
+  %c = felt.add %a, %b
+  function.return %c : !felt.type
+}

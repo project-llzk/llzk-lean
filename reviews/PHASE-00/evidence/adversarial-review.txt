@@ -1,0 +1,71 @@
+Script started on 2026-06-05 20:24:54+01:00 [COMMAND="rg -n 'L-P0-004|CERT_SMOKE_ALLOW_PREBUILT|g\+\+|source|prebuilt|MLIR matcher|adversarial' docs/harness reviews/PHASE-00/*.md scripts/harness" <not executed on terminal>]
+reviews/PHASE-00/request.md
+17:Strategy E MLIR matcher coverage accurately.
+
+reviews/PHASE-00/findings.md
+36:contains W4B TODOs. Phase 0 must report MLIR matcher absence rather than
+43:### L-P0-004: Certificate smoke must not silently trust stale build artifacts
+49:unavailable. Those binaries may be stale relative to the edited source, so they
+
+reviews/PHASE-00/adversarial-review.md
+23:- Does certificate smoke build or identify its checker binary source clearly?
+24:- Do canonical docs distinguish schema/loader evidence from MLIR matcher
+31:- L-P0-004 was added: the first certificate smoke fallback could rely on
+33:- `scripts/harness/cert-smoke.sh` now builds from source via CMake/CTest or
+34:  direct `g++`. Prebuilt binaries require `CERT_SMOKE_ALLOW_PREBUILT=1`.
+
+reviews/PHASE-00/disposition.md
+14:  status separately from MLIR matcher status.
+15:- L-P0-004: fixed. `scripts/harness/cert-smoke.sh` now source-builds through
+16:  CMake/CTest when available or direct `g++` otherwise. Prebuilt
+17:  `checker/build` binaries require `CERT_SMOKE_ALLOW_PREBUILT=1` and are
+
+scripts/harness/check-doc-freshness.sh
+35:require_file reviews/PHASE-00/adversarial-review.md
+79:  reviews/PHASE-00/evidence/adversarial-review.txt; do
+
+docs/harness/REVIEWS.md
+12:- `adversarial-review.md`
+15:Each claim in canonical harness docs must cite either a local source in
+17:trusted external source added to the source ledger.
+
+scripts/harness/cert-smoke.sh
+44:elif command -v g++ >/dev/null 2>&1; then
+45:  src_build="${TMPDIR_LOCAL}/source-build"
+47:  common_sources=(
+52:  if ! g++ -std=c++17 -I"${ROOT}/checker/src" \
+53:      "${common_sources[@]}" "${ROOT}/checker/tests/test_loader.cpp" \
+56:    echo "CERT-SMOKE: g++ loader build failed" >&2
+59:  if ! g++ -std=c++17 -I"${ROOT}/checker/src" \
+60:      "${common_sources[@]}" "${ROOT}/checker/bin/llzk_lean_check.cpp" \
+63:    echo "CERT-SMOKE: g++ driver build failed" >&2
+68:  echo "CERT-SMOKE: cmake/ctest unavailable; built checker from source with g++"
+71:    echo "CERT-SMOKE: g++ loader tests failed" >&2
+74:  echo "CERT-SMOKE: g++ schema/loader tests passed"
+75:  build_mode="g++"
+76:elif [[ "${CERT_SMOKE_ALLOW_PREBUILT:-0}" == "1" && -x "$loader" && -x "$driver" ]]; then
+77:  echo "CERT-SMOKE: using prebuilt checker binaries because CERT_SMOKE_ALLOW_PREBUILT=1"
+80:    echo "CERT-SMOKE: prebuilt loader tests failed" >&2
+83:  echo "CERT-SMOKE: prebuilt schema/loader tests passed"
+84:  build_mode="prebuilt"
+86:  echo "TOOL-MISSING: cmake/ctest and g++ unavailable" >&2
+87:  echo "Set CERT_SMOKE_ALLOW_PREBUILT=1 to use existing checker/build binaries as non-source-build evidence." >&2
+113:  echo "CERT-SMOKE: MLIR matcher absent; DefaultMatcher still has W4B TODOs"
+115:  echo "CERT-SMOKE: MLIR matcher configured active"
+117:  echo "CERT-SMOKE: MLIR matcher absent in ${build_mode} smoke mode"
+
+docs/harness/CURRENT.md
+40:  loader behavior, and dispatch tests from source when CMake/CTest or `g++` is
+42:  `CERT_SMOKE_ALLOW_PREBUILT=1` is set. Real MLIR-backed matching remains
+
+docs/harness/SOURCES.md
+10:| llzk-lean repository HEAD | `ea2363f87bcc` | Bootstrap llzk-lean source state |
+11:| Workspace VeIR repository HEAD | `4b0978bddec0` | Companion source state |
+17:| `checker/src/CertChecker.cpp` | local file, 2026-06-05 | MLIR matcher status |
+27:No external web source is trusted as canonical for Phase 0. Future phases may
+
+docs/harness/GATES.md
+14:| Certificate smoke | `scripts/harness/cert-smoke.sh` | Builds checker smoke binaries from source via CMake/CTest or direct `g++`, passes loader/schema smoke, and reports MLIR matcher active or absent | Strategy E smoke status is classified without pretending MLIR matching exists |
+15:| Prebuilt certificate smoke | `CERT_SMOKE_ALLOW_PREBUILT=1 scripts/harness/cert-smoke.sh` | Uses existing `checker/build` binaries only when source-build tools are unavailable | Prebuilt evidence is explicit and not confused with source-build evidence |
+
+Script done on 2026-06-05 20:24:54+01:00 [COMMAND_EXIT_CODE="0"]
