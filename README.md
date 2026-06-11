@@ -26,7 +26,7 @@ LLZK's Felt dialect:
   and Mathlib out of LLZK's runtime trusted base.
 
 The current proof basis is the clean VEIR commit
-[`d4cc1bf2d31beeca17eb2e8c9c7181d04af013a3`](docs/harness/PINS.md),
+[`d899d95004d4bd988c8456d686c33b11a7a5eb4a`](docs/harness/PINS.md),
 selected from `project-llzk/veir` branch `felt-review-structural-close`
 and pinned through Lake metadata.
 
@@ -55,10 +55,15 @@ documented under [`docs/`](docs/):
   dependency state.
 - [`docs/harness/CURRENT.md`](docs/harness/CURRENT.md) — active
   phase and acceptance rule for the harness.
+- [`docs/drop-in-roadmap.md`](docs/drop-in-roadmap.md) — single roadmap
+  for the Felt drop-in replacement goal, including coverage, toolchain,
+  proof/certificate, assumptions, and TCB requirements.
+- [`scripts/harness/phase10-toolchain-smoke.sh`](scripts/harness/phase10-toolchain-smoke.sh)
+  — Phase 10 bootstrap smoke for the current external-driver replacement path.
 - [`docs/future-b-extraction.md`](docs/future-b-extraction.md) —
   Future: extract VEIR's verified rewriter to C++.
 - [`docs/future-c-drop-in.md`](docs/future-c-drop-in.md) — Future:
-  drop-in replacement for LLZK's Felt dialect.
+  full replacement of the `llzk-opt` binary.
 - [`docs/future-d-ffi-plugin.md`](docs/future-d-ffi-plugin.md) —
   Future: FFI plugin for the Lean rewriter.
 - [`docs/future-f-folders-only.md`](docs/future-f-folders-only.md) —

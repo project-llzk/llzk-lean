@@ -30,6 +30,11 @@ Last reviewed: 2026-06-10
 | `docs/phases/PHASE-06-strategy-a-divergence-burndown.md` | local file, 2026-06-10 | Completed Phase 6 divergence burn-down objective, artifacts, gates, and done criteria |
 | `docs/phases/PHASE-07-strategy-a-modular-reduction.md` | local file, 2026-06-10 | Completed Phase 7 registered-field modular-reduction objective, artifacts, gates, and done criteria |
 | `docs/phases/PHASE-08-strategy-a-field-preconditions.md` | local file, 2026-06-10 | Active Phase 8 field-precondition objective, artifacts, gates, and done criteria |
+| `docs/drop-in-roadmap.md` | local file, 2026-06-11 | Planning baseline for the Felt drop-in replacement objective; not phase acceptance evidence |
+| `docs/phases/PHASE-09-drop-in-roadmap.md` | local file, 2026-06-11 | Completed roadmap and claim-reset planning phase; not implementation acceptance evidence |
+| `docs/phases/PHASE-10-toolchain-replacement-spike.md` | local file, 2026-06-11 | Phase 10 bootstrap plan for the external-driver toolchain spike; not Phase 8 acceptance evidence |
+| `scripts/harness/phase10-toolchain-smoke.sh` | local file, 2026-06-11 | Phase 10 bootstrap smoke for the lower-first external-driver replacement path; not clean-pin acceptance evidence by itself |
+| Phase 10 toolchain smoke evidence | `reviews/PHASE-10/evidence/toolchain-smoke.md` | Bootstrap workspace evidence for the external-driver path and Felt side-effect/DCE fix; not Phase 8 acceptance evidence |
 | `differential/run-differential.sh` | local file, 2026-06-09 | llzk-lean corpus wrapper around the consumed VeIR diff script |
 | `differential/corpus/` | local files, 2026-06-09 | Current Strategy A corpus and expected-divergence classification |
 | Consumed VeIR `scripts/llzk-diff.sh` | `.lake/packages/VeIR/scripts/llzk-diff.sh` at accepted pin | Default clean dependency driver with canonicalization support; Phase 6 canonical mode runs `felt-combine,dce`, the accepted Phase 7 pin includes registered-field fold-result reduction, and the accepted Phase 8 pin skips folds whose field name does not resolve |
